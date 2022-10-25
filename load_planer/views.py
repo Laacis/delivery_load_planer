@@ -11,7 +11,8 @@ from .models import *
 # Create your views here.
 
 def index(request):
-    return render(request, "load_planer/index.html")
+    tours = []
+    return render(request, "load_planer/index.html", {"tours":tours})
 
 
 def login_view(request):

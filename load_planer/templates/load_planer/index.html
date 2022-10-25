@@ -2,5 +2,18 @@
 {% load static %}
 
 {% block body %}
-    <h1> this is Index.html</h1>
+    
+    <div class="container text-center">
+        <h1> this is Index.html</h1>
+        <!-- Stack the columns on mobile by making one full-width and the other half-width -->
+        {% if tours %}
+        {% for tour in tours %}
+        <div class="row" style="background-color: rgb(151, 146, 146);">
+          <div class="col-md-12">Tour ID</div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>{{ user }}, there's no tour ready for you at the moment.</p>
+        {% endif %}
+    </div>  
 {% endblock %}
