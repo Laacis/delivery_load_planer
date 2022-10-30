@@ -4,7 +4,7 @@
 {% block body %}
     
     <div class="container text-center">
-        <h1> this is Index.html</h1>
+        <h1> Tours</h1>
         <!-- Stack the columns on mobile by making one full-width and the other half-width -->
         {% if tours %}
         {% for tour in tours %}
@@ -13,7 +13,7 @@
         </div>
         {% endfor %}
         {% else %}
-        <p>{{ user }}, there's no tour ready for you at the moment.</p>
+        <p>There's no tour ready for you, at the moment.</p>
         {% endif %}
     </div>  
 {% endblock %}

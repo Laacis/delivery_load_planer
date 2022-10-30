@@ -15,6 +15,10 @@ def index(request):
     return render(request, "load_planer/index.html", {"tours":tours})
 
 
+def tour_planing(request):
+    return render(request, "load_planer/tour_planing.html")
+
+
 def login_view(request):
     if request.method == "POST":
 
