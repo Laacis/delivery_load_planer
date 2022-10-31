@@ -1,3 +1,4 @@
+from django import forms
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -69,3 +70,7 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "load_planer/register.html")
+
+
+# FORMS
+
