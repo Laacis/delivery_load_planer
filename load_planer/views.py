@@ -27,6 +27,9 @@ def trucks(request):
 def drivers(request):
     return render(request, 'load_planer/drivers.html')
 
+def delivery_plans(request):
+    return render(request, 'load_planer/delivery_plans.html')
+
 
 def login_view(request):
     if request.method == "POST":
