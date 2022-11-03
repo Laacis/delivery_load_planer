@@ -20,6 +20,14 @@ def tour_planing(request):
     return render(request, "load_planer/tour_planing.html")
 
 
+def trucks(request):
+    return render(request, 'load_planer/trucks.html')
+
+
+def drivers(request):
+    return render(request, 'load_planer/drivers.html')
+
+
 def login_view(request):
     if request.method == "POST":
 
