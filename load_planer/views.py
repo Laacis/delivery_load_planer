@@ -19,10 +19,30 @@ def index(request):
 def tour_planing(request):
     return render(request, "load_planer/tour_planing.html")
 
-
+@login_required
 def trucks(request):
     form = TruckForm()
-    return render(request, 'load_planer/trucks.html', {"truck_form": form})
+    trucks = Truck.objects.all()
+    if request.method == 'POST':
+        # REMEMBER TO MAKE SURE THE USER ADDING Truck is A PLANER, not a driver!!!
+        truck_form = TruckForm(request.POST)
+        if truck_form.is_valid():
+            truck_id = truck_form.cleaned_data['truck_id']
+            pallet_size = truck_form.cleaned_data['pallet_size']
+            zones = truck_form.cleaned_data['zones']
+            try:
+                add_truck = Truck(truck_id=truck_id, pallet_size=pallet_size, zones=zones)
+                add_truck.save()
+                return render(request, 'load_planer/trucks.html', {"truck_form": form, "trucks": trucks})
+            except: 
+                return HttpResponse("Error: Unable to save this truck!")
+        
+        else:
+            return HttpResponse("Error: Form not valid!")
+
+    else:
+        
+        return render(request, 'load_planer/trucks.html', {"truck_form": form, "trucks": trucks})
 
 
 def drivers(request):
@@ -89,13 +109,12 @@ def register(request):
 
 class TruckForm(forms.ModelForm):
     zones = forms.TypedChoiceField(choices=[(2, 2), (3, 3)], coerce=int)
+    pallet_size = forms.TypedChoiceField(choices=[(20, 20), (33, 33)], coerce=int)
 
     class Meta:
         model = Truck
         fields = ["truck_id", "pallet_size", "zones"]
-        truck_id = forms.CharField(label="Truck ID", required=True)
-        pallet_size = forms.IntegerField()
-
+        truck_id = forms.CharField(label="Truck ID", required=True, )
         widgets = {
-            'truck_id' : forms.Textarea(attrs={'placeholder':'Truck id', 'rows':1, 'class':"form-control"}),
+            'truck_id' : forms.Textarea(attrs={'placeholder':'Truck ID: AA000', 'rows':1, 'class':"form-control"}),
         }

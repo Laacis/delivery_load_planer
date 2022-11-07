@@ -21,9 +21,12 @@ class Profile(models.Model):
 
 class Truck(models.Model):
     # All trucks are Reefers, have 2 or 3 zones of temperature control
-    truck_id = models.CharField(max_length=5) # Truck identicifation number for inner audit, not Number plates
+    truck_id = models.CharField(max_length=5, primary_key=True) # Truck identicifation number for inner audit, not Number plates
     pallet_size = models.IntegerField(blank=False) # Number of EUROPALLETS full load 
     zones = models.IntegerField(blank=False) # Number of temperature controll zones(2 or 3)
+
+    def __str__(self):
+        return f"Reefer truck with id: ${self.truck_id} fits ${self.pallet_size} pallets and has ${self.zones} temperature zones."
 
 
 class Destination(models.Model):
