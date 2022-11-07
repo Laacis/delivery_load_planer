@@ -6,13 +6,6 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     pass
 
-
-class Truck(models.Model):
-    truck_id = models.CharField(max_length=3, blank=False)  # Truck identification number in the organizetion
-    zones = models.IntegerField(blank=False) # Reefer zones in the truck 
-    pallet_count = models.IntegerField(blank=False)  # Number of palets in full load 
-
-
 class Driver(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=30, blank=False) 
@@ -38,6 +31,7 @@ class Destination(models.Model):
     address = models.CharField(max_length=90, blank=False) 
     # Add more detailed address fields if you need to, since this project is not going to have map related components - I don't need more details
 
+
 class Delivery_plan(models.Model):
     # sequesnce of Destinations to build a delivery route
     # Delivery plans are made for a period of 3-4 month, to keep a stable schedule for the customers
@@ -51,5 +45,6 @@ class Delivery_plan(models.Model):
     delivery_id = models.CharField(max_length=30, blank=False)
     querter = models.PositiveSmallIntegerField(choices=Quarter.choices, default=Quarter.Q1)
     year = models.PositiveSmallIntegerField()
-
-    # TODO Missing actuall delivery order data
+    # del_order is delivery order sequesnce
+    del_order = models.PositiveBigIntegerField()
+    del_loc = models.ForeignKey(Destination, on_delete=models.CASCADE)

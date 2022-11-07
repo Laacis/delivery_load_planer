@@ -21,11 +21,13 @@ def tour_planing(request):
 
 
 def trucks(request):
-    return render(request, 'load_planer/trucks.html')
+    form = TruckForm()
+    return render(request, 'load_planer/trucks.html', {"truck_form": form})
 
 
 def drivers(request):
     return render(request, 'load_planer/drivers.html')
+
 
 def delivery_plans(request):
     return render(request, 'load_planer/delivery_plans.html')
@@ -85,3 +87,15 @@ def register(request):
 
 # FORMS
 
+class TruckForm(forms.ModelForm):
+    zones = forms.TypedChoiceField(choices=[(2, 2), (3, 3)], coerce=int)
+
+    class Meta:
+        model = Truck
+        fields = ["truck_id", "pallet_size", "zones"]
+        truck_id = forms.CharField(label="Truck ID", required=True)
+        pallet_size = forms.IntegerField()
+
+        widgets = {
+            'truck_id' : forms.Textarea(attrs={'placeholder':'Truck id', 'rows':1, 'class':"form-control"}),
+        }

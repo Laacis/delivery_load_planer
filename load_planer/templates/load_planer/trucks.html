@@ -10,6 +10,13 @@
         <p> register a truck</p>
         <p> display a list of registred trucks</p>
 
+        <form action="#" method="post">
+            {% csrf_token %}
+            {{ truck_form }}
+
+            <input type="submit" value="Register Truck" class="btn btn-primary form-control">
+        </form>
+
 
     </div>  
 {% endblock %}
