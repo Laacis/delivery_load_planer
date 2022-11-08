@@ -15,5 +15,12 @@
         {% else %}
         <p>There's no tour ready for you, at the moment.</p>
         {% endif %}
+
+
+        {% if user.is_authenticated %}
+        <p> Authenticated</p>
+
+        {}
+        {% endif %}
     </div>  
 {% endblock %}

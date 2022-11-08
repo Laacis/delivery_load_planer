@@ -9,7 +9,13 @@
         <p> TODO: </p>
         <p> register a Driver</p>
         <p> display a list of registred Drivers</p>
-
-
+        
+        {% if driver_list %}
+            {% for driver in driver_list %}
+                {{ driver }}
+            {% endfor %}
+        {% else %}
+        <p> No drivers in the list</p>
+        {% endif %}
     </div>  
 {% endblock %}

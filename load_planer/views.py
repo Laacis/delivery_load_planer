@@ -12,8 +12,17 @@ from .models import *
 # Create your views here.
 
 def index(request):
-    tours = []
-    return render(request, "load_planer/index.html", {"tours":tours})
+    return render(request, "load_planer/index.html")
+
+
+@login_required
+def gateway(request):
+    try:
+        is_driver = Profile.objects.get(username = request.user.id)
+        return render(request,"load_planer/gateway.html", {"driver": is_driver})
+    except:
+        driver_form = DriverForm()
+        return render(request,"load_planer/gateway.html", {"driver": "You are not verified as Driver/Planer.", "driver_form": driver_form})
 
 
 def tour_planing(request):
@@ -46,7 +55,32 @@ def trucks(request):
 
 
 def drivers(request):
-    return render(request, 'load_planer/drivers.html')
+    driver_list = Driver.objects.all()
+    return render(request, 'load_planer/drivers.html', {"driver_list":driver_list})
+
+@login_required
+def reg_driver(request):
+    if request.method != 'POST':
+        return HttpResponse("Error: Forbidden method!")
+    else:
+        form = DriverForm(request.POST)
+        if form.is_valid():
+            username = User.objects.get(pk=request.user.id)
+            first_name = form.cleaned_data["first_name"]
+            last_name = form.cleaned_data["last_name"]
+            driver_id = form.cleaned_data["driver_id"]
+            try:
+                driver = Driver(
+                    username=username,
+                    first_name=first_name,
+                    last_name=last_name,
+                    driver_id=driver_id
+                    )
+                driver.save()
+                return render(request, 'load_planer/gateway.html')
+            except:
+                return HttpResponse("Error: form is not valid!")
+        return 0
 
 
 def delivery_plans(request):
@@ -64,7 +98,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("gateway"))
         else:
             return render(request, "load_planer/login.html", {
                 "message": "Invalid username and/or password."
@@ -100,7 +134,7 @@ def register(request):
                 "message": "Username already taken."
             })
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("gateway"))
     else:
         return render(request, "load_planer/register.html")
 
@@ -118,3 +152,12 @@ class TruckForm(forms.ModelForm):
         widgets = {
             'truck_id' : forms.Textarea(attrs={'placeholder':'Truck ID: AA000', 'rows':1, 'class':"form-control"}),
         }
+
+    
+class DriverForm(forms.ModelForm):
+    class Meta:
+        model = Driver
+        fields = ["first_name", "last_name", "driver_id"]
+        first_name = forms.CharField()
+        last_name = forms.CharField()
+        driver_id = forms.CharField()
