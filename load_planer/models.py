@@ -26,7 +26,7 @@ class Truck(models.Model):
     zones = models.IntegerField(blank=False) # Number of temperature controll zones(2 or 3)
 
     def __str__(self):
-        return f"Reefer truck with id: ${self.truck_id} fits ${self.pallet_size} pallets and has ${self.zones} temperature zones."
+        return f"Reefer truck with id: {self.truck_id} fits {self.pallet_size} pallets and has {self.zones} temperature zones."
 
 
 class Destination(models.Model):
