@@ -12,10 +12,20 @@
         
         {% if driver_list %}
             {% for driver in driver_list %}
-                {{ driver }}
+                {{ driver }}<br>
             {% endfor %}
         {% else %}
         <p> No drivers in the list</p>
         {% endif %}
+        <br> <br>
+        {% if verified_drivers %}
+            {% for item in verified_drivers %}
+            {{ item }} 
+            <p>verify driver {{ item.username }}</p>
+            <br>
+            {% endfor %}
+        {% else %}
+            <p> You have no verified drivers.</p>
+        {% endif%}
     </div>  
 {% endblock %}

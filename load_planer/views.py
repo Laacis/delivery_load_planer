@@ -53,10 +53,12 @@ def trucks(request):
         
         return render(request, 'load_planer/trucks.html', {"truck_form": form, "trucks": trucks})
 
-
+@login_required
 def drivers(request):
     driver_list = Driver.objects.all()
-    return render(request, 'load_planer/drivers.html', {"driver_list":driver_list})
+    # Only show drivers verified of not, don't show planers
+    verified_drivers = Profile.objects.filter(is_planer=False)
+    return render(request, 'load_planer/drivers.html', {"driver_list":driver_list, "verified_drivers":verified_drivers})
 
 @login_required
 def reg_driver(request):
@@ -77,6 +79,8 @@ def reg_driver(request):
                     driver_id=driver_id
                     )
                 driver.save()
+                prof = Profile(username=username)
+                prof.save()
                 return render(request, 'load_planer/gateway.html')
             except:
                 return HttpResponse("Error: form is not valid!")

@@ -10,7 +10,7 @@ class Driver(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=30, blank=False) 
     last_name = models.CharField(max_length=30, blank=False)
-    driver_id = models.CharField(max_length=3, blank=True) # driver_initials or driver ID
+    driver_id = models.CharField(max_length=3, blank=True, primary_key=True) # driver_initials or driver ID
 
     def __str__(self):
         return f"user: {self.username} is {self.first_name} {self.last_name} and has driver ID: {self.driver_id}"
@@ -22,7 +22,7 @@ class Profile(models.Model):
     is_driver = models.BooleanField(default=False)  # Planer can change this to true, to verify driver
     
     def __str__(self):
-        return f"User {self.username} is Planer:{self.is_planer} / is Driver:{self.is_driver}"
+        return f"User {self.username} is verified driver: {self.is_driver}"
 
 
 class Truck(models.Model):
