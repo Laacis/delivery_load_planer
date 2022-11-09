@@ -91,6 +91,45 @@ def delivery_plans(request):
     return render(request, 'load_planer/delivery_plans.html')
 
 
+@login_required
+def profile(request, profileid):
+    try:
+        user_data = User.objects.get(pk=profileid)
+        driver_data = Driver.objects.get(username=user_data)
+        profile_data = Profile.objects.get(username=user_data)
+        context = {
+            "user":user_data, 
+            "profile_details":driver_data, 
+            "verified":profile_data,
+            }
+        return render(request, 'load_planer/profile.html', context)
+    except:
+        return HttpResponse("Error: Profile doesn't exist!")
+
+
+@login_required
+def verify(request, profileid):
+    if request.method != 'POST':
+        return HttpResponse("Error: Forbidden method!")
+    else:
+        try:
+            user = User.objects.get(pk=profileid)
+            driver = Profile.objects.get(username=user)
+            if driver.is_driver:
+                # Going to remove the driver from the Verified Drivers
+                driver.is_driver = False
+                driver.save()
+                return HttpResponseRedirect(reverse("profile", kwargs={'profileid':profileid}))
+            else:
+                # Going to verify driver
+                driver.is_driver = True
+                driver.save()
+                return HttpResponseRedirect(reverse("profile", kwargs={'profileid':profileid}))
+
+        except:
+            return HttpResponse("Error: Uanbale to register user!")
+
+
 def login_view(request):
     if request.method == "POST":
 
@@ -165,3 +204,5 @@ class DriverForm(forms.ModelForm):
         first_name = forms.CharField()
         last_name = forms.CharField()
         driver_id = forms.CharField()
+
+

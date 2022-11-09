@@ -22,7 +22,11 @@ class Profile(models.Model):
     is_driver = models.BooleanField(default=False)  # Planer can change this to true, to verify driver
     
     def __str__(self):
-        return f"User {self.username} is verified driver: {self.is_driver}"
+        if self.is_driver == False:
+            return f"Driver with id: {self.username} is NOT verified as Driver."
+        else:
+            return f"Driver with id: {self.username} is verified as Driver."
+        
 
 
 class Truck(models.Model):

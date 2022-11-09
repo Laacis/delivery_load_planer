@@ -14,4 +14,6 @@ urlpatterns = [
     path("reg_driver", views.reg_driver, name="reg_driver"),
     path("delivery_plan", views.delivery_plans, name="delivery_plans"),
     path("gateway", views.gateway, name="gateway"),
+    path("profile/<int:profileid>", views.profile, name="profile"),
+    path("verify/<int:profileid>", views.verify, name="verify_driver")
 ]
