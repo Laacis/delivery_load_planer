@@ -93,18 +93,25 @@ def delivery_plans(request):
 
 @login_required
 def profile(request, profileid):
-    try:
-        user_data = User.objects.get(pk=profileid)
-        driver_data = Driver.objects.get(username=user_data)
-        profile_data = Profile.objects.get(username=user_data)
-        context = {
-            "user":user_data, 
-            "profile_details":driver_data, 
-            "verified":profile_data,
-            }
-        return render(request, 'load_planer/profile.html', context)
-    except:
-        return HttpResponse("Error: Profile doesn't exist!")
+    # Only Planers should be allowed to see other users/drivers profiles
+    planer = Profile.objects.get(username=request.user.id)
+    if planer.is_planer or (profileid == request.user.id):
+        try:
+            user_data = User.objects.get(pk=profileid)
+            driver_data = Driver.objects.get(username=user_data)
+            profile_data = Profile.objects.get(username=user_data)
+            context = {
+                "user":user_data, 
+                "profile_details":driver_data, 
+                "verified":profile_data,
+                }
+            return render(request, 'load_planer/profile.html', context)
+        except:
+            return HttpResponse("Error: Profile doesn't exist!")
+
+    else:
+        return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
+
 
 
 @login_required

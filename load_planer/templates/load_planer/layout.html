@@ -25,7 +25,7 @@
                             <a class="nav-link active" aria-current="page" href="{% url 'tour_planing' %}">Tour Planing</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">{{ user.username }}</a>
+                            <a class="nav-link active" aria-current="page" href="{% url 'profile' user.id %}">{{ user.username }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="#">Your plan</a>

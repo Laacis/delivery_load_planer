@@ -16,18 +16,22 @@
             <p> Nothing to display </p>
         {% endif %}
 
-        {% if verified.is_driver == False %}
-        <form action="{% url 'verify_driver' user.id %}" method="post">
-            {% csrf_token %}
-
-            <input type="submit" value="Verify driver" class="btn btn-secondary form-control">
-        </form>
+        {% if user.id == request.user.id %}
+            <p> TODO: Let user edit user's profile</p>
         {% else %}
-        <form action="{% url 'verify_driver' user.id %}" method="post">
-            {% csrf_token %}
+            {% if verified.is_driver == False %}
+            <form action="{% url 'verify_driver' user.id %}" method="post">
+                {% csrf_token %}
 
-            <input type="submit" value="Remove driver" class="btn btn-secondary form-control">
-        </form>
+                <input type="submit" value="Verify driver" class="btn btn-secondary form-control">
+            </form>
+            {% else %}
+            <form action="{% url 'verify_driver' user.id %}" method="post">
+                {% csrf_token %}
+
+                <input type="submit" value="Remove driver" class="btn btn-secondary form-control">
+            </form>
+            {% endif %}
         {% endif %}
     </div>  
 {% endblock %}
