@@ -110,25 +110,30 @@ def profile(request, profileid):
 @login_required
 def verify(request, profileid):
     if request.method != 'POST':
+        # Only POST method allowed
         return HttpResponse("Error: Forbidden method!")
     else:
-        try:
-            user = User.objects.get(pk=profileid)
-            driver = Profile.objects.get(username=user)
-            if driver.is_driver:
-                # Going to remove the driver from the Verified Drivers
-                driver.is_driver = False
-                driver.save()
-                return HttpResponseRedirect(reverse("profile", kwargs={'profileid':profileid}))
-            else:
-                # Going to verify driver
-                driver.is_driver = True
-                driver.save()
-                return HttpResponseRedirect(reverse("profile", kwargs={'profileid':profileid}))
-
-        except:
-            return HttpResponse("Error: Uanbale to register user!")
-
+        # Only planer should be able to verify drivers
+        planer = Profile.objects.get(username=request.user.id)
+        if planer.is_planer:
+            try:
+                user = User.objects.get(pk=profileid)
+                driver = Profile.objects.get(username=user)
+                if driver.is_driver:
+                    # Going to remove the driver from the Verified Drivers
+                    driver.is_driver = False
+                    driver.save()
+                    return HttpResponseRedirect(reverse("profile", kwargs={'profileid':profileid}))
+                else:
+                    # Going to verify driver
+                    driver.is_driver = True
+                    driver.save()
+                    return HttpResponseRedirect(reverse("profile", kwargs={'profileid':profileid}))
+            except:
+                return HttpResponse("Error: Uanbale to register user!")
+        else:
+            return HttpResponse("Error: Only Planer can verify Drivers!")
+        
 
 def login_view(request):
     if request.method == "POST":
