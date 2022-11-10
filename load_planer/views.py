@@ -99,7 +99,7 @@ def delivery_plans(request):
 
 
 @login_required
-def destination(request):
+def destinations(request):
     # make sure it's only viewed by Planer
     destination_form = DestinationForm()
     destination_list = Destination.objects.all()
@@ -127,6 +127,7 @@ def reg_destination(request):
                 destination.save()
                 return HttpResponseRedirect(reverse("destination"))
             else:
+                # if the "destination_id" field is not unique, it will drop this Response as well as form is not valid.
                 return HttpResponse("Error: Form is not valid!")
             
     except:
@@ -137,22 +138,28 @@ def reg_destination(request):
 
 @login_required
 def profile(request, profileid):
+    """ TODO
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        NEED TO REDO THIS ALL!
+    """
+    
     # Only Planers should be allowed to see other users/drivers profiles
     planer = Profile.objects.get(username=request.user.id)
     if planer.is_planer or (profileid == request.user.id):
         try:
             user_data = User.objects.get(pk=profileid)
             driver_data = Driver.objects.get(username=user_data)
-            profile_data = Profile.objects.get(username=user_data)
+            
+            verification_data = Profile.objects.get(username=user_data)
+
             context = {
-                "user":user_data, 
+                "profile":user_data, 
                 "profile_details":driver_data, 
-                "verified":profile_data,
+                "verified":verification_data,
                 }
             return render(request, 'load_planer/profile.html', context)
         except:
             return HttpResponse("Error: Profile doesn't exist!")
-
     else:
         # if not a Planer - redirect to own profile page
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))

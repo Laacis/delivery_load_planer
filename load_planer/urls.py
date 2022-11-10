@@ -17,5 +17,5 @@ urlpatterns = [
     path("profile/<int:profileid>", views.profile, name="profile"),
     path("verify/<int:profileid>", views.verify, name="verify_driver"),
     path("reg_destination", views.reg_destination, name="reg_destination"),
-    path("destination", views.destination, name="destination")
+    path("destinations", views.destinations, name="destinations")
 ]
