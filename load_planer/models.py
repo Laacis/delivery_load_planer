@@ -40,9 +40,12 @@ class Truck(models.Model):
 
 
 class Destination(models.Model):
-    destination_id = models.CharField(max_length=30, blank=False)
+    destination_id = models.CharField(max_length=30, blank=False, unique=True)
     address = models.CharField(max_length=90, blank=False) 
     # Add more detailed address fields if you need to, since this project is not going to have map related components - I don't need more details
+
+    def __str__(self):
+        return f"id: {self.destination_id} and address {self.address}."
 
 
 class Delivery_plan(models.Model):

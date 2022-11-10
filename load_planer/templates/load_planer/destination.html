@@ -1,0 +1,30 @@
+{% extends "load_planer/layout.html" %}
+{% load static %}
+
+{% block body %}
+    
+    <div class="container text-center">
+        <h1> Destination</h1>
+        
+        <p> TODO: </p>
+        <p> register a Delivery destination</p>
+        <p> display a list of registred Delivery destinations</p>
+        <p> make a delivery list based on registred destinations</p>
+
+        <p> Form:</p>
+        <form action="{% url 'reg_destination' %}" method="post">
+            {% csrf_token %}
+            {{ destination_form }}
+            <input type="submit" value="Add delivery destination" class="btn btn-primary form-control">
+        </form>
+
+        {% if destination_list %}
+            <p>List if destination registred:</p><br>
+            {% for destination in destination_list %}
+                {{ destination }}<br>
+            {% endfor %}
+        {% else %}
+        <p> list is emply</p>
+        {% endif %}
+    </div>  
+{% endblock %}

@@ -17,7 +17,8 @@
         {% endif %}
 
         {% if user.id == request.user.id %}
-            <p> TODO: Let user edit user's profile</p>
+        <br>
+            <br><p> TODO: Let user edit user's profile</p>
         {% else %}
             {% if verified.is_driver == False %}
             <form action="{% url 'verify_driver' user.id %}" method="post">

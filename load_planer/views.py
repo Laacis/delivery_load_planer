@@ -86,9 +86,53 @@ def reg_driver(request):
                 return HttpResponse("Error: form is not valid!")
         return 0
 
-
+@login_required
 def delivery_plans(request):
-    return render(request, 'load_planer/delivery_plans.html')
+    # make sure it's only viewed by Planer
+    destination_form = DestinationForm()
+    destination_list = Destination.objects.all()
+    context = {
+        "destination_form": destination_form,
+        "destination_list": destination_list,
+        }
+    return render(request, 'load_planer/delivery_plans.html', context)
+
+
+@login_required
+def destination(request):
+    # make sure it's only viewed by Planer
+    destination_form = DestinationForm()
+    destination_list = Destination.objects.all()
+    context = {
+        "destination_form": destination_form,
+        "destination_list": destination_list,
+        }
+    return render(request, 'load_planer/destination.html', context)
+
+
+@login_required
+def reg_destination(request):
+    # only Planer may send request and only POST reqest is accepted
+    try:
+        planer = Profile.objects.get(username=request.user.id)
+        if request.method != 'POST' or not planer.is_planer:
+            return HttpResponse("Error: Forbidden method or wrong user!")
+        else:
+            # Register a new Destination
+            form = DestinationForm(request.POST)
+            if form.is_valid():
+                id = form.cleaned_data["destination_id"]
+                address = form.cleaned_data["address"]
+                destination = Destination(destination_id = id, address = address)
+                destination.save()
+                return HttpResponseRedirect(reverse("destination"))
+            else:
+                return HttpResponse("Error: Form is not valid!")
+            
+    except:
+        # if user is not verified as Driver nor Planer
+        return HttpResponse("Error: Forbidden action!")
+
 
 
 @login_required
@@ -110,6 +154,7 @@ def profile(request, profileid):
             return HttpResponse("Error: Profile doesn't exist!")
 
     else:
+        # if not a Planer - redirect to own profile page
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
 
 
@@ -218,3 +263,9 @@ class DriverForm(forms.ModelForm):
         driver_id = forms.CharField()
 
 
+class DestinationForm(forms.ModelForm):
+    class Meta:
+        model = Destination
+        fields = ["destination_id", "address"]
+        destinationid = forms.CharField()
+        address = forms.CharField()
