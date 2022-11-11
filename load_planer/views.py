@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -111,6 +112,7 @@ def destinations(request):
     return render(request, 'load_planer/destinations.html', context)
 
 @login_required
+@require_http_methods(["GET"])
 def destination(request, destination_id):
     # checking if the destination id exists
     try:
@@ -118,23 +120,16 @@ def destination(request, destination_id):
     except:
         return HttpResponse(f"Destination  id: {destination_id} doesn't exist!")
 
-    if request.method == 'POST':
-        # POST request may be only made by Planer
-        return HttpResponse(f"RPOST reqeust on Destination  id: {destination_id}!")
+    user = User.objects.get(pk=request.user.id)
+    if user.is_planer() or user.is_driver():
+        context = {
+            "destination_id":destination.destination_id,
+            "address":destination.address
+        }
+        return render(request, 'load_planer/destination_details.html', context)
+        # return HttpResponse(f" DRIVER Requested destination with id: {destination_id}!")
     else:
-        # Planer may change the content of the page/ Driver can only view / unverified user is redirected to own profile
-        planer = User.objects.get(pk=request.user.id)
-        if planer.is_planer():
-            return HttpResponse(f"PLANER Requested destination with id: {destination_id}!")
-        elif planer.is_driver():
-            context = {
-                "destination_id":destination.destination_id,
-                "address":destination.address
-            }
-            return render(request, 'load_planer/destination_details.html', context)
-            # return HttpResponse(f" DRIVER Requested destination with id: {destination_id}!")
-        else:
-            return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
+        return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
 
 
 @login_required

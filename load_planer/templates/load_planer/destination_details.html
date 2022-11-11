@@ -5,7 +5,11 @@
     
     <div class="container text-center">
         <h1> Destination id:{{ destination_id }}</h1>
-        {{ address }}
+        <p> Address: {{ address }}</p>
 
+        {% if request.user.is_planer %}
+        <br>
+        <p>TODO: Write Javascript to DELETE / Edit details on the Destination For a PLANER!</p>
+        {% endif %}
     </div>  
 {% endblock %}
