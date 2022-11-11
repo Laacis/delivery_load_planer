@@ -21,7 +21,7 @@
         {% if destination_list %}
             <p>List if destination registred:</p><br>
             {% for destination in destination_list %}
-                {{ destination }}<br>
+                <a href="{% url 'destination' destination.destination_id %}">{{ destination }}</a><br>
             {% endfor %}
         {% else %}
         <p> list is emply</p>

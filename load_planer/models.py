@@ -6,8 +6,15 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     def is_planer(self):
         try:
-            test = Profile.objects.get(username=self)
-            return test.is_planer
+            planer = Profile.objects.get(username=self)
+            return planer.is_planer
+        except:
+            return False
+
+    def is_driver(self):
+        try:
+            driver = Profile.objects.get(username=self)
+            return driver.is_driver
         except:
             return False
 

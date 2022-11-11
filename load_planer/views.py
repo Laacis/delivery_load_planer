@@ -108,14 +108,30 @@ def destinations(request):
         "destination_form": destination_form,
         "destination_list": destination_list,
         }
-    return render(request, 'load_planer/destination.html', context)
+    return render(request, 'load_planer/destinations.html', context)
+
+@login_required
+def destination(request, destination_id):
+    if request.method == 'POST':
+        # POST request may be only made by Planer
+        return HttpResponse(f"RPOST reqeust on Destination  id: {destination_id}!")
+    else:
+        # Planer may change the content of the page/ Driver can only view / unverified user is redirected to own profile
+        planer = User.objects.get(pk=request.user.id)
+        if planer.is_planer():
+            return HttpResponse(f"PLANER Requested destination with id: {destination_id}!")
+        elif planer.is_driver():
+            
+            return HttpResponse(f" DRIVER Requested destination with id: {destination_id}!")
+        else:
+            return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
 
 
 @login_required
 def reg_destination(request):
     # only Planer may send request and only POST reqest is accepted
     try:
-        planer = Profile.objects.get(username=request.user.id)
+        planer = User.objects.get(pk=request.user.id)
         if request.method != 'POST' or not planer.is_planer:
             return HttpResponse("Error: Forbidden method or wrong user!")
         else:
@@ -168,8 +184,6 @@ def profile(request, profileid):
             "driver_form": None
         }
         return render(request, 'load_planer/profile.html', context)
-
-
         # return HttpResponse(f"IS Planer {requesting_user.is_planer()}")
     else:
         # If not a Planer, user can only view own account
@@ -198,14 +212,14 @@ def profile(request, profileid):
 
 
 @login_required
-def verify(request, profileid):
+def verify_driver(request, profileid):
     if request.method != 'POST':
         # Only POST method allowed
         return HttpResponse("Error: Forbidden method!")
     else:
         # Only planer should be able to verify drivers
-        planer = Profile.objects.get(username=request.user.id)
-        if planer.is_planer:
+        planer = User.objects.get(pk=request.user.id)
+        if planer.is_planer():
             try:
                 user = User.objects.get(pk=profileid)
                 driver = Profile.objects.get(username=user)
