@@ -8,9 +8,22 @@
         
         <p> TODO: </p>
         <p> register a Delivery destination</p>
-        <p> display a list of registred Delivery destinations</p>
         <p> make a delivery list based on registred destinations</p>
+        {% if delivery_plan_list %}
+            {% for plan in delivery_plan_list %}
+                {{ plan }}<br>
+            {% endfor %}
+        {% else %}
+        <p> this!</p>
+        {% endif %}
 
-
+        <br><br>
+        {% if form %}
+            <form action="#" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" value="Register" class="btn btn-primary form-control">
+            </form>
+        {% endif %}
     </div>  
 {% endblock %}

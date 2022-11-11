@@ -76,3 +76,6 @@ class Delivery_plan(models.Model):
     # del_order is delivery order sequesnce
     del_order = models.PositiveBigIntegerField()
     del_loc = models.ForeignKey(Destination, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f" Delivery ID: {self.delivery_id}"

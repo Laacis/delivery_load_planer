@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import formset_factory
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -93,9 +94,30 @@ def delivery_plans(request):
     # make sure it's only viewed by Planer
     destination_form = DestinationForm()
     destination_list = Destination.objects.all()
+    try:
+        delivery_plan_list = Delivery_plan.objects.all()
+    except:
+        delivery_plan_list = []
+    
+    # need to get number of delivery count from every DeliveryID
+    unique_list = []
+    for unit in delivery_plan_list:
+        if unit.delivery_id not in unique_list:
+            unique_list.append(unit.delivery_id)
+    # cleaning up the delivery_plan_list for population        
+    delivery_plan_list = []
+
+    """ 
+            I SHOULD FIND BETTER WAY TO DO THIS
+    """
+    for id in unique_list:
+        delivery = Delivery_plan.objects.filter(delivery_id=id)
+        delivery_plan_list.append(f"delivery ID:{id} has {len(delivery)} destination(s).")
     context = {
         "destination_form": destination_form,
         "destination_list": destination_list,
+        "delivery_plan_list": delivery_plan_list,
+        "form":DeliveryPlanForm()
         }
     return render(request, 'load_planer/delivery_plans.html', context)
 
@@ -326,3 +348,9 @@ class DestinationForm(forms.ModelForm):
         fields = ["destination_id", "address"]
         destinationid = forms.CharField()
         address = forms.CharField()
+
+
+class DeliveryPlanForm(forms.ModelForm):
+    class Meta:
+        model = Delivery_plan
+        fields = ["delivery_id", "querter", "year", "del_order", "del_loc"]
