@@ -112,6 +112,12 @@ def destinations(request):
 
 @login_required
 def destination(request, destination_id):
+    # checking if the destination id exists
+    try:
+        destination = Destination.objects.get(destination_id=destination_id)
+    except:
+        return HttpResponse(f"Destination  id: {destination_id} doesn't exist!")
+
     if request.method == 'POST':
         # POST request may be only made by Planer
         return HttpResponse(f"RPOST reqeust on Destination  id: {destination_id}!")
@@ -121,8 +127,12 @@ def destination(request, destination_id):
         if planer.is_planer():
             return HttpResponse(f"PLANER Requested destination with id: {destination_id}!")
         elif planer.is_driver():
-            
-            return HttpResponse(f" DRIVER Requested destination with id: {destination_id}!")
+            context = {
+                "destination_id":destination.destination_id,
+                "address":destination.address
+            }
+            return render(request, 'load_planer/destination_details.html', context)
+            # return HttpResponse(f" DRIVER Requested destination with id: {destination_id}!")
         else:
             return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
 
@@ -132,7 +142,7 @@ def reg_destination(request):
     # only Planer may send request and only POST reqest is accepted
     try:
         planer = User.objects.get(pk=request.user.id)
-        if request.method != 'POST' or not planer.is_planer:
+        if request.method != 'POST' or not planer.is_planer():
             return HttpResponse("Error: Forbidden method or wrong user!")
         else:
             # Register a new Destination
@@ -142,7 +152,7 @@ def reg_destination(request):
                 address = form.cleaned_data["address"]
                 destination = Destination(destination_id = id, address = address)
                 destination.save()
-                return HttpResponseRedirect(reverse("destination"))
+                return HttpResponseRedirect(reverse("destination", kwargs={'destination_id':id}))
             else:
                 # if the "destination_id" field is not unique, it will drop this Response as well as form is not valid.
                 return HttpResponse("Error: Form is not valid!")
