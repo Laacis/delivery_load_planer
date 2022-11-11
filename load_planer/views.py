@@ -71,6 +71,7 @@ def reg_driver(request):
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]
             driver_id = form.cleaned_data["driver_id"]
+            # checking if driver_id
             try:
                 driver = Driver(
                     username=username,
@@ -83,8 +84,8 @@ def reg_driver(request):
                 prof.save()
                 return render(request, 'load_planer/gateway.html')
             except:
-                return HttpResponse("Error: form is not valid!")
-        return 0
+                return HttpResponse("Error: Form could not be saved!")
+        return HttpResponse("Error: form is not valid!")
 
 @login_required
 def delivery_plans(request):
@@ -138,31 +139,61 @@ def reg_destination(request):
 
 @login_required
 def profile(request, profileid):
-    """ TODO
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        NEED TO REDO THIS ALL!
-    """
-    
-    # Only Planers should be allowed to see other users/drivers profiles
-    planer = Profile.objects.get(username=request.user.id)
-    if planer.is_planer or (profileid == request.user.id):
+    # if the user is requesting own profile
+    requesting_user = User.objects.get(pk=request.user.id)
+    # Checking if the user is a planer
+    if requesting_user.is_planer():
         try:
-            user_data = User.objects.get(pk=profileid)
-            driver_data = Driver.objects.get(username=user_data)
-            
-            verification_data = Profile.objects.get(username=user_data)
-
-            context = {
-                "profile":user_data, 
-                "profile_details":driver_data, 
-                "verified":verification_data,
-                }
-            return render(request, 'load_planer/profile.html', context)
+            #checking if profile exists:
+            profile_data = User.objects.get(pk=profileid)
         except:
-            return HttpResponse("Error: Profile doesn't exist!")
+            return HttpResponse("Requested ID doesn't exist!")
+        try:
+            # checking if the user has supplied details for Driver registration
+            driver_data = Driver.objects.get(username=profileid)
+            verification_data = Profile.objects.get(username=profileid)
+        except:
+            # if the planer is viewing own profile it will have no driver_data
+            if profileid == requesting_user.id:
+                driver_data = None
+                verification_data = Profile.objects.get(username=profileid)
+                # return HttpResponse("Planer viewing own profile")
+            else:
+                driver_data = None
+                verification_data = None
+        context = {
+            "profile":profile_data,
+            "profile_details": driver_data,
+            "verified": verification_data,
+            "driver_form": None
+        }
+        return render(request, 'load_planer/profile.html', context)
+
+
+        # return HttpResponse(f"IS Planer {requesting_user.is_planer()}")
     else:
-        # if not a Planer - redirect to own profile page
-        return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
+        # If not a Planer, user can only view own account
+        if profileid != request.user.id:
+            #if the user is trying to view another users profile, redirect back to own profile
+            return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
+        # Checking if the user has given details for Driver registration
+        try:
+            driver_data = Driver.objects.get(username=requesting_user)
+            verification_data = Profile.objects.get(username=requesting_user)
+            context = {
+                "profile":requesting_user,
+                "profile_details": driver_data,
+                "verified": verification_data,
+                "driver_form": None
+            }
+        except:
+            context = {
+                "profile":requesting_user,
+                "profile_details": 0,
+                "verified": 0,
+                "driver_form": DriverForm()
+            }
+        return render(request, 'load_planer/profile.html', context)
 
 
 

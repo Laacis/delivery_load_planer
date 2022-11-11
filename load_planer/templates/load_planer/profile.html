@@ -13,25 +13,46 @@
             <br><br>
             {{ verified }}
         {% else %}
-            <p> Nothing to display </p>
+            <p> Nothing to display, no Prodile details provided! </p>
         {% endif %}
 
         {% if profile.id == request.user.id %}
         <br>
             <br><p> TODO: Let user edit user's profile</p>
         {% else %}
-            {% if verified.is_driver == False %}
-            <form action="{% url 'verify_driver' user.id %}" method="post">
-                {% csrf_token %}
+            {% if profile_details == None %}
+                <p> This user didn't supply any details to register as Driver</p>
+                {% else %}
+                {% if verified.is_driver == False %}
+                <form action="{% url 'verify_driver' profile.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Verify driver" class="btn btn-secondary form-control">
+                </form>
+                {% else %}
+                <form action="{% url 'verify_driver' profile.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Remove driver" class="btn btn-secondary form-control">
+                </form>
+                {% endif %}
+            {% endif %}
+        {% endif %}
 
-                <input type="submit" value="Verify driver" class="btn btn-secondary form-control">
-            </form>
+        {% if driver_form %}
+        <form action="{% url 'reg_driver' %}" method="post">
+            {% csrf_token %}
+            {{ driver_form }}
+
+            <input type="submit" value="Register" class="btn btn-primary form-control">
+        </form>
+        {% else %}
+            {% if verified.is_driver == True%}
+            <p> Verified as driver</p> {{ verified }}
+            {% elif verified.is_driver == None %}
+            <p> User didn't supply any details for registration. Let the Planer Edit this profile.</p>
+            {% elif verified.is_planer == True %}
+            <p> You are a Planer!</p>
             {% else %}
-            <form action="{% url 'verify_driver' user.id %}" method="post">
-                {% csrf_token %}
-
-                <input type="submit" value="Remove driver" class="btn btn-secondary form-control">
-            </form>
+            <p> Not verified as driver, please await Verification by Planer</p>
             {% endif %}
         {% endif %}
     </div>  

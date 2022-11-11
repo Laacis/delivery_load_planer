@@ -4,13 +4,18 @@ from django.contrib.auth.models import AbstractUser
 # Models
 
 class User(AbstractUser):
-    pass
+    def is_planer(self):
+        try:
+            test = Profile.objects.get(username=self)
+            return test.is_planer
+        except:
+            return False
 
 class Driver(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=30, blank=False) 
     last_name = models.CharField(max_length=30, blank=False)
-    driver_id = models.CharField(max_length=3, blank=True, primary_key=True) # driver_initials or driver ID
+    driver_id = models.CharField(max_length=3, blank=False, primary_key=True) # driver_initials or driver ID
 
     def __str__(self):
         return f"user: {self.username} is {self.first_name} {self.last_name} and has driver ID: {self.driver_id}"
