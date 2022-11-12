@@ -8,7 +8,7 @@
         
         {% if driver_list %}
             {% for driver in driver_list %}
-                {{ driver }}<br>
+               <a href="{% url 'profile' driver.uid %}"> {{ driver }} </a> <br>
             {% endfor %}
         {% else %}
         <p> No drivers in the list</p>
@@ -17,7 +17,7 @@
         {% if verified_drivers %}
             {% for item in verified_drivers %}
             {{ item }} 
-            <p>verify driver {{ item.username }}</p>
+            <p>verify driver {{ item.username }}</p><a href="#"> {{ item.username}}</a>
             <br>
             {% endfor %}
         {% else %}

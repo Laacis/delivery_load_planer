@@ -17,6 +17,7 @@ class User(AbstractUser):
             return driver.is_driver
         except:
             return False
+        
 
 class Driver(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -26,6 +27,10 @@ class Driver(models.Model):
 
     def __str__(self):
         return f"user: {self.username} is {self.first_name} {self.last_name} and has driver ID: {self.driver_id}"
+
+    def uid(self):
+        user = User.objects.get(pk=self.username.id)
+        return user.id
 
 
 class Profile(models.Model):
