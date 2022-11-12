@@ -6,34 +6,21 @@
     <div class="container text-center">
         <h1> Delivery plans</h1>
         
-        <p> TODO: </p>
-        <p> register a Delivery destination</p>
-        <p> make a delivery list based on registred destinations</p>
-        {% if delivery_plan_list %}
-            {% for plan in delivery_plan_list %}
-                <a href="{% url 'delivery_plan' plan.delivery_id %}">{{ plan }}</a><br>
-            {% endfor %}
-        {% else %}
-        <p> this!</p>
-        {% endif %}
+    {% if delivery_plan_list %}
+        {% for delivery_plan in delivery_plan_list%}
+            {{ delivery_plan }}<br>
+        {% endfor %}
+    {% endif %}
 
-        <br><br>
-        {% if form %}
-            <form action="#" method="post">
-                {% csrf_token %}
-                {{ form }}
-                <input type="submit" value="Register" class="btn btn-primary form-control">
-            </form>
-        {% endif %}
-
-
-        <strong>this</strong>
-        {% if pre_form %}
-        <form action="{% url 'del_plan_preform' %}" method="post">
-            {% csrf_token %}
-            {{ pre_form }}
-            <input type="submit" value="Request Registration Form" class="btn btn-primary form-control">
-        </form>
+    {% if form %}
+    <p> FORM HERE!</p><br>
+    <form action="#" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Register" class="btn btn-primary form-control">
+    </form>
+    {% else %}
+        <p>No form to display</p>
     {% endif %}
     </div>  
 {% endblock %}

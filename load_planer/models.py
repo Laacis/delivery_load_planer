@@ -79,11 +79,9 @@ class Delivery_plan(models.Model):
     querter = models.PositiveSmallIntegerField(choices=Quarter.choices, default=Quarter.Q1)
     year = models.PositiveSmallIntegerField()
     # del_order is delivery order sequesnce
-    del_order = models.PositiveSmallIntegerField()
-    del_loc = models.ForeignKey(Destination, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ("del_order", "del_loc")
+    # del_order = models.PositiveSmallIntegerField()
+    # del_loc = models.ForeignKey(Destination, on_delete=models.CASCADE)
+    del_order = models.JSONField()
 
     def __str__(self):
-        return f"Delivery ID: {self.delivery_id} Q: {self.querter} Y:{self.year} odrer NR:{self.del_order} destination: {self.del_loc}"
+        return f"Delivery ID: {self.delivery_id} Q:{self.querter} Year:{self.year} number of destinations: {len(self.del_order)}"

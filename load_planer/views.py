@@ -101,7 +101,20 @@ def del_plan_preform(request):
     if User.objects.get(pk=request.user.id).is_planer():
         pre_form = DeliveryPlanPreForm(request.POST)
         if pre_form.is_valid():
-            return HttpResponse("PLANER: PREForm is valid!")
+            extra = pre_form.cleaned_data["destination_count"] - 1
+            DeliveryPlanFormSet = formset_factory(DeliveryPlanForm, extra=extra)
+            initial_values = {
+                
+            }
+            delivery_plan_formset = DeliveryPlanFormSet(initial = [{
+                "delivery_id" : pre_form.cleaned_data["id"],
+                "year":pre_form.cleaned_data['year'],
+                "quarter": int(pre_form.cleaned_data['quarter'])
+            } ])
+            context = {
+                "formset":delivery_plan_formset,
+            }
+            return render(request, 'load_planer/delivery_plans.html', context)
         else:
             return HttpResponse("PLANER PREFORM not valid!")
     else:
@@ -111,33 +124,15 @@ def del_plan_preform(request):
 @login_required
 def delivery_plans(request):
     # make sure it's only viewed by Planer
-    destination_form = DestinationForm()
-    destination_list = Destination.objects.all()
+
     try:
         delivery_plan_list = Delivery_plan.objects.all()
     except:
         delivery_plan_list = []
-    
-    # # need to get number of delivery count from every DeliveryID
-    # unique_list = []
-    # for unit in delivery_plan_list:
-    #     if unit.delivery_id not in unique_list:
-    #         unique_list.append(unit.delivery_id)
-    # # cleaning up the delivery_plan_list for population        
-    # delivery_plan_list = []
 
-    # """ 
-    #         I SHOULD FIND BETTER WAY TO DO THIS
-    # """
-    # for id in unique_list:
-    #     delivery = Delivery_plan.objects.filter(delivery_id=id)
-    #     delivery_plan_list.append(f"delivery ID:{id} has {len(delivery)} destination(s).")
     context = {
-        "destination_form": destination_form,
-        "destination_list": destination_list,
         "delivery_plan_list": delivery_plan_list,
-        "form":DeliveryPlanForm(),
-        "pre_form": DeliveryPlanPreForm()
+        "form":DeliveryPlanForm()
         }
     return render(request, 'load_planer/delivery_plans.html', context)
 
@@ -373,10 +368,11 @@ class DestinationForm(forms.ModelForm):
 class DeliveryPlanForm(forms.ModelForm):
     class Meta:
         model = Delivery_plan
-        fields = ["delivery_id", "querter", "year", "del_order", "del_loc"]
+        fields = ["delivery_id", "querter", "year", "del_order"]
+        # REWORKED, del_order is now JSONfield
 
 
-
+# NEVER USED
 class DeliveryPlanPreForm(forms.Form):
     CHOICES_YEAR = [(2022, 2022), (2023, 2023), (2024, 2024)]
     id = forms.CharField()
