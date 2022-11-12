@@ -11,7 +11,7 @@
         <p> make a delivery list based on registred destinations</p>
         {% if delivery_plan_list %}
             {% for plan in delivery_plan_list %}
-                {{ plan }}<br>
+                <a href="{% url 'delivery_plan' plan.delivery_id %}">{{ plan }}</a><br>
             {% endfor %}
         {% else %}
         <p> this!</p>
@@ -25,5 +25,15 @@
                 <input type="submit" value="Register" class="btn btn-primary form-control">
             </form>
         {% endif %}
+
+
+        <strong>this</strong>
+        {% if pre_form %}
+        <form action="{% url 'del_plan_preform' %}" method="post">
+            {% csrf_token %}
+            {{ pre_form }}
+            <input type="submit" value="Request Registration Form" class="btn btn-primary form-control">
+        </form>
+    {% endif %}
     </div>  
 {% endblock %}

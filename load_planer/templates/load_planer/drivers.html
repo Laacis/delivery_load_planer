@@ -17,7 +17,6 @@
         {% if verified_drivers %}
             {% for item in verified_drivers %}
             {{ item }} 
-            <p>verify driver {{ item.username }}</p><a href="#"> {{ item.username}}</a>
             <br>
             {% endfor %}
         {% else %}

@@ -90,6 +90,25 @@ def reg_driver(request):
         return HttpResponse("Error: form is not valid!")
 
 @login_required
+def delivery_plan(request, delivery_plan_id):
+    return HttpResponse(f"Delivery plan{delivery_plan_id} requested!")
+
+
+@login_required
+@require_http_methods("POST")
+def del_plan_preform(request):
+    # only Planer may send this request
+    if User.objects.get(pk=request.user.id).is_planer():
+        pre_form = DeliveryPlanPreForm(request.POST)
+        if pre_form.is_valid():
+            return HttpResponse("PLANER: PREForm is valid!")
+        else:
+            return HttpResponse("PLANER PREFORM not valid!")
+    else:
+        return HttpResponse("NOT PLANER REQUEST!")
+
+
+@login_required
 def delivery_plans(request):
     # make sure it's only viewed by Planer
     destination_form = DestinationForm()
@@ -99,25 +118,26 @@ def delivery_plans(request):
     except:
         delivery_plan_list = []
     
-    # need to get number of delivery count from every DeliveryID
-    unique_list = []
-    for unit in delivery_plan_list:
-        if unit.delivery_id not in unique_list:
-            unique_list.append(unit.delivery_id)
-    # cleaning up the delivery_plan_list for population        
-    delivery_plan_list = []
+    # # need to get number of delivery count from every DeliveryID
+    # unique_list = []
+    # for unit in delivery_plan_list:
+    #     if unit.delivery_id not in unique_list:
+    #         unique_list.append(unit.delivery_id)
+    # # cleaning up the delivery_plan_list for population        
+    # delivery_plan_list = []
 
-    """ 
-            I SHOULD FIND BETTER WAY TO DO THIS
-    """
-    for id in unique_list:
-        delivery = Delivery_plan.objects.filter(delivery_id=id)
-        delivery_plan_list.append(f"delivery ID:{id} has {len(delivery)} destination(s).")
+    # """ 
+    #         I SHOULD FIND BETTER WAY TO DO THIS
+    # """
+    # for id in unique_list:
+    #     delivery = Delivery_plan.objects.filter(delivery_id=id)
+    #     delivery_plan_list.append(f"delivery ID:{id} has {len(delivery)} destination(s).")
     context = {
         "destination_form": destination_form,
         "destination_list": destination_list,
         "delivery_plan_list": delivery_plan_list,
-        "form":DeliveryPlanForm()
+        "form":DeliveryPlanForm(),
+        "pre_form": DeliveryPlanPreForm()
         }
     return render(request, 'load_planer/delivery_plans.html', context)
 
@@ -354,3 +374,12 @@ class DeliveryPlanForm(forms.ModelForm):
     class Meta:
         model = Delivery_plan
         fields = ["delivery_id", "querter", "year", "del_order", "del_loc"]
+
+
+
+class DeliveryPlanPreForm(forms.Form):
+    CHOICES_YEAR = [(2022, 2022), (2023, 2023), (2024, 2024)]
+    id = forms.CharField()
+    year = forms.TypedChoiceField(choices=[(x, x) for x in range(2022,2026)], coerce=int)
+    quarter = forms.TypedChoiceField(choices=[(x, x) for x in range(1,5)], coerce=int)
+    destination_count = forms.IntegerField(widget = forms.Select(choices=[(x, x) for x in range(1,21)]))

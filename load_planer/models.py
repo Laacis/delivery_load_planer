@@ -70,17 +70,20 @@ class Delivery_plan(models.Model):
     # Delivery plans are made for a period of 3-4 month, to keep a stable schedule for the customers
     # For this project we're going to use Q1 to Q4 asd Quarters for delivery plans
     class Quarter(models.IntegerChoices):
-        Q1 = 1, "01.01 - 31.03"
-        Q2 = 2, "01.04 - 31.06"
-        Q3 = 3, "01.07 - 30.09"
-        Q4 = 4, "01.10 - 31.12"
+        Q1 = 1, "'Q1' 01.01 - 31.03"
+        Q2 = 2, "'Q2' 01.04 - 31.06"
+        Q3 = 3, "'Q3' 01.07 - 30.09"
+        Q4 = 4, "'Q4' 01.10 - 31.12"
 
     delivery_id = models.CharField(max_length=30, blank=False)
     querter = models.PositiveSmallIntegerField(choices=Quarter.choices, default=Quarter.Q1)
     year = models.PositiveSmallIntegerField()
     # del_order is delivery order sequesnce
-    del_order = models.PositiveBigIntegerField()
+    del_order = models.PositiveSmallIntegerField()
     del_loc = models.ForeignKey(Destination, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ("del_order", "del_loc")
+
     def __str__(self):
-        return f" Delivery ID: {self.delivery_id}"
+        return f"Delivery ID: {self.delivery_id} Q: {self.querter} Y:{self.year} odrer NR:{self.del_order} destination: {self.del_loc}"
