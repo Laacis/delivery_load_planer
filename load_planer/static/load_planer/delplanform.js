@@ -54,16 +54,37 @@ function create_form(form_field){
         extra_fields.id = "delivery_plan_extra_fields";
         extra_fields.textContent = "extra field";
         form_field.append(extra_fields);
-        console.log(`building extra ${destination_choice.value} fields`)
+        var destination_field_number = destination_choice.value;
+        console.log(`building extra ${destination_field_number} fields`)
         for (var i = 0; i < destination_choice.value; i++) {
             const set_div = document.createElement('div');
-            set_div.id = `div_id:${i+1}`;
-            set_div.textContent = i+1+".";
-            extra_fields.appendChild(set_div)
+            set_div.id = `destination_div_id:${i+1}`;
+            extra_fields.appendChild(set_div);
+            // Creating Select element for delivery order sequesnce
+            const dest_order = document.createElement('select');
+            dest_order.id = `destination_select_id:${i+1}`;
+            set_div.appendChild(dest_order);
+            var option = document.createElement('option');
+            option.value = i+1;
+            option.text = i+1;
+            dest_order.appendChild(option);
+            // Creating input text for Destination id
+            const destination_id = document.createElement('input');
+            destination_id.type = 'text';
+            destination_id.id = `destination_field_id:${i+1}`;
+            set_div.appendChild(destination_id);
+            
         }
         //cleaning up button and choice field
         button_f_request.remove();
         destination_choice.remove();
+
+        // buttor field
+        const Plan_submit_button = document.createElement('button');
+        Plan_submit_button.classList = 'btn btn-primary';
+        Plan_submit_button.type = 'submit';
+        Plan_submit_button.textContent = "Submit Plan";
+        form_field.appendChild(Plan_submit_button);
     });
     
 
@@ -83,10 +104,5 @@ function create_form(form_field){
             // form_field.appendChild(dest_id_f);
 
 
-    // // buttor field
-    // const button = document.createElement('button');
-    // button.classList = 'btn btn-secondary';
-    // button.type = 'submit';
-    // button.textContent = "Create";
-    // form_field.appendChild(button);
+
 }
