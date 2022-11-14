@@ -65,6 +65,7 @@ class Destination(models.Model):
         return f"id: {self.destination_id} and address {self.address}."
 
 
+
 class Delivery_plan(models.Model):
     # sequesnce of Destinations to build a delivery route
     # Delivery plans are made for a period of 3-4 month, to keep a stable schedule for the customers

@@ -78,6 +78,9 @@ function create_form(form_field){
         //cleaning up button and choice field
         button_f_request.remove();
         destination_choice.remove();
+        
+        // Loading destinations
+            load_list();
 
         // buttor field
         const Plan_submit_button = document.createElement('button');
@@ -86,23 +89,12 @@ function create_form(form_field){
         Plan_submit_button.textContent = "Submit Plan";
         form_field.appendChild(Plan_submit_button);
     });
-    
+}
 
-    // // this is going to be transfered into JSON later :
-    // // {"delivery order from 1 to n":"destination_id"}
-    // // Delivery order field
-    // const del_ord_f = document.createElement('input');
-    // del_ord_f.type = "number";
-    // del_ord_f.min = 1;
-    // del_ord_f.max = 20;
-    // form_field.appendChild(del_ord_f);
-
-
-            // //destination_id field
-            // const dest_id_f = document.createElement('textarea');
-            // dest_id_f.id = "destination_id";
-            // form_field.appendChild(dest_id_f);
-
-
-
+function load_list(){
+    fetch('get_destination_list')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
 }

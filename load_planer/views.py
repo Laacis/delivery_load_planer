@@ -1,4 +1,6 @@
+import json
 from django import forms
+from django.core.serializers import serialize
 from django.forms import formset_factory
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -379,3 +381,12 @@ class DeliveryPlanPreForm(forms.Form):
     year = forms.TypedChoiceField(choices=[(x, x) for x in range(2022,2026)], coerce=int)
     quarter = forms.TypedChoiceField(choices=[(x, x) for x in range(1,5)], coerce=int)
     destination_count = forms.IntegerField(widget = forms.Select(choices=[(x, x) for x in range(1,21)]))
+
+
+
+# API
+def get_destination_list(request):
+    # DOT: Check if the user sending request is a Planer?!
+    destinations = list(Destination.objects.values('destination_id'))
+    result = json.dumps(destinations)
+    return  JsonResponse(result, safe=False)
