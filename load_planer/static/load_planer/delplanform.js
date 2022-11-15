@@ -14,6 +14,7 @@ function create_form(form_field){
 
     // Quarter field
     const quater_f = document.createElement('select');
+    quater_f.id = "quarter";
     form_field.appendChild(quater_f);
     for ( var i = 1; i < 5; i++) {
         var option = document.createElement('option')
@@ -23,6 +24,7 @@ function create_form(form_field){
     }
     // Year field
     const year_f = document.createElement('select');
+    year_f.id = "year";
     form_field.appendChild(year_f);
     for ( var i = 2022; i < 2025; i++) {
         var option = document.createElement('option')
@@ -51,7 +53,6 @@ function create_form(form_field){
         extra_fields.id = "delivery_plan_extra_fields";
         extra_fields.textContent = "extra field";
         form_field.append(extra_fields);
-        var destination_field_number = destination_choice.value;
         for (var i = 0; i < destination_choice.value; i++) {
             const set_div = document.createElement('div');
             set_div.id = `destination_div_id:${i+1}`;
@@ -85,14 +86,15 @@ function create_form(form_field){
         destination_choice.remove();
         
         // Loading destinations
-            load_list();
+        load_list();
 
-        // buttor field
+        // button field
         const Plan_submit_button = document.createElement('button');
         Plan_submit_button.classList = 'btn btn-primary';
         Plan_submit_button.type = 'submit';
         Plan_submit_button.textContent = "Submit Plan";
         form_field.appendChild(Plan_submit_button);
+        Plan_submit_button.addEventListener('click', send_delivery_plan);
     });
 }
 
@@ -145,4 +147,26 @@ function clean_list() {
     catch {
         console.log("No list to clean!");
     }   
+}
+
+function send_delivery_plan(event) {
+    event.preventDefault();
+    const delivery_id = document.getElementById("delivery_id").value;
+    const quarter = document.getElementById("quarter").value;
+    const year = document.getElementById('year').value;
+    const del_order = {};
+    const fields = document.getElementById('delivery_plan_extra_fields').childNodes;
+    for ( let i = 1; i<fields.length; i++) {
+        const del_id_value = document.getElementById("destination_field_id:"+i).value;
+        var obj1 = { [i] : del_id_value};
+        Object.assign(del_order, obj1)
+    }
+    let some = JSON.stringify({
+        "delivery_id": delivery_id,
+        "quarter": quarter,
+        "year:": year,
+        "fields": fields.length-1,
+        "order": del_order,
+      });
+    console.log(some);
 }
