@@ -374,19 +374,9 @@ class DeliveryPlanForm(forms.ModelForm):
         # REWORKED, del_order is now JSONfield
 
 
-# NEVER USED
-class DeliveryPlanPreForm(forms.Form):
-    CHOICES_YEAR = [(2022, 2022), (2023, 2023), (2024, 2024)]
-    id = forms.CharField()
-    year = forms.TypedChoiceField(choices=[(x, x) for x in range(2022,2026)], coerce=int)
-    quarter = forms.TypedChoiceField(choices=[(x, x) for x in range(1,5)], coerce=int)
-    destination_count = forms.IntegerField(widget = forms.Select(choices=[(x, x) for x in range(1,21)]))
-
-
-
 # API
 def get_destination_list(request):
     # DOT: Check if the user sending request is a Planer?!
-    destinations = list(Destination.objects.values('destination_id').order_by("-destination_id"))
+    destinations = list(Destination.objects.values('destination_id'))
     result = json.dumps(destinations)
     return  JsonResponse(result, safe=False)

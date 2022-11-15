@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("LOADED!");
     var form_field = document.querySelector('#delivery_plan_form');
     create_form(form_field);
 });
@@ -7,8 +6,6 @@ document.addEventListener("DOMContentLoaded", function() {
 var destination_list =[]
 
 function create_form(form_field){
-    console.log("creating form field");
-    
     // delivery_id field
     const del_id_f = document.createElement('input');
     del_id_f.id = "delivery_id";
@@ -50,13 +47,11 @@ function create_form(form_field){
     button_f_request.id = "request_field_btn";
     form_field.appendChild(button_f_request);
     button_f_request.addEventListener('click', function() {
-        console.log("clicked this button!");
         const extra_fields = document.createElement('div');
         extra_fields.id = "delivery_plan_extra_fields";
         extra_fields.textContent = "extra field";
         form_field.append(extra_fields);
         var destination_field_number = destination_choice.value;
-        console.log(`building extra ${destination_field_number} fields`)
         for (var i = 0; i < destination_choice.value; i++) {
             const set_div = document.createElement('div');
             set_div.id = `destination_div_id:${i+1}`;
@@ -110,16 +105,12 @@ function load_list(){
         data.forEach(element => {
             destination_list.push(element["destination_id"]);
         });
-        console.log(destination_list);
         //sort the list
         destination_list = destination_list.sort();
-        console.log(destination_list);
     })
 }
 
 function suggestion_list(event){
-    // event.target.value = 'hiden';
-    // console.log(value);
     var id = event.target.id.slice(21);
     clean_list();
     for ( let item of destination_list){
