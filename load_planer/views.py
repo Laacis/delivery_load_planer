@@ -387,6 +387,6 @@ class DeliveryPlanPreForm(forms.Form):
 # API
 def get_destination_list(request):
     # DOT: Check if the user sending request is a Planer?!
-    destinations = list(Destination.objects.values('destination_id'))
+    destinations = list(Destination.objects.values('destination_id').order_by("-destination_id"))
     result = json.dumps(destinations)
     return  JsonResponse(result, safe=False)

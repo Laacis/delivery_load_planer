@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", function() {
     var form_field = document.querySelector('#delivery_plan_form');
     create_form(form_field);
 });
-
+// list of destinations todisplay in the form
+var destination_list =[]
 
 function create_form(form_field){
     console.log("creating form field");
@@ -67,12 +68,21 @@ function create_form(form_field){
             var option = document.createElement('option');
             option.value = i+1;
             option.text = i+1;
+            option.selected = i+1;
+            option.disabled = true;
             dest_order.appendChild(option);
             // Creating input text for Destination id
             const destination_id = document.createElement('input');
             destination_id.type = 'text';
             destination_id.id = `destination_field_id:${i+1}`;
             set_div.appendChild(destination_id);
+            //adding event listeners to every input field of destination_id
+            destination_id.addEventListener("keyup", suggestion_list);
+
+            //adding ul field for destination list to display suggestions
+            const destination_list = document.createElement('ul');
+            destination_list.id = `destination_list:${i+1}`;
+            set_div.appendChild(destination_list);
             
         }
         //cleaning up button and choice field
@@ -92,9 +102,56 @@ function create_form(form_field){
 }
 
 function load_list(){
+    // fetching the list of destinations from db
     fetch('get_destination_list')
     .then(response => response.json())
     .then(data => {
-        console.log(data);
+        data = JSON.parse(data);
+        data.forEach(element => {
+            destination_list.push(element["destination_id"]);
+        });
+        console.log(destination_list);
+        //sort the list
+        destination_list = destination_list.sort();
+        console.log(destination_list);
     })
+}
+
+function suggestion_list(event){
+    // event.target.value = 'hiden';
+    // console.log(value);
+    var id = event.target.id.slice(21);
+    clean_list();
+    for ( let item of destination_list){
+        //convert to lover case and comapre to each item in destination list
+        if (item.toLowerCase().startsWith( event.target.value.toLowerCase()) && event.target.value != "") { 
+            let itemList = document.createElement("li");
+            itemList.classList.add(`item-list:${id}`);
+            itemList.style.cursor = "pointer";
+            itemList.setAttribute("onclick", `dispplayDestinations('${item}', '${event.target.id}')`);
+            let match_d = "<b>" + item.substring(0, event.target.value.length) + "</b>";
+            match_d += item.substring(event.target.value.length);
+
+            itemList.innerHTML =  match_d;
+            document.getElementById(`destination_list:${id}`).appendChild(itemList);
+        }
+    }
+}
+
+function dispplayDestinations(value, id) {
+    // sets up value  of input chosen by the user
+    let input = document.getElementById(id);
+    input.value = value;
+    clean_list();
+}
+
+function clean_list() {
+    // cleaning up the the list of destinations by removing all the <li>
+    try {
+        const items = document.querySelectorAll("li");
+        items.forEach(item => item.remove());
+    }
+    catch {
+        console.log("No list to clean!");
+    }   
 }
