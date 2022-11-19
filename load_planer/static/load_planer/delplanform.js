@@ -158,7 +158,7 @@ function send_delivery_plan(event) {
     const fields = document.getElementById('delivery_plan_extra_fields').childNodes;
     for ( let i = 1; i<fields.length; i++) {
         const del_id_value = document.getElementById("destination_field_id:"+i).value;
-        var obj1 = { [i] : del_id_value};
+        var obj1 = {[del_id_value]:i};
         Object.assign(del_order, obj1)
     }
     let some = JSON.stringify({
@@ -169,4 +169,18 @@ function send_delivery_plan(event) {
         "order": del_order,
       });
     console.log(some);
+    fetch("/reg_destination_plan", {
+        method: 'POST',
+        body: JSON.stringify({
+            delivery_id: delivery_id,
+            quarter: quarter,
+            year: year,
+            del_order: del_order,
+        }),
+        
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log(result);
+    })
 }

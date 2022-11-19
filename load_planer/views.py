@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -97,33 +98,6 @@ def delivery_plan(request, delivery_plan_id):
 
 
 @login_required
-@require_http_methods("POST")
-def del_plan_preform(request):
-    # only Planer may send this request
-    if User.objects.get(pk=request.user.id).is_planer():
-        pre_form = DeliveryPlanPreForm(request.POST)
-        if pre_form.is_valid():
-            extra = pre_form.cleaned_data["destination_count"] - 1
-            DeliveryPlanFormSet = formset_factory(DeliveryPlanForm, extra=extra)
-            initial_values = {
-                
-            }
-            delivery_plan_formset = DeliveryPlanFormSet(initial = [{
-                "delivery_id" : pre_form.cleaned_data["id"],
-                "year":pre_form.cleaned_data['year'],
-                "quarter": int(pre_form.cleaned_data['quarter'])
-            } ])
-            context = {
-                "formset":delivery_plan_formset,
-            }
-            return render(request, 'load_planer/delivery_plans.html', context)
-        else:
-            return HttpResponse("PLANER PREFORM not valid!")
-    else:
-        return HttpResponse("NOT PLANER REQUEST!")
-
-
-@login_required
 def delivery_plans(request):
     # make sure it's only viewed by Planer
 
@@ -134,7 +108,6 @@ def delivery_plans(request):
 
     context = {
         "delivery_plan_list": delivery_plan_list,
-        "form":DeliveryPlanForm()
         }
     return render(request, 'load_planer/delivery_plans.html', context)
 
@@ -166,7 +139,7 @@ def destination(request, destination_id):
             "address":destination.address
         }
         return render(request, 'load_planer/destination_details.html', context)
-        # return HttpResponse(f" DRIVER Requested destination with id: {destination_id}!")
+
     else:
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
 
@@ -367,12 +340,6 @@ class DestinationForm(forms.ModelForm):
         address = forms.CharField()
 
 
-class DeliveryPlanForm(forms.ModelForm):
-    class Meta:
-        model = Delivery_plan
-        fields = ["delivery_id", "querter", "year", "del_order"]
-        # REWORKED, del_order is now JSONfield
-
 
 # API
 def get_destination_list(request):
@@ -380,3 +347,26 @@ def get_destination_list(request):
     destinations = list(Destination.objects.values('destination_id'))
     result = json.dumps(destinations)
     return  JsonResponse(result, safe=False)
+
+
+@csrf_exempt
+def reg_destination_plan(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        delivery_id = data.get("delivery_id")
+        quarter = data.get("quarter")
+        year = data.get('year')
+        del_order = data.get("del_order")
+        try:
+            record = Delivery_plan.objects.create(
+                delivery_id = delivery_id,
+                quarter = quarter,
+                year = year,
+                del_order = del_order
+            )
+            record.save()
+            return JsonResponse({"Success": "True"})
+        except:
+            return JsonResponse({"Success": "False"})
+    else:
+        return HttpResponse("Error: Forbidden method!")

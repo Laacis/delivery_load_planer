@@ -77,7 +77,7 @@ class Delivery_plan(models.Model):
         Q4 = 4, "'Q4' 01.10 - 31.12"
 
     delivery_id = models.CharField(max_length=30, blank=False)
-    querter = models.PositiveSmallIntegerField(choices=Quarter.choices, default=Quarter.Q1)
+    quarter = models.PositiveSmallIntegerField(choices=Quarter.choices, default=Quarter.Q1)
     year = models.PositiveSmallIntegerField()
     # del_order is delivery order sequesnce
     # del_order = models.PositiveSmallIntegerField()
@@ -85,4 +85,4 @@ class Delivery_plan(models.Model):
     del_order = models.JSONField()
 
     def __str__(self):
-        return f"Delivery ID: {self.delivery_id} Q:{self.querter} Year:{self.year} number of destinations: {len(self.del_order)}"
+        return f"Delivery ID: {self.delivery_id} Q:{self.quarter} Year:{self.year} number of destinations: {len(self.del_order)}"

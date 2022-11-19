@@ -24,4 +24,5 @@ urlpatterns = [
 
     # API
     path("get_destination_list", views.get_destination_list, name="get_destination_list"),
+    path("reg_destination_plan", views.reg_destination_plan, name="reg_destination_plan"),
 ]
