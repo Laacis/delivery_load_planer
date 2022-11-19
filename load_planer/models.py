@@ -88,3 +88,39 @@ class Delivery_plan(models.Model):
 
     def __str__(self):
         return f"Delivery ID: {self.delivery_id} Q:{self.quarter} Year:{self.year} number of destinations: {len(self.del_order)}"
+
+
+"""
+    TOUR model:
+    Tour is a compiled data of Delivery plan, executed on a special date
+    it has a defined Driver and a Truck
+    To the Delivery Plan is add information about Palets for each Destination(delivery plan order sequence)
+    Palets are 3 type: 
+    (f) Frozen goods, -22 C
+    (c) Chilled goods +2 C
+    and (d) Dry goods (may be stored with chilled goods)
+
+    #####
+    delivery_id = FK from Delivery_plan
+    driver_id = FK from Driver 
+    truck_id = FK from Truck
+    exec_date = Date of Tour execution
+    delivery_time = Time the destination should be reached and goods unloaded
+    destination = FK from Destination
+    f_pallets = Number of FROZEN GOODS EUROpallets
+    c_pallets = Number of CHILLED GOODS EUROpallets
+    d_pallets = Number of DRY GOODS EUROpallets
+"""
+class Tour(models.Model):
+    delivery_id = models.ForeignKey(Delivery_plan, on_delete=models.CASCADE)
+    driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE)
+    truck_id = models.ForeignKey(Truck, on_delete=models.CASCADE)
+    exec_date = models.DateField()
+    delivery_time = models.TimeField()
+    destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
+    f_pallets = models.PositiveSmallIntegerField()
+    c_pallets = models.PositiveSmallIntegerField()
+    d_pallets = models.PositiveSmallIntegerField()
+    
+    def __str__(self):
+        return f"delivery:{self.delivery_id} on {self.exec_date} to {self.destination}."

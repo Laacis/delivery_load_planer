@@ -31,7 +31,17 @@ def gateway(request):
 
 
 def tour_planing(request):
-    return render(request, "load_planer/tour_planing.html")
+    try:
+        tour_list = Tour.objects.all().order_by("-exec_date")
+        context = {
+            "tour_form": TourForm(),
+            "tour_list": tour_list
+        }
+    except:
+        context = {
+            "tour_form": TourForm(),
+        }
+    return render(request, "load_planer/tour_planing.html", context=context)
 
 @login_required
 def trucks(request):
@@ -322,9 +332,9 @@ class TruckForm(forms.ModelForm):
         model = Truck
         fields = ["truck_id", "pallet_size", "zones"]
         truck_id = forms.CharField(label="Truck ID", required=True, )
-        widgets = {
-            'truck_id' : forms.Textarea(attrs={'placeholder':'Truck ID: AA000', 'rows':1, 'class':"form-control"}),
-        }
+        # widgets = {
+        #     'truck_id' : forms.Textarea(attrs={'placeholder':'Truck ID: AA000', 'rows':1, 'class':"form-control"}),
+        # }
 
     
 class DriverForm(forms.ModelForm):
@@ -342,6 +352,12 @@ class DestinationForm(forms.ModelForm):
         fields = ["destination_id", "address"]
         destinationid = forms.CharField()
         address = forms.CharField()
+
+    
+class TourForm(forms.ModelForm):
+    class Meta:
+        model = Tour
+        fields = ["delivery_id", "driver_id", "truck_id", "exec_date", "delivery_time", "destination", "f_pallets", "c_pallets", "d_pallets"]
 
 
 
@@ -382,3 +398,4 @@ def get_delivery_plan_list(request,delivery_id):
     data_list = Delivery_plan.objects.get(pk=delivery_id)
     data_list = data_list.del_order
     return JsonResponse({"Result": True, "data_list": data_list})
+

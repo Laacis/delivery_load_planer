@@ -26,4 +26,8 @@ function get_delivery_order_list(delivery_id) {
             }
         }
     })
-}
+} 
+
+// TODO : Write fetch to get Destination list adresses  to display
+// and make a table Delivery  
+// | Nr. | Destination id | Destination address |

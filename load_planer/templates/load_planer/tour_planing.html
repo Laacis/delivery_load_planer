@@ -13,5 +13,22 @@
         <p>make a delivery plan <a  href="{% url 'delivery_plans' %}">Delivery Plans</a> </p>
         
 
+        {% if tour_list %}
+            {% for item in tour_list %}
+            {{ item }}
+            {% endfor %}
+        {% else %}
+            <p>No Tours to display!</p>
+        {% endif %}
+
+
+        {% if tour_form %}
+            <form action="#" method="post">
+                {% csrf_token %}
+                {{ tour_form }}
+
+                <input type="submit" value="Registre Tour" class="btn btn-primary form-control">
+            </form>
+        {% endif %}
     </div>  
 {% endblock %}
