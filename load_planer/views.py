@@ -94,7 +94,11 @@ def reg_driver(request):
 
 @login_required
 def delivery_plan(request, delivery_plan_id):
-    return HttpResponse(f"Delivery plan{delivery_plan_id} requested!")
+    plan = Delivery_plan.objects.get(delivery_id=delivery_plan_id)
+    context = {
+        "plan": plan
+    }
+    return render(request, 'load_planer/delivery_plan.html', context)
 
 
 @login_required
@@ -370,3 +374,11 @@ def reg_destination_plan(request):
             return JsonResponse({"Success": "False"})
     else:
         return HttpResponse("Error: Forbidden method!")
+
+
+def get_delivery_plan_list(request,delivery_id):
+    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planer ?
+
+    data_list = Delivery_plan.objects.get(pk=delivery_id)
+    data_list = data_list.del_order
+    return JsonResponse({"Result": True, "data_list": data_list})

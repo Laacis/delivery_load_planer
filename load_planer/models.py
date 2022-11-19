@@ -76,12 +76,14 @@ class Delivery_plan(models.Model):
         Q3 = 3, "'Q3' 01.07 - 30.09"
         Q4 = 4, "'Q4' 01.10 - 31.12"
 
-    delivery_id = models.CharField(max_length=30, blank=False)
+    class YearChoices(models.IntegerChoices):
+        Y2022 = 2022, "2022"
+        Y2023 = 2023, "2023"
+        Y2024 = 2024, "2024"
+
+    delivery_id = models.CharField(max_length=30, blank=False, primary_key=True)
     quarter = models.PositiveSmallIntegerField(choices=Quarter.choices, default=Quarter.Q1)
-    year = models.PositiveSmallIntegerField()
-    # del_order is delivery order sequesnce
-    # del_order = models.PositiveSmallIntegerField()
-    # del_loc = models.ForeignKey(Destination, on_delete=models.CASCADE)
+    year = models.PositiveSmallIntegerField(choices=YearChoices.choices, default=YearChoices.Y2022)
     del_order = models.JSONField()
 
     def __str__(self):
