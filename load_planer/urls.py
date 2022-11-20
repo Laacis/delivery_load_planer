@@ -26,4 +26,6 @@ urlpatterns = [
     path("get_destination_list", views.get_destination_list, name="get_destination_list"),
     path("reg_destination_plan", views.reg_destination_plan, name="reg_destination_plan"),
     path("get_delivery_plan_list/<str:delivery_id>", views.get_delivery_plan_list, name="get_delivery_plan_list"),
+    path("get_delivery_list_by_details/<int:year>/<int:quarter>", views.get_delivery_list_by_details, name="get_delivery_list_by_details"),
+
 ]

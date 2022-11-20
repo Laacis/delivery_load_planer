@@ -399,3 +399,12 @@ def get_delivery_plan_list(request,delivery_id):
     data_list = data_list.del_order
     return JsonResponse({"Result": True, "data_list": data_list})
 
+
+def get_delivery_list_by_details(request,year, quarter):
+    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planer ?
+    data = Delivery_plan.objects.filter(year=year,quarter=quarter).values_list("delivery_id")
+    result = []
+    for item in data:
+        result.append(item[0])
+    result = json.dumps(result)
+    return JsonResponse(result, safe=False)

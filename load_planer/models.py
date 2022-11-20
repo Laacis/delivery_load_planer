@@ -90,6 +90,9 @@ class Delivery_plan(models.Model):
         return f"Delivery ID: {self.delivery_id} Q:{self.quarter} Year:{self.year} number of destinations: {len(self.del_order)}"
 
 
+
+
+
 """
     TOUR model:
     Tour is a compiled data of Delivery plan, executed on a special date
