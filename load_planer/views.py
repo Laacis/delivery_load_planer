@@ -31,15 +31,17 @@ def gateway(request):
 
 
 def tour_planing(request):
+
+    # TODO : REWORK THIS!
     try:
         tour_list = Tour.objects.all().order_by("-exec_date")
         context = {
-            "tour_form": TourForm(),
+            "tour_form": None,
             "tour_list": tour_list
         }
     except:
         context = {
-            "tour_form": TourForm(),
+            "tour_form": None,
         }
     return render(request, "load_planer/tour_planing.html", context=context)
 
@@ -354,10 +356,10 @@ class DestinationForm(forms.ModelForm):
         address = forms.CharField()
 
     
-class TourForm(forms.ModelForm):
-    class Meta:
-        model = Tour
-        fields = ["delivery_id", "driver_id", "truck_id", "exec_date", "delivery_time", "destination", "f_pallets", "c_pallets", "d_pallets"]
+# class TourForm(forms.ModelForm):
+#     class Meta:
+#         model = Tour
+#         fields = ["delivery_id", "driver_id", "truck_id", "exec_date", "delivery_time", "destination", "f_pallets", "c_pallets", "d_pallets"]
 
 
 

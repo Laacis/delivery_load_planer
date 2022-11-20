@@ -104,26 +104,37 @@ class Delivery_plan(models.Model):
     and (d) Dry goods (may be stored with chilled goods)
 
     #####
+    tour_id = PK   let's agree we construct it as (delivery_id + exec_date)
     delivery_id = FK from Delivery_plan
     driver_id = FK from Driver 
     truck_id = FK from Truck
     exec_date = Date of Tour execution
+"""
+class Tour(models.Model):
+    tour_id = models.CharField()
+    delivery_id = models.ForeignKey(Delivery_plan, on_delete=models.CASCADE)
+    driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE)
+    truck_id = models.ForeignKey(Truck, on_delete=models.CASCADE)
+    exec_date = models.DateField()
+
+    
+    def __str__(self):
+        return f"delivery:{self.delivery_id} on {self.exec_date} driver {self.driver_id} on truck {self.truck_id}."
+
+"""
+DeliveryPoint 
+    tour_id = FK from Tour
     delivery_time = Time the destination should be reached and goods unloaded
     destination = FK from Destination
     f_pallets = Number of FROZEN GOODS EUROpallets
     c_pallets = Number of CHILLED GOODS EUROpallets
     d_pallets = Number of DRY GOODS EUROpallets
+
 """
-class Tour(models.Model):
-    delivery_id = models.ForeignKey(Delivery_plan, on_delete=models.CASCADE)
-    driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE)
-    truck_id = models.ForeignKey(Truck, on_delete=models.CASCADE)
-    exec_date = models.DateField()
+class DelPoint(models.Model):
+    tour_id = models.ForeignKey(Tour, on_delete=models.CASCADE)
     delivery_time = models.TimeField()
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
     f_pallets = models.PositiveSmallIntegerField()
     c_pallets = models.PositiveSmallIntegerField()
     d_pallets = models.PositiveSmallIntegerField()
-    
-    def __str__(self):
-        return f"delivery:{self.delivery_id} on {self.exec_date} to {self.destination}."
