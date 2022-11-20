@@ -111,7 +111,7 @@ class Delivery_plan(models.Model):
     exec_date = Date of Tour execution
 """
 class Tour(models.Model):
-    tour_id = models.CharField()
+    tour_id = models.CharField(max_length=30, blank=False, primary_key=True)
     delivery_id = models.ForeignKey(Delivery_plan, on_delete=models.CASCADE)
     driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE)
     truck_id = models.ForeignKey(Truck, on_delete=models.CASCADE)
@@ -131,7 +131,7 @@ DeliveryPoint
     d_pallets = Number of DRY GOODS EUROpallets
 
 """
-class DelPoint(models.Model):
+class DeliveryPoint(models.Model):
     tour_id = models.ForeignKey(Tour, on_delete=models.CASCADE)
     delivery_time = models.TimeField()
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
