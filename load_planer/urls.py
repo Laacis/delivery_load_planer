@@ -8,7 +8,7 @@ urlpatterns = [
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
-    path("tour_planing", views.tour_planing, name="tour_planing"),
+    path("tour_planning", views.tour_planning, name="tour_planning"),
     path("trucks", views.trucks, name="trucks"),
     path("drivers", views.drivers, name="drivers"),
     path("reg_driver", views.reg_driver, name="reg_driver"),
@@ -27,5 +27,6 @@ urlpatterns = [
     path("reg_destination_plan", views.reg_destination_plan, name="reg_destination_plan"),
     path("get_delivery_plan_list/<str:delivery_id>", views.get_delivery_plan_list, name="get_delivery_plan_list"),
     path("get_delivery_list_by_details/<int:year>/<int:quarter>", views.get_delivery_list_by_details, name="get_delivery_list_by_details"),
-
+    path("get_driver_list/<slug:date>", views.get_driver_list, name="get_driver_list"),
+    path("get_truck_list/<slug:date>", views.get_truck_list, name="get_truck_list"),
 ]

@@ -49,10 +49,10 @@
             <p> Verified as driver</p> {{ verified }}
             {% elif verified.is_driver == None %}
             <p> User didn't supply any details for registration. Let the Planer Edit this profile.</p>
-            {% elif verified.is_planer == True %}
-            <p> You are a Planer!</p>
+            {% elif verified.is_planner == True %}
+            <p> You are a Planner!</p>
             {% else %}
-            <p> Not verified as driver, please await Verification by Planer</p>
+            <p> Not verified as driver, please await Verification by Planner</p>
             {% endif %}
         {% endif %}
     </div>  

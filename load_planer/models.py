@@ -4,10 +4,10 @@ from django.contrib.auth.models import AbstractUser
 # Models
 
 class User(AbstractUser):
-    def is_planer(self):
+    def is_planner(self):
         try:
             planer = Profile.objects.get(username=self)
-            return planer.is_planer
+            return planer.is_planner
         except:
             return False
 
@@ -35,7 +35,7 @@ class Driver(models.Model):
 
 class Profile(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
-    is_planer = models.BooleanField(default=False)  # Admin can change this to True, to give planer access to user
+    is_planner = models.BooleanField(default=False)  # Admin can change this to True, to give planer access to user
     is_driver = models.BooleanField(default=False)  # Planer can change this to true, to verify driver
     
     def __str__(self):

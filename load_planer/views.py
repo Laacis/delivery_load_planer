@@ -30,7 +30,7 @@ def gateway(request):
         return render(request,"load_planer/gateway.html", {"driver": "You are not verified as Driver/Planer.", "driver_form": driver_form})
 
 
-def tour_planing(request):
+def tour_planning(request):
 
     # TODO : REWORK THIS!
     try:
@@ -43,14 +43,14 @@ def tour_planing(request):
         context = {
             "tour_form": None,
         }
-    return render(request, "load_planer/tour_planing.html", context=context)
+    return render(request, "load_planer/tour_planning.html", context=context)
 
 @login_required
 def trucks(request):
     form = TruckForm()
     trucks = Truck.objects.all()
     if request.method == 'POST':
-        # REMEMBER TO MAKE SURE THE USER ADDING Truck is A PLANER, not a driver!!!
+        # REMEMBER TO MAKE SURE THE USER ADDING Truck is A PLANNER, not a driver!!!
         truck_form = TruckForm(request.POST)
         if truck_form.is_valid():
             truck_id = truck_form.cleaned_data['truck_id']
@@ -73,8 +73,8 @@ def trucks(request):
 @login_required
 def drivers(request):
     driver_list = Driver.objects.all()
-    # Only show drivers verified of not, don't show planers
-    verified_drivers = Profile.objects.filter(is_planer=False)
+    # Only show drivers verified of not, don't show planners
+    verified_drivers = Profile.objects.filter(is_planner=False)
     return render(request, 'load_planer/drivers.html', {"driver_list":driver_list, "verified_drivers":verified_drivers})
 
 @login_required
@@ -115,7 +115,7 @@ def delivery_plan(request, delivery_plan_id):
 
 @login_required
 def delivery_plans(request):
-    # make sure it's only viewed by Planer
+    # make sure it's only viewed by Planner
 
     try:
         delivery_plan_list = Delivery_plan.objects.all()
@@ -130,7 +130,7 @@ def delivery_plans(request):
 
 @login_required
 def destinations(request):
-    # make sure it's only viewed by Planer
+    # make sure it's only viewed by Planner
     destination_form = DestinationForm()
     destination_list = Destination.objects.all()
     context = {
@@ -149,7 +149,7 @@ def destination(request, destination_id):
         return HttpResponse(f"Destination  id: {destination_id} doesn't exist!")
 
     user = User.objects.get(pk=request.user.id)
-    if user.is_planer() or user.is_driver():
+    if user.is_planner() or user.is_driver():
         context = {
             "destination_id":destination.destination_id,
             "address":destination.address
@@ -162,10 +162,10 @@ def destination(request, destination_id):
 
 @login_required
 def reg_destination(request):
-    # only Planer may send request and only POST reqest is accepted
+    # only Planner may send request and only POST reqest is accepted
     try:
-        planer = User.objects.get(pk=request.user.id)
-        if request.method != 'POST' or not planer.is_planer():
+        planner = User.objects.get(pk=request.user.id)
+        if request.method != 'POST' or not planner.is_planner():
             return HttpResponse("Error: Forbidden method or wrong user!")
         else:
             # Register a new Destination
@@ -181,7 +181,7 @@ def reg_destination(request):
                 return HttpResponse("Error: Form is not valid!")
             
     except:
-        # if user is not verified as Driver nor Planer
+        # if user is not verified as Driver nor Planner
         return HttpResponse("Error: Forbidden action!")
 
 
@@ -190,8 +190,8 @@ def reg_destination(request):
 def profile(request, profileid):
     # if the user is requesting own profile
     requesting_user = User.objects.get(pk=request.user.id)
-    # Checking if the user is a planer
-    if requesting_user.is_planer():
+    # Checking if the user is a planner
+    if requesting_user.is_planner():
         try:
             #checking if profile exists:
             profile_data = User.objects.get(pk=profileid)
@@ -202,11 +202,11 @@ def profile(request, profileid):
             driver_data = Driver.objects.get(username=profileid)
             verification_data = Profile.objects.get(username=profileid)
         except:
-            # if the planer is viewing own profile it will have no driver_data
+            # if the planner is viewing own profile it will have no driver_data
             if profileid == requesting_user.id:
                 driver_data = None
                 verification_data = Profile.objects.get(username=profileid)
-                # return HttpResponse("Planer viewing own profile")
+                # return HttpResponse("Planner viewing own profile")
             else:
                 driver_data = None
                 verification_data = None
@@ -217,9 +217,9 @@ def profile(request, profileid):
             "driver_form": None
         }
         return render(request, 'load_planer/profile.html', context)
-        # return HttpResponse(f"IS Planer {requesting_user.is_planer()}")
+        # return HttpResponse(f"IS Planner {requesting_user.is_planner()}")
     else:
-        # If not a Planer, user can only view own account
+        # If not a Planner, user can only view own account
         if profileid != request.user.id:
             #if the user is trying to view another users profile, redirect back to own profile
             return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
@@ -250,9 +250,9 @@ def verify_driver(request, profileid):
         # Only POST method allowed
         return HttpResponse("Error: Forbidden method!")
     else:
-        # Only planer should be able to verify drivers
+        # Only planner should be able to verify drivers
         planer = User.objects.get(pk=request.user.id)
-        if planer.is_planer():
+        if planer.is_planner():
             try:
                 user = User.objects.get(pk=profileid)
                 driver = Profile.objects.get(username=user)
@@ -269,7 +269,7 @@ def verify_driver(request, profileid):
             except:
                 return HttpResponse("Error: Uanbale to register user!")
         else:
-            return HttpResponse("Error: Only Planer can verify Drivers!")
+            return HttpResponse("Error: Only Planner can verify Drivers!")
         
 
 def login_view(request):
@@ -365,7 +365,7 @@ class DestinationForm(forms.ModelForm):
 
 # API
 def get_destination_list(request):
-    # DOT: Check if the user sending request is a Planer?!
+    # TODO: Check if the user sending request is a Planner?!
     destinations = list(Destination.objects.values('destination_id'))
     result = json.dumps(destinations)
     return  JsonResponse(result, safe=False)
@@ -395,7 +395,7 @@ def reg_destination_plan(request):
 
 
 def get_delivery_plan_list(request,delivery_id):
-    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planer ?
+    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ?
 
     data_list = Delivery_plan.objects.get(pk=delivery_id)
     data_list = data_list.del_order
@@ -403,10 +403,46 @@ def get_delivery_plan_list(request,delivery_id):
 
 
 def get_delivery_list_by_details(request,year, quarter):
-    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planer ?
+    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ?
     data = Delivery_plan.objects.filter(year=year,quarter=quarter).values_list("delivery_id")
     result = []
     for item in data:
         result.append(item[0])
+    result = json.dumps(result)
+    return JsonResponse(result, safe=False)
+
+def get_driver_list(request, date):
+    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 
+    try:
+        drivers_busy = list(Tour.objects.filter(exec_date = date).values_list("driver_id"))
+    except:
+        drivers_busy = []
+
+    drivers_busy_clean = []
+    for i in drivers_busy:
+        drivers_busy_clean.append(i[0])
+    drivers =  Driver.objects.all()
+    result = []
+    for e in drivers:
+        if e.username.is_driver() and e.driver_id not in drivers_busy_clean:
+            result.append(e.driver_id)
+    result = json.dumps(result)
+    return JsonResponse(result, safe=False)
+
+
+def get_truck_list(request, date):
+    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 
+    try:
+        trucks_busy = list(Tour.objects.filter(exec_date = date).values_list("truck_id"))
+    except:
+        trucks_busy = []
+    trucks_busy_clean = []
+    for i in trucks_busy:
+        trucks_busy_clean.append(i[0])
+    trucks = Truck.objects.all()
+    result = []
+    for t in trucks:
+        if t.truck_id not in trucks_busy_clean:
+            result.append(t.truck_id)
     result = json.dumps(result)
     return JsonResponse(result, safe=False)
