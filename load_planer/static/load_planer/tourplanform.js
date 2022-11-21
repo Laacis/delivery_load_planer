@@ -10,7 +10,6 @@ var listDeliveryIds = []
     for the selected period of Y/Q
 */
 function loadDeliveryPlanPart1() {
-    console.log("loading Delivery Plan options: load year and quarter.");
     const formField = document.getElementById('tour_plan_form');
     const deliveryYearField = document.createElement('select');
     deliveryYearField.id = "delivery_plan_year";
@@ -54,8 +53,7 @@ function loadDeliveryPlanPart1() {
 }
 
 /* loads the second part of the Tour form: 
-    loading date field for the Tour to be executed
-
+    loading date/delivery_id fields for the Tour to be executed
 */
 function loadDeliveryPlanPart2() {
     console.log("loading second part of form.");
@@ -77,7 +75,7 @@ function loadDeliveryPlanPart2() {
     const dateField = document.createElement('input');
     dateField.type = 'date';
     dateField.id = 'exec_date';
-    dateField.min = "{new Date().toISOString().split('T')[0]}"
+    dateField.min = new Date().toISOString().split('T')[0];
     formField.appendChild(dateField);
 
     const loadButton = document.createElement('button');
@@ -90,7 +88,6 @@ function loadDeliveryPlanPart2() {
         // let's checks if the delivery plan id is matching one from the list
         const checkingSet = new Set(listDeliveryIds);
         const isItemInSet = checkingSet.has(deliveryIdField.value);
-        
         if (isItemInSet) {
             //if item is valid we disable the input fields, enamble button and listener
             dateField.disabled = true;
@@ -102,10 +99,8 @@ function loadDeliveryPlanPart2() {
             console.log("Wrong Delivery Plan ID!");
             deliveryIdField.focus();
             deliveryIdField.placeholder = "Valid Delivery plan id!";
-        }
-            
+        }    
     })
-
 }
 
 /* loads the third part of the Tour form: */
@@ -148,7 +143,6 @@ function suggestion_list(event) {
             itemList.setAttribute("onclick", `dispplayDestinations('${item}', '${event.target.id}')`);
             let match_d = "<b>" + item.substring(0, event.target.value.length) + "</b>";
             match_d += item.substring(event.target.value.length);
-
             itemList.innerHTML =  match_d;
             document.getElementById(`destination_list:`).appendChild(itemList);
         }
@@ -210,9 +204,6 @@ function loadDeliveryPlanPart4() {
 
     // checking if users provided Delivery ID is in the list from db
     const DeliveryPlanId = document.getElementById('delivery_id_field');  
-    /* creating a button to load Delivery plan 
-        the button will be enabled when the Delivery plan is typed in
-    */  
     const formField = document.getElementById('tour_plan_form');
     const loadPlanButton = document.createElement('button');
     loadPlanButton.classList = 'btn btn-secondary';
@@ -224,7 +215,12 @@ function loadDeliveryPlanPart4() {
         console.log("LOAD DELIVERY PLAN!");
     })
 
-        
+        /*  TODO! Write APi request to fetch the list of destinations
+            then load next part that will generate  the destination table 
+            and preload par of the fields like Nr. and Destination ids
+            
+            and remember to check if values in select are valid!!!
+        */
 
 
 }

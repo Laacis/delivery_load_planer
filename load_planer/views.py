@@ -356,13 +356,7 @@ class DestinationForm(forms.ModelForm):
         address = forms.CharField()
 
     
-# class TourForm(forms.ModelForm):
-#     class Meta:
-#         model = Tour
-#         fields = ["delivery_id", "driver_id", "truck_id", "exec_date", "delivery_time", "destination", "f_pallets", "c_pallets", "d_pallets"]
-
-
-
+    
 # API
 def get_destination_list(request):
     # TODO: Check if the user sending request is a Planner?!
