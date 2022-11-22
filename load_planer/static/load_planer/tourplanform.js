@@ -114,7 +114,10 @@ function loadDeliveryPlanPart2() {
     })
 }
 
-/* loads the third part of the Tour form: */
+/* loads the third part of the Tour form: 
+    giving select fields for Driver/Truck id to select
+    loadSelectedFields() function fetches the options from db
+*/
 function loadDeliveryPlanPart3() {
     const formField = document.getElementById('tour_plan_form');
 
@@ -200,12 +203,12 @@ function clean_list() {
 function loadSelectIdFields() {
     const truckId = document.getElementById('truck_id');
     const dateField = document.getElementById('exec_date').value;
-    // dodulate options with driver_id that are not busy on selected date
+    // populate options with driver_id that are not busy on selected date
     fetch(`/get_truck_list/${dateField}`)
     .then(response => response.json())
-    .then(data => {
-        data = JSON.parse(data);
-        data.forEach(element => {
+    .then(trucks_data => {
+        trucks_data = JSON.parse(trucks_data);
+        trucks_data.forEach(element => {
             const option = document.createElement('option');
             option.value = element;
             option.text = element;
@@ -217,9 +220,9 @@ function loadSelectIdFields() {
     const driverId = document.getElementById('driver_id');
     fetch(`/get_driver_list/${dateField}`)
     .then(response => response.json())
-    .then(data => {
-        data = JSON.parse(data);
-        data.forEach(element => {
+    .then(drivers_data => {
+        drivers_data = JSON.parse(drivers_data);
+        drivers_data.forEach(element => {
             const option = document.createElement('option');
             option.value = element;
             option.text = element;
