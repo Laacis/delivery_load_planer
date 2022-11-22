@@ -444,5 +444,6 @@ def get_truck_list(request, date):
 
 
 def get_delivery_destinations(request, delivery_id):
-
-    return JsonResponse({"response":delivery_id})
+    plan = Delivery_plan.objects.get(delivery_id=delivery_id)
+    result = json.dumps(plan.del_order)
+    return JsonResponse(result, safe=False)

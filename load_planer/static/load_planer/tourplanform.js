@@ -10,7 +10,7 @@ var listDeliveryIds = []
     for the selected period of Y/Q
 */
 function loadDeliveryPlanPart1() {
-    const formField = document.getElementById('tour_plan_form');
+    var formField = document.getElementById('tour_plan_form');
     const deliveryYearField = document.createElement('select');
     deliveryYearField.id = "delivery_plan_year";
     formField.appendChild(deliveryYearField);
@@ -157,8 +157,7 @@ function loadDeliveryPlanPart3() {
         else {
             console.log("Select driver and/or truck id!");
         }
-    })
-    
+    })  
 }
 
 function suggestion_list(event) {
@@ -228,25 +227,64 @@ function loadSelectIdFields() {
 
 }
 
-/* loads the forth part of the Tour form: */
+/* loads the forth part of the Tour form:
+    This part will load data with destination points and delivery order
+    after this data will be used to generate a table to fill out for 
+    the selected tour.
+*/
 function loadDeliveryPlanPart4() {
-
+    const formField = document.getElementById("tour_plan_form");
 
     const DeliveryPlanId = document.getElementById('delivery_id_field');  
     // checking if truck and Driver has been selected
-    fetch(`/get_delivery_destinations/${DeliveryPlanId.value}`)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
+    const tableField = document.createElement('table');
+    tableField.style = "width:100%"
+    formField.appendChild(tableField);
+    const headerRow = document.createElement('tr');
+    tableField.appendChild(headerRow);
+    //creating headers for first row and appending to header row
+    const listHeaders = ['Nr.', 'Destination', 'time', 'frozen', 'chilled', 'dry', 'total']
+    const listInputCells = ['frozen', 'chilled', 'dry'];
+    // generating row headders
+    listHeaders.forEach(headder =>{
+        const thElement = document.createElement('th');
+        thElement.innerHTML = `${headder}`;
+        headerRow.appendChild(thElement);
     })
 
 
-        /*  TODO! Write APi request to fetch the list of destinations
-            then load next part that will generate  the destination table 
-            and preload par of the fields like Nr. and Destination ids
-            
-            and remember to check if values in select are valid!!!
-        */
+    fetch(`/get_delivery_destinations/${DeliveryPlanId.value}`)
+    .then(response => response.json())
+    .then(data => { 
+        data = JSON.parse(data);
+        Object.entries(data).forEach(entry => {
+            const [key, value] = entry
+            const row = document.createElement('tr');
+            row.id = `row:${value}`;
+            tableField.appendChild(row);
+            listHeaders.forEach(element => {
+                const cell = document.createElement('td');
+                if (element === 'Nr.') {cell.innerHTML = `${value}.`;}
+                else if (element === 'Destination') {cell.innerHTML = key;}
+                else if (element === 'time'){ 
+                    const inputField = document.createElement('input');
+                    inputField.type = "time";
+                    inputField.id = `${element}:${value}`;
+                    cell.appendChild(inputField);
+                }
+                else if (listInputCells.includes(element)) {
+                    const inputField = document.createElement('input');
+                    inputField.type = "number";
+                    inputField.id = `${element}:${value}`;
+                    inputField.placeholder = `pallets`;
+                    cell.appendChild(inputField);
+                }
+                row.appendChild(cell);
+            })
+        })
+    })
 
+
+        
 
 }
