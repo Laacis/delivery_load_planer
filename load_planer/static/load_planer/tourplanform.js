@@ -265,7 +265,14 @@ function loadDeliveryPlanPart4() {
             listHeaders.forEach(element => {
                 const cell = document.createElement('td');
                 if (element === 'Nr.') {cell.innerHTML = `${value}.`;}
-                else if (element === 'Destination') {cell.innerHTML = key;}
+                else if (element === 'Destination') {
+                    // cell.innerHTML = key;
+                    const aLink = document.createElement('a');
+                    aLink.href = `/destination/${key}`;
+                    aLink.target = "_blank";
+                    aLink.innerHTML = key;
+                    cell.appendChild(aLink);
+                }
                 else if (element === 'time'){ 
                     const inputField = document.createElement('input');
                     inputField.type = "time";
