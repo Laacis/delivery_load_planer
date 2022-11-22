@@ -153,6 +153,7 @@ function loadDeliveryPlanPart3() {
         //let's make sure driver/truck is selected
         if (!driverId.value.includes("select") && !truckId.value.includes("select")) {
             loadDeliveryPlanPart4();
+            loadPlanButton.remove();
         }
         else {
             console.log("Select driver and/or truck id!");
@@ -187,8 +188,9 @@ function dispplayDestinations(value, id) {
 function clean_list() {
     // cleaning up the the list of destinations by removing all the <li>
     try {
-        const items = document.querySelectorAll("li");
-        items.forEach(item => item.remove());
+        const ulList = document.getElementById(`destination_list:`);
+        while (ulList.firstChild) {ulList.removeChild(ulList.firstChild);}
+
     }
     catch {
         console.log("No list to clean!");
@@ -290,8 +292,5 @@ function loadDeliveryPlanPart4() {
             })
         })
     })
-
-
-        
-
 }
+
