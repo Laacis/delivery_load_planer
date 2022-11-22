@@ -367,6 +367,7 @@ def get_destination_list(request):
 
 @csrf_exempt
 def reg_destination_plan(request):
+     # TODO: Check if the user sending request is a Planner?!
     if request.method == 'POST':
         data = json.loads(request.body)
         delivery_id = data.get("delivery_id")
@@ -440,3 +441,8 @@ def get_truck_list(request, date):
             result.append(t.truck_id)
     result = json.dumps(result)
     return JsonResponse(result, safe=False)
+
+
+def get_delivery_destinations(request, delivery_id):
+
+    return JsonResponse({"response":delivery_id})

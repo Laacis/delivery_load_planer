@@ -46,6 +46,9 @@ function loadDeliveryPlanPart1() {
             });
             console.log(listDeliveryIds);
             // when list is updated: create and update the form
+            //disable selected fields
+            deliveryYearField.disabled = true;
+            deliveryQuarterField.disabled = true;
             loadButton.remove(); //remove button as we don't need it anymore
             loadDeliveryPlanPart2();
         })
@@ -75,6 +78,7 @@ function loadDeliveryPlanPart2() {
     const dateField = document.createElement('input');
     dateField.type = 'date';
     dateField.id = 'exec_date';
+    dateField.placeholder = "select-date";
     dateField.min = new Date().toISOString().split('T')[0];
     formField.appendChild(dateField);
 
@@ -88,7 +92,7 @@ function loadDeliveryPlanPart2() {
         // let's checks if the delivery plan id is matching one from the list
         const checkingSet = new Set(listDeliveryIds);
         const isItemInSet = checkingSet.has(deliveryIdField.value);
-        if (isItemInSet) {
+        if (isItemInSet && dateField.value != "") {
             //if item is valid we disable the input fields, enamble button and listener
             dateField.disabled = true;
             deliveryIdField.disabled = true;
@@ -96,9 +100,16 @@ function loadDeliveryPlanPart2() {
             loadDeliveryPlanPart3();
         }
         else {
-            console.log("Wrong Delivery Plan ID!");
-            deliveryIdField.focus();
-            deliveryIdField.placeholder = "Valid Delivery plan id!";
+            //if date was not chose set focus on it
+            if(dateField.value === "") {
+                dateField.focus();
+            }
+            else {
+                //if delivery id not valid - set focus on it and write to console
+                console.log("Wrong Delivery Plan ID!");
+                deliveryIdField.focus();
+                deliveryIdField.placeholder = "Valid Delivery plan id!";
+            }
         }    
     })
 }
@@ -129,7 +140,25 @@ function loadDeliveryPlanPart3() {
 
     // populate truckId and driverId with options from db
     loadSelectIdFields(); 
-    loadDeliveryPlanPart4();
+    // checking if users provided Delivery ID is in the list from db
+    
+    // create button
+    const loadPlanButton = document.createElement('button');
+    loadPlanButton.classList = 'btn btn-secondary';
+    loadPlanButton.type = 'submit';
+    loadPlanButton.textContent = "Load Delivery Plan";
+    formField.appendChild(loadPlanButton);
+
+    loadPlanButton.addEventListener('click', function(){
+        //let's make sure driver/truck is selected
+        if (!driverId.value.includes("select") && !truckId.value.includes("select")) {
+            loadDeliveryPlanPart4();
+        }
+        else {
+            console.log("Select driver and/or truck id!");
+        }
+    })
+    
 }
 
 function suggestion_list(event) {
@@ -202,18 +231,15 @@ function loadSelectIdFields() {
 /* loads the forth part of the Tour form: */
 function loadDeliveryPlanPart4() {
 
-    // checking if users provided Delivery ID is in the list from db
-    const DeliveryPlanId = document.getElementById('delivery_id_field');  
-    const formField = document.getElementById('tour_plan_form');
-    const loadPlanButton = document.createElement('button');
-    loadPlanButton.classList = 'btn btn-secondary';
-    loadPlanButton.type = 'submit';
-    loadPlanButton.textContent = "Load Delivery Plan";
-    formField.appendChild(loadPlanButton);
 
-    loadPlanButton.addEventListener('click', function(){
-        console.log("LOAD DELIVERY PLAN!");
+    const DeliveryPlanId = document.getElementById('delivery_id_field');  
+    // checking if truck and Driver has been selected
+    fetch(`/get_delivery_destinations/${DeliveryPlanId.value}`)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
     })
+
 
         /*  TODO! Write APi request to fetch the list of destinations
             then load next part that will generate  the destination table 
