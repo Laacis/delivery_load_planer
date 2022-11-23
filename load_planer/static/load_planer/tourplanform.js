@@ -10,7 +10,7 @@ var listDeliveryIds = []
     for the selected period of Y/Q
 */
 function loadDeliveryPlanPart1() {
-    var formField = document.getElementById('tour_plan_form');
+    const formField = document.getElementById('tour_plan_form');
     const deliveryYearField = document.createElement('select');
     deliveryYearField.id = "delivery_plan_year";
     formField.appendChild(deliveryYearField);
@@ -244,6 +244,7 @@ function loadDeliveryPlanPart4() {
     // checking if truck and Driver has been selected
     const tableField = document.createElement('table');
     tableField.style = "width:100%"
+    tableField.id = 'tour_table';
     formField.appendChild(tableField);
     const headerRow = document.createElement('tr');
     tableField.appendChild(headerRow);
@@ -294,6 +295,8 @@ function loadDeliveryPlanPart4() {
                 row.appendChild(cell);
             })
         })
+
     })
+    submitTourPlaningForm();
 }
 
