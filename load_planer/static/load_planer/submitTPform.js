@@ -55,13 +55,17 @@ function verificateTableData() {
     const rows = document.getElementById('tour_table').rows.length;
     console.log(`number of rows:${rows}`);
     var totalPalletCount = 0;
-    let maxPalletCount = 20; // this number should be fetched from db
+    var totalFrozenPallets = 0;
+    var totalCDPallets = 0;
+    let maxPalletCount = 0; 
+    let truckZones = 0;
     const truck_id = document.getElementById("truck_id").value
     fetch(`/get_truck_details/${truck_id}`)
     .then(response => response.json())
     .then(response => {
         // fetched value is set to max pallet count
         maxPalletCount = response["pallet_size"];
+        truckZones = response['zones'];
 
         /* One more check rule to implement is:
             TODO!:
@@ -86,18 +90,47 @@ function verificateTableData() {
             const dPisValid = /^[0-9]?[0-9]+$/.test(dPallets.value) && dPallets.value <= maxPalletCount;
             if (destIsValid && timeIsValid && fPisValid && cPisValid &&dPisValid) {
                 // check if total number of pallets is < maxPallets         
+                totalFrozenPallets += parseInt(fPallets.value);
+                totalCDPallets += parseInt(cPallets.value) + parseInt(dPallets.value);
                 totalPalletCount += parseInt(fPallets.value) + parseInt(cPallets.value) + parseInt(dPallets.value);
-
-                if (totalPalletCount >= maxPalletCount) {console.log("form is valid, But number of pallets exceeds the maximum volume!");}
-                else {console.log("form is valid!");} // return True
+                if (totalPalletCount >= maxPalletCount) {
+                    console.log("form is valid, But number of pallets exceeds the maximum volume!");
+                }
+                else {console.log(`row${i} VALID!`);} // return True
 
             }
             else {
-                console.log("FIELDS NOT VALID!"); //return False
+                console.log(`row${i} NOT VALID!`); //return False
             }
         }
-        if (totalPalletCount >= maxPalletCount) {alert("But number of pallets exceeds the maximum volume!");}
-        // return False Raise Alert!
+        // TESTING
+        console.log(`totalPalletCount:${totalPalletCount}`)
+        console.log(`totalFrozenPallets:${totalFrozenPallets}`)
+        console.log(`totalCDPallets:${totalCDPallets}`)
+        console.log(`maxPalletCount:${maxPalletCount}`)
+        console.log(`truckZones:${truckZones}`)
+        console.log(`totalFrozenPallets/totalPalletCount : 1/truckZones -> ${totalFrozenPallets/totalPalletCount} : ${1/truckZones}`)
+        console.log(`totalFrozenPallets/totalPalletCount : 2/truckZones -> ${totalFrozenPallets/totalPalletCount} : ${2/truckZones}`)
+
+
+        // TESTING FINISH
+
+        // TODO remember to add a case when theres is only F goods or only C/D goods in the load, rules down under won't work then
+        // it's when totalCDPallets or totalFpallets == totalPalletCount 
+
+        let result = false;
+        if (totalPalletCount > maxPalletCount) {alert("But number of pallets exceeds the maximum volume!");}
+        // some calculation for the F/CD pallets load
+        else if (truckZones === 2) {
+            result = totalFrozenPallets/maxPalletCount <= 1/truckZones;
+            if (!result) {alert("But number of Frozen pallets exceeds the maximum volume: 1/2 of load");}
+        }
+        else if ( truckZones === 3) {
+            result = totalFrozenPallets/maxPalletCount <= 2/truckZones;
+            if (!result) {alert("But number of Frozen pallets exceeds the maximum volume: 2/3 of load");}
+        }
+        
+
     })
         
 }
