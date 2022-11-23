@@ -55,6 +55,12 @@ class Truck(models.Model):
     def __str__(self):
         return f"Reefer truck with id: {self.truck_id} fits {self.pallet_size} pallets and has {self.zones} temperature zones."
 
+    def serialize(self):
+        return {
+            'truck_id':self.truck_id,
+            'pallet_size':self.pallet_size,
+            'zones':self.zones
+        }
 
 class Destination(models.Model):
     destination_id = models.CharField(max_length=30, blank=False, unique=True)

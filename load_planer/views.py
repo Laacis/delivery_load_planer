@@ -455,6 +455,15 @@ def register_delivery_point(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         destination = data['destination']
+        # TODO : finish this!!!!
+
+
         return JsonResponse({"message":destination})
     else:
         return JsonResponse({"response":"wrong request"})
+
+
+def get_truck_details(request, truck_id):
+    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 
+    truck_data = Truck.objects.get(truck_id=truck_id)
+    return JsonResponse(truck_data.serialize())

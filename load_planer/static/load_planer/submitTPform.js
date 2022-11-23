@@ -54,45 +54,50 @@ function submitTourPlaningForm(){
 function verificateTableData() {
     const rows = document.getElementById('tour_table').rows.length;
     console.log(`number of rows:${rows}`);
-    let totalPalletCount = 0;
-    const maxPalletCount = 20; // this number should be fetched from db
-    for (var i = 1; i < rows; i++){
-        //getting vital values:
-        const destination = document.getElementById(`Destination:${i}`);
-        const deliveryTime = document.getElementById(`time:${i}`);          
-        const fPallets = document.getElementById(`frozen:${i}`);
-        const cPallets = document.getElementById(`chilled:${i}`);
-        const dPallets = document.getElementById(`dry:${i}`);
-        console.log(`Starting check row ${i}.`)
-        const destIsValid = /^[0-9a-zA-Z]+$/.test(destination.innerHTML);
-        console.log(destIsValid);
-        console.log(destination.innerHTML);
-        const timeIsValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(deliveryTime.value);
-        console.log(timeIsValid);
-        console.log(deliveryTime.value);
-        const fPisValid = /^[0-9]?[0-9]+$/.test(fPallets.value) && fPallets.value <= maxPalletCount;
-        console.log(fPisValid);
-        console.log(fPallets.value);
-        const cPisValid = /^[0-9]?[0-9]+$/.test(cPallets.value) && cPallets.value <= maxPalletCount;
-        console.log(cPisValid);
-        console.log(cPallets.value);
-        const dPisValid = /^[0-9]?[0-9]+$/.test(dPallets.value) && dPallets.value <= maxPalletCount;
-        console.log(dPisValid);
-        console.log(dPallets.value);
-        if (destIsValid && timeIsValid && fPisValid && cPisValid &&dPisValid){
-            // check if total number of pallets is < maxPallets         
-            totalPalletCount = parseInt(fPallets.value) + parseInt(cPallets.value) + parseInt(dPallets.value);
-            console.log("parseInt:")
-            console.log(totalPalletCount);
-            if (totalPalletCount >= maxPalletCount) {console.log("form is valid, But number of pallets exceeds the maximum volume!");}
-            else {console.log("form is valid!");} // return True
+    var totalPalletCount = 0;
+    let maxPalletCount = 20; // this number should be fetched from db
+    const truck_id = document.getElementById("truck_id").value
+    fetch(`/get_truck_details/${truck_id}`)
+    .then(response => response.json())
+    .then(response => {
+        // fetched value is set to max pallet count
+        maxPalletCount = response["pallet_size"];
 
+        /* One more check rule to implement is:
+            TODO!:
+            make script ckeck for the number of F pallets, to the number of truck zones
+            if 2 zones, F pallets cant be more than 1/2 of total load
+            if 3 zones F pallets can't be more than 2/3 of total load
+            use response["zones"] to get zones count
+        
+        */
+        for (var i = 1; i < rows; i++){
+            //getting vital values:
+            const destination = document.getElementById(`Destination:${i}`);
+            const deliveryTime = document.getElementById(`time:${i}`);          
+            const fPallets = document.getElementById(`frozen:${i}`);
+            const cPallets = document.getElementById(`chilled:${i}`);
+            const dPallets = document.getElementById(`dry:${i}`);
+            // Validation goes here:
+            const destIsValid = /^[0-9a-zA-Z]+$/.test(destination.innerHTML);
+            const timeIsValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(deliveryTime.value);
+            const fPisValid = /^[0-9]?[0-9]+$/.test(fPallets.value) && fPallets.value <= maxPalletCount;
+            const cPisValid = /^[0-9]?[0-9]+$/.test(cPallets.value) && cPallets.value <= maxPalletCount;
+            const dPisValid = /^[0-9]?[0-9]+$/.test(dPallets.value) && dPallets.value <= maxPalletCount;
+            if (destIsValid && timeIsValid && fPisValid && cPisValid &&dPisValid) {
+                // check if total number of pallets is < maxPallets         
+                totalPalletCount += parseInt(fPallets.value) + parseInt(cPallets.value) + parseInt(dPallets.value);
+
+                if (totalPalletCount >= maxPalletCount) {console.log("form is valid, But number of pallets exceeds the maximum volume!");}
+                else {console.log("form is valid!");} // return True
+
+            }
+            else {
+                console.log("FIELDS NOT VALID!"); //return False
+            }
         }
-        else {
-            console.log("FIELDS NOT VALID!"); //return False
-        }
-    }
-    if (totalPalletCount >= maxPalletCount) {console.log("form is valid, But number of pallets exceeds the maximum volume!");}
-    // return False Raise Alert!
+        if (totalPalletCount >= maxPalletCount) {alert("But number of pallets exceeds the maximum volume!");}
+        // return False Raise Alert!
+    })
         
 }
