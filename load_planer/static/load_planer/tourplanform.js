@@ -270,13 +270,17 @@ function loadDeliveryPlanPart4() {
             tableField.appendChild(row);
             listHeaders.forEach(element => {
                 const cell = document.createElement('td');
-                if (element === 'Nr.') {cell.innerHTML = `${value}.`;}
+                if (element === 'Nr.') {
+                    cell.innerHTML = `${value}.`;
+                    cell.id = `${element}:${value}`;
+                }
                 else if (element === 'Destination') {
                     // cell.innerHTML = key;
                     const aLink = document.createElement('a');
                     aLink.href = `/destination/${key}`;
                     aLink.target = "_blank";
                     aLink.innerHTML = key;
+                    aLink.id = `${element}:${value}`;
                     cell.appendChild(aLink);
                 }
                 else if (element === 'time'){ 

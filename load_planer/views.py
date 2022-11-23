@@ -444,6 +444,17 @@ def get_truck_list(request, date):
 
 
 def get_delivery_destinations(request, delivery_id):
+    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 
     plan = Delivery_plan.objects.get(delivery_id=delivery_id)
     result = json.dumps(plan.del_order)
     return JsonResponse(result, safe=False)
+
+@csrf_exempt
+def register_delivery_point(request):
+    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        destination = data['destination']
+        return JsonResponse({"message":destination})
+    else:
+        return JsonResponse({"response":"wrong request"})

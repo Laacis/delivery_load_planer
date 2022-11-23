@@ -30,4 +30,5 @@ urlpatterns = [
     path("get_driver_list/<slug:date>", views.get_driver_list, name="get_driver_list"),
     path("get_truck_list/<slug:date>", views.get_truck_list, name="get_truck_list"),
     path("get_delivery_destinations/<str:delivery_id>", views.get_delivery_destinations, name="get_delivery_destinations"),
+    path("register_delivery_point", views.register_delivery_point, name="register_delivery_point"),
 ]
