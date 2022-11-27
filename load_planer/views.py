@@ -449,6 +449,30 @@ def get_delivery_destinations(request, delivery_id):
     result = json.dumps(plan.del_order)
     return JsonResponse(result, safe=False)
 
+
+@csrf_exempt
+def register_tour(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        delivery_id = data['delivery_id']
+        exec_date = data['exec_date']
+        tour_id = f"{delivery_id}{exec_date}"
+
+
+        # TODO : finish this!!!!
+
+
+        return JsonResponse({"message":tour_id})
+    else:
+        return JsonResponse({"response":"wrong request"})
+    # tour_id = 
+    # delivery_id = 
+    # driver_id = 
+    # truck_id = 
+    # exec_date =
+    return JsonResponse({"message":"registring Tour!"})
+
+
 @csrf_exempt
 def register_delivery_point(request):
     # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 

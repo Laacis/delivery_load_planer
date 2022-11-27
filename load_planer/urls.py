@@ -32,4 +32,5 @@ urlpatterns = [
     path("get_delivery_destinations/<str:delivery_id>", views.get_delivery_destinations, name="get_delivery_destinations"),
     path("register_delivery_point", views.register_delivery_point, name="register_delivery_point"),
     path("get_truck_details/<str:truck_id>", views.get_truck_details, name="get_truck_details"),
+    path("register_tour", views.register_tour, name='register"tour'),
 ]
