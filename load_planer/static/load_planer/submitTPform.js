@@ -14,7 +14,7 @@ function submitTourPlaningForm(){
         /* TODO now we need to write a way to grab tada from the table
             and send a reqeust to registed each row as a tour */
 
-        verificateTableData();
+        verificateTableData(); //returns true or false
 
         for (var i = 1; i < rows; i++){
             //getting vital values:
@@ -67,14 +67,6 @@ function verificateTableData() {
         maxPalletCount = response["pallet_size"];
         truckZones = response['zones'];
 
-        /* One more check rule to implement is:
-            TODO!:
-            make script ckeck for the number of F pallets, to the number of truck zones
-            if 2 zones, F pallets cant be more than 1/2 of total load
-            if 3 zones F pallets can't be more than 2/3 of total load
-            use response["zones"] to get zones count
-        
-        */
         for (var i = 1; i < rows; i++){
             //getting vital values:
             const destination = document.getElementById(`Destination:${i}`);
@@ -98,45 +90,22 @@ function verificateTableData() {
                     alert("Number of pallets exceeds the maximum volume!");
                     return false;
                 }
-                else {
-                    //console.log(`row${i} VALID!`);
-                    //return true;
-                } 
             }
             else {
-                console.log(`row${i} NOT VALID!`); //return False
+                let result = false;
+                if (totalFrozenPallets == totalPalletCount && totalCDPallets == 0){ console.log("Load is only Frozen goods!");}
+                else if (totalCDPallets == totalPalletCount && totalFrozenPallets == 0) {console.log("Load is only chill/dry goods!");}
+                else if (totalPalletCount > maxPalletCount) {alert("Number of pallets exceeds the maximum volume!");}
+                // some calculation for the F/CD pallets load
+                else if (truckZones === 2) {
+                    result = totalFrozenPallets/maxPalletCount <= 1/truckZones;
+                    if (!result) {alert("Number of Frozen pallets exceeds the maximum volume: 1/2 of load");}
+                }
+                else if ( truckZones === 3) {
+                    result = totalFrozenPallets/maxPalletCount <= 0.8;
+                    if (!result) {alert("But number of Frozen pallets exceeds the maximum volume: 80% of load");}
+                }
             }
         }
-        // TESTING
-        console.log(`totalPalletCount:${totalPalletCount}`)
-        console.log(`totalFrozenPallets:${totalFrozenPallets}`)
-        console.log(`totalCDPallets:${totalCDPallets}`)
-        console.log(`maxPalletCount:${maxPalletCount}`)
-        console.log(`truckZones:${truckZones}`)
-        console.log(`totalFrozenPallets/totalPalletCount : 1/truckZones -> ${totalFrozenPallets/totalPalletCount} : ${1/truckZones}`)
-        console.log(`totalFrozenPallets/totalPalletCount : 2/truckZones -> ${totalFrozenPallets/totalPalletCount} : ${2/truckZones}`)
-
-
-        // TESTING FINISH
-
-        // TODO remember to add a case when theres is only F goods or only C/D goods in the load, rules down under won't work then
-        // it's when totalCDPallets or totalFpallets == totalPalletCount 
-
-        let result = false;
-        if (totalFrozenPallets == totalPalletCount && totalCDPallets == 0){ console.log("Load is only Frozen goods!");}
-        else if (totalCDPallets == totalPalletCount && totalFrozenPallets == 0) {console.log("Load is only chill/dry goods!");}
-        else if (totalPalletCount > maxPalletCount) {alert("Number of pallets exceeds the maximum volume!");}
-        // some calculation for the F/CD pallets load
-        else if (truckZones === 2) {
-            result = totalFrozenPallets/maxPalletCount <= 1/truckZones;
-            if (!result) {alert("Number of Frozen pallets exceeds the maximum volume: 1/2 of load");}
-        }
-        else if ( truckZones === 3) {
-            result = totalFrozenPallets/maxPalletCount <= 0.8;
-            if (!result) {alert("But number of Frozen pallets exceeds the maximum volume: 80% of load");}
-        }
-        
-
-    })
-        
+    })      
 }

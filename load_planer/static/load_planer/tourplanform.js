@@ -275,7 +275,7 @@ function loadDeliveryPlanPart4() {
                     cell.id = `${element}:${value}`;
                 }
                 else if (element === 'Destination') {
-                    // cell.innerHTML = key;
+                    
                     const aLink = document.createElement('a');
                     aLink.href = `/destination/${key}`;
                     aLink.target = "_blank";
@@ -293,14 +293,37 @@ function loadDeliveryPlanPart4() {
                     const inputField = document.createElement('input');
                     inputField.type = "number";
                     inputField.id = `${element}:${value}`;
+                    inputField.classList = `pallets_in${value}`;
                     inputField.placeholder = `pallets`;
+                    cell.appendChild(inputField);
+                    inputField.addEventListener('change', recountTotal);
+                }
+                else if (element === 'total'){
+                    const inputField = document.createElement('p');
+                    inputField.id = `total:${value}`;
+                    inputField.innerHTML = 0;
                     cell.appendChild(inputField);
                 }
                 row.appendChild(cell);
             })
         })
-
     })
     submitTourPlaningForm();
+}
+
+function recountTotal(event) {
+    const rowNumber = event.target.parentElement.parentElement.id.slice(4);
+    //check values of all class pallets_in{rowNumber} and update the value of total:{rownumber}
+    const total = document.getElementById(`total:${rowNumber}`);
+    const palletCount = document.querySelectorAll(`.pallets_in${rowNumber}`);
+    let totalNumberOfPallets = 0;
+
+    for ( var i = 0; i<palletCount.length; i++) {
+        if (palletCount[i].value === "") {
+            palletCount[i].value = 0;
+        }
+        totalNumberOfPallets += parseInt(palletCount[i].value);
+    }
+    total.innerHTML = totalNumberOfPallets;
 }
 
