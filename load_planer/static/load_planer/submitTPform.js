@@ -1,13 +1,23 @@
 function submitTourPlaningForm(){
-    console.log("loaded submitTourPlaningForm()");
     // create a button and append to formfield
     const formField = document.getElementById('tour_plan_form');
+    const verificateButton = document.createElement('button');
+    verificateButton.classList = 'btn btn-primary btn-block';
+    verificateButton.type = 'submit';
+    verificateButton.textContent = "Verify Tour";
+    verificateButton.id = 'verify_button';
+    formField.append(verificateButton);
+    verificateButton.addEventListener('click', verificateTableData);
+
+    //creating registration button
     const submitButton = document.createElement('button');
-    submitButton.classList = 'btn btn-primary btn-block';
+    submitButton.classList = 'btn btn-success btn-block';
     submitButton.type = 'submit';
-    submitButton.textContent = "Verify Tour";
+    submitButton.textContent = "Register Tour";
+    submitButton.disabled = true;
+    submitButton.id = "submit_button";
     formField.append(submitButton);
-    submitButton.addEventListener('click', verificateTableData);
+    submitButton.addEventListener('click', verifyTourData);
 
 }
 
@@ -16,9 +26,15 @@ function submitTourPlaningForm(){
     This function is going to verify all the data in table
     row by row checking if the input is filled out.
     Server side verification is going to happen as well.
+
+    If ever some messages that supply additional information 
+    about driver or  truck, that needs to be add here!
 */
 function verificateTableData(event) {
-    
+    //making sure the subbmit button is disabled.
+    const submitButton = document.getElementById('submit_button');
+    submitButton.disabled = true;
+
     const rows = document.getElementById('tour_table').rows.length;
     var totalPalletCount = 0;
     var totalFrozenPallets = 0;
@@ -51,7 +67,7 @@ function verificateTableData(event) {
             if (destIsValid && timeIsValid && fPisValid && cPisValid &&dPisValid) {
                 // check if total number of pallets is < maxPallets    
                 console.log("row valid and none of above!");
-                targetRow.style = "background-color:green";
+                targetRow.style = "background-color:#66FF99"; //green
 
                 totalFrozenPallets += parseInt(fPallets.value);
                 totalCDPallets += parseInt(cPallets.value) + parseInt(dPallets.value);
@@ -59,7 +75,7 @@ function verificateTableData(event) {
                 let result = false;
                 if (totalPalletCount > maxPalletCount) {
                     console.log("Number of pallets exceeds the maximum volume!");
-                    targetRow.style = "background-color:red";
+                    targetRow.style = "background-color:#E33C3C"; //red
                     validationValue -= 1;
                 }
                 // // some calculation for the F/CD pallets load
@@ -67,7 +83,7 @@ function verificateTableData(event) {
                     result = totalFrozenPallets/maxPalletCount <= 1/truckZones;
                     if (!result) {
                         console.log("Number of Frozen pallets exceeds the maximum volume: 1/2 of load");
-                        targetRow.style = "background-color:yellow";
+                        targetRow.style = "background-color:#FFE666"; //yellow
                         validationValue -= 1;
                     }
                 }
@@ -75,91 +91,105 @@ function verificateTableData(event) {
                     result = totalFrozenPallets/maxPalletCount <= 0.8;
                     if (!result) {
                         console.log("But number of Frozen pallets exceeds the maximum volume: 80% of load");
-                        targetRow.style = "background-color:yellow";
+                        targetRow.style = "background-color:#FFE666"; //yellow
                         validationValue -= 1;
                     }
                 }
                validationValue += 1;  
             }
             else {
-                console.log("Form not valid!");
-                console.log(validationValue);
-                targetRow.style = "background-color:red";
+                targetRow.style = "background-color:#E33C3C"; //red
             }
         }
-        console.log("final:");
-        console.log(validationValue);
         if (validationValue == (rows-1)) {
             console.log("ALL rows in the table are valid!");
+            submitButton.disabled = false;
         }
         else {
             console.log("Check the yellow/red rows again!");
         }
-
     })     
 
 }
 
-function registerTour(){
-    // rows is a number of rows in the table
-    // rows is including header row!
-    const rows = document.getElementById('tour_table').rows.length;
+function verifyTourData(){
+
     /* TODO now we need to write a way to grab tada from the table
         and send a reqeust to registed each row as a tour */
 
-        // returns true or false
-    if (false) {
-
-        // // first we need to register the TOur and then every row as Destination point
-        // const delivery_id_field = document.getElementById('delivery_id_field');
-        // const delivery_date = document.getElementById('exec_date');
-        // const truck_id = document.getElementById('truck_id');
-        // const driver_id = document.getElementById('driver_id');
-        // fetch('/register_tour', {
-        //     method: "POST",
-        //     body: JSON.stringify({
-        //         delivery_id: delivery_id_field.value,
-        //         exec_date : delivery_date.value,
-        //         truck_id: truck_id.value,
-        //         driver_id: driver_id.value,
-        //     }),
-        // })
-        // .then(response => response.json())
-        // .then(data => {
-        //     console.log(data);
-        // })
-
-
-
-        // for (var i = 1; i < rows; i++){
-        //     //getting vital values:
-        //     const destination = document.getElementById(`Destination:${i}`);
-        //     const deliveryTime = document.getElementById(`time:${i}`);          
-        //     const fPallets = document.getElementById(`frozen:${i}`);
-        //     const cPallets = document.getElementById(`chilled:${i}`);
-        //     const dPallets = document.getElementById(`dry:${i}`);
-            
-        //     /* if form is valid we fetch registration for every line */
-
-        //     fetch('/register_delivery_point', {
-        //         method: "POST",
-        //         body: JSON.stringify({
-        //             destination: destination.innerHTML,
-        //             time : deliveryTime.value,
-        //             fpallets: fPallets.value,
-        //             cpallets: cPallets.value,
-        //             dpallets: dPallets.value,
-        //         }),
-        //     })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         console.log(data);
-        //     })
-        // }
-    } 
-    else {
-        console.log("11111");
+    // lock all buttons
+    const verifyButton = document.getElementById('verify_button');
+    verifyButton.disabled = true;
+    const registerButton = document.getElementById('submit_button');
+    registerButton.disabled = true;
+     //lock all input fields
+    const inpiutList = document.querySelectorAll('input');
+    for (var i = 0; i < inpiutList.length; i++) {
+    inpiutList[i].disabled = true;
     }
+    // lock select fields
+    const selectFields = document.querySelectorAll('select');
+    for ( var i = 0; i< selectFields.length; i++){
+        selectFields[i].disabled = true;
+    }
+    // registring Tour
+    registerTour();
+}
 
+/* Function is registring Tour so the Destination points can be registred. */
+function registerTour(){
+    // first we need to register the TOur and then every row as Destination point
+    const delivery_id_field = document.getElementById('delivery_id_field');
+    const delivery_date = document.getElementById('exec_date');
+    const truck_id = document.getElementById('truck_id');
+    const driver_id = document.getElementById('driver_id');
+    fetch('/register_tour', {
+        method: "POST",
+        body: JSON.stringify({
+            delivery_id: delivery_id_field.value,
+            exec_date : delivery_date.value,
+            truck_id: truck_id.value,
+            driver_id: driver_id.value,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        const tour_id = data['tour_id'];
+        console.log(tour_id);
+        /* data has to return tour_id to be user to register delivery points*/
+        registerDeliveryPoint(tour_id);
+    })
+}
 
+/* Functions is registring every row as a Destination point */
+function registerDeliveryPoint(tour_id){
+    // rows is a number of rows in the table
+    // rows is including header row!
+    const rows = document.getElementById('tour_table').rows.length;
+    for (var i = 1; i < rows; i++){
+        //getting vital values:
+        const destination = document.getElementById(`Destination:${i}`);
+        const deliveryTime = document.getElementById(`time:${i}`);          
+        const fPallets = document.getElementById(`frozen:${i}`);
+        const cPallets = document.getElementById(`chilled:${i}`);
+        const dPallets = document.getElementById(`dry:${i}`);
+        
+        /* if form is valid we fetch registration for every line */
+    
+        fetch('/register_delivery_point', {
+            method: "POST",
+            body: JSON.stringify({
+                tour_id: tour_id,
+                destination: destination.innerHTML,
+                time : deliveryTime.value,
+                fpallets: fPallets.value,
+                cpallets: cPallets.value,
+                dpallets: dPallets.value,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+    }
 }

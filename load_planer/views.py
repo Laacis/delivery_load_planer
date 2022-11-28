@@ -452,6 +452,7 @@ def get_delivery_destinations(request, delivery_id):
 
 @csrf_exempt
 def register_tour(request):
+    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 
     if request.method == 'POST':
         data = json.loads(request.body)
         delivery_id = data['delivery_id']
@@ -462,7 +463,7 @@ def register_tour(request):
         # TODO : finish this!!!!
 
 
-        return JsonResponse({"message":tour_id})
+        return JsonResponse({"tour_id":tour_id})
     else:
         return JsonResponse({"response":"wrong request"})
     # tour_id = 
@@ -479,10 +480,11 @@ def register_delivery_point(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         destination = data['destination']
+        tour_id = data['tour_id']
         # TODO : finish this!!!!
 
 
-        return JsonResponse({"message":destination})
+        return JsonResponse({"destination":destination, "tour_id":tour_id})
     else:
         return JsonResponse({"response":"wrong request"})
 
