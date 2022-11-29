@@ -1,6 +1,18 @@
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("LOADED!");
-    loadDeliveryPlanPart1();
+    const sideBar = document.getElementById('sidebar_left');
+    const newButton = document.createElement('button');
+    newButton.classList = 'btn btn-success';
+    newButton.type = 'submit';
+    newButton.textContent = "New Tour";
+    sideBar.appendChild(newButton);
+    newButton.addEventListener('click', function(){
+
+        newButton.disabled = true;
+        loadDeliveryPlanPart1();
+    })
+
+
+    
 });
 
 var listDeliveryIds = []
@@ -8,26 +20,75 @@ var listDeliveryIds = []
 /* loads the first part of the Tour form:
     user has to select year and Quarter to load matching Delivery plans 
     for the selected period of Y/Q
+
+    Going to put row inside "main_left" then a div"col-md" and that 
+    inside div"form-floating" inside that input field and label for 
+    select of year, same for quarter
 */
 function loadDeliveryPlanPart1() {
-    const formField = document.getElementById('tour_plan_form');
+    const formField = document.getElementById('main_left');
+    // row here
+    const yqRow = document.createElement('row');
+    yqRow.classList = 'row g-2';
+    yqRow.id = "yRow_g2";
+    formField.appendChild(yqRow);
+
+    //div here
+    const truckDiv = document.createElement('div');
+    truckDiv.classList = "col-md";
+    yqRow.appendChild(truckDiv);
+    //form-floating div
+    const truckDivFormF = document.createElement('div');
+    truckDivFormF.classList = 'form-floating';
+    truckDiv.appendChild(truckDivFormF);
+
+    //select year
     const deliveryYearField = document.createElement('select');
     deliveryYearField.id = "delivery_plan_year";
-    formField.appendChild(deliveryYearField);
+    deliveryYearField.classList = "form-control";
+    // creating label
+    const truckLabel = document.createElement('label');
+    truckLabel.for = "delivery_plan_year";
+    truckLabel.classList = "form-label";
+    truckLabel.innerHTML = 'Choose Year:';
+
+    // putting it together
+    truckDivFormF.appendChild(deliveryYearField);
+    truckDivFormF.appendChild(truckLabel)
     for (var i = 2022; i < 2025; i++) {
         const option = document.createElement('option')
         option.value = i;
         option.text = i;
         deliveryYearField.appendChild(option);
     }
-    const deliveryQuarterField = document.createElement('select');
-    deliveryQuarterField.id = "delivery_plan_quarter";
-    formField.appendChild(deliveryQuarterField);
+    /* here goes the same for the Quarter select */
+    //div here
+    const driverDiv = document.createElement('div');
+    driverDiv.classList = "col-md";
+    yqRow.appendChild(driverDiv);
+    //form-floating div
+    const driverDivFormF = document.createElement('div');
+    driverDivFormF.classList = 'form-floating';
+    driverDiv.appendChild(driverDivFormF);
+
+    // select quarter
+    const driverIdField = document.createElement('select');
+    driverIdField.id = "delivery_plan_quarter";
+    driverIdField.classList = "form-control";
+    // creating label
+    const driverLabel = document.createElement('label');
+    driverLabel.for = "delivery_plan_quarter";
+    driverLabel.classList = "form-label";
+    driverLabel.innerHTML = 'Choose Quarter:';
+
+    driverDivFormF.appendChild(driverIdField);
+    driverDivFormF.appendChild(driverLabel);
+    //yqDiv.appendChild(driverIdField);
     for (var i = 1; i < 5; i++) {
         const option = document.createElement('option');
         option.value = i;
         option.text = "Q"+i;
-        deliveryQuarterField.appendChild(option);
+        driverIdField.appendChild(option);
     }
     // create and style button
     const loadButton = document.createElement('button');
@@ -36,7 +97,7 @@ function loadDeliveryPlanPart1() {
     loadButton.textContent = "Load Plans";
     formField.appendChild(loadButton);
     loadButton.addEventListener('click', function(){
-        fetch(`/get_delivery_list_by_details/${deliveryYearField.value}/${deliveryQuarterField.value}`)
+        fetch(`/get_delivery_list_by_details/${deliveryYearField.value}/${driverIdField.value}`)
         .then(response => response.json())
         .then(data => {
             // returns a list of values from delivery_id, now push values into listDeliveryIds
@@ -48,7 +109,7 @@ function loadDeliveryPlanPart1() {
             // when list is updated: create and update the form
             //disable selected fields
             deliveryYearField.disabled = true;
-            deliveryQuarterField.disabled = true;
+            driverIdField.disabled = true;
             loadButton.remove(); //remove button as we don't need it anymore
             loadDeliveryPlanPart2();
         })
@@ -59,35 +120,50 @@ function loadDeliveryPlanPart1() {
     loading date/delivery_id fields for the Tour to be executed
 */
 function loadDeliveryPlanPart2() {
-    console.log("loading second part of form.");
-    const formField = document.getElementById('tour_plan_form');
+    
+    const formField = document.getElementById('main_middle');
 
-    const deliveryIdField = document.createElement('input');
-    deliveryIdField.placeholder = 'Delivery plan id: AAAA01';
-    deliveryIdField.type = 'text';
-    deliveryIdField.id = 'delivery_id_field';
-    formField.appendChild(deliveryIdField);
-    //adding event listeners to every input field of deliveryIdField
-    deliveryIdField.addEventListener("keyup", suggestion_list);
+    const pdDiv = document.createElement('div');
+    //pdDiv.classList = "text-end";
+    formField.appendChild(pdDiv);
 
-    //adding ul field for destination list to display suggestions
-    const destination_list = document.createElement('ul');
-    destination_list.id = 'destination_list:';
-    formField.appendChild(destination_list);
+    const pdLabel = document.createElement('label');
+    pdLabel.for = "exec_date";
+    pdLabel.classList = "form-label";
+    pdLabel.innerHTML = 'Select date and Delivery Plan:';
+
 
     const dateField = document.createElement('input');
     dateField.type = 'date';
     dateField.id = 'exec_date';
     dateField.placeholder = "select-date";
     dateField.min = new Date().toISOString().split('T')[0];
-    formField.appendChild(dateField);
+    pdDiv.appendChild(pdLabel);
+    pdDiv.appendChild(dateField);
+
+    const deliveryIdField = document.createElement('input');
+    deliveryIdField.placeholder = 'Delivery plan id: AAAA01';
+    deliveryIdField.type = 'text';
+    deliveryIdField.id = 'delivery_id_field';
+
+    pdDiv.appendChild(document.createElement('br'));
+    pdDiv.appendChild(deliveryIdField);
+    //adding event listeners to every input field of deliveryIdField
+    deliveryIdField.addEventListener("keyup", suggestion_list);
+
+    //adding ul field for destination list to display suggestions
+    const destination_list = document.createElement('ul');
+    destination_list.id = 'destination_list:';
+    pdDiv.appendChild(destination_list);
+
+
 
     const loadButton = document.createElement('button');
     loadButton.classList = 'btn btn-primary';
     loadButton.type = 'submit';
     loadButton.textContent = "Load Plans";
 
-    formField.appendChild(loadButton);
+    pdDiv.appendChild(loadButton);
     loadButton.addEventListener('click', function(){
         // let's checks if the delivery plan id is matching one from the list
         const checkingSet = new Set(listDeliveryIds);
@@ -119,27 +195,77 @@ function loadDeliveryPlanPart2() {
     loadSelectedFields() function fetches the options from db
 */
 function loadDeliveryPlanPart3() {
-    const formField = document.getElementById('tour_plan_form');
+    const formField = document.getElementById('main_right');
+    // row here
+    const yqRow = document.createElement('row');
+    yqRow.classList = 'row g-2';
+    yqRow.id = "TruckRow_g2";
+    formField.appendChild(yqRow);
+    
+    //div here
+    const truckDiv = document.createElement('div');
+    truckDiv.classList = "col-md";
+    yqRow.appendChild(truckDiv);
+    //form-floating div
+    const truckDivFormF = document.createElement('div');
+    truckDivFormF.classList = 'form-floating';
+    truckDiv.appendChild(truckDivFormF);
 
-    // create input field for Truck id
+    //select truck
     const truckId = document.createElement('select'); 
     truckId.id = 'truck_id';
-    formField.appendChild(truckId);
-    const dOptionTruck = document.createElement('option');
-    dOptionTruck.text = "select-truck";
-    dOptionTruck.disabled = true;
-    dOptionTruck.selected = true;
-    truckId.appendChild(dOptionTruck);
+    truckId.classList = "form-control";
+    // creating label
+    const truckLabel = document.createElement('label');
+    truckLabel.for = "truck_id";
+    truckLabel.classList = "form-label";
+    truckLabel.innerHTML = 'Select Truck:';
 
+    // putting it together
+    truckDivFormF.appendChild(truckId);
+    truckDivFormF.appendChild(truckLabel);
+
+    // options for truckId
+    // const dOptionTruck = document.createElement('option');
+    // dOptionTruck.text = "";
+    // dOptionTruck.disabled = true;
+    // dOptionTruck.selected = true;
+    // truckId.appendChild(dOptionTruck);
+
+    /* here goes the same for the Driver select */
+    //div here
+    const driverDiv = document.createElement('div');
+    driverDiv.classList = "col-md";
+    yqRow.appendChild(driverDiv);
+    //form-floating div
+    const driverDivFormF = document.createElement('div');
+    driverDivFormF.classList = 'form-floating';
+    driverDiv.appendChild(driverDivFormF);
+
+    // select quarter
+    const driverIdField = document.createElement('select');
+    driverIdField.id = "driver_id";
+    driverIdField.classList = "form-control";
+    // creating label
+    const driverLabel = document.createElement('label');
+    driverLabel.for = "driver_id";
+    driverLabel.classList = "form-label";
+    driverLabel.innerHTML = 'Choose Driver:';
+
+    driverDivFormF.appendChild(driverIdField);
+    driverDivFormF.appendChild(driverLabel);
+
+
+    ///////////////////////////////////////
     //create input field for driver id
-    const driverId = document.createElement('select');
-    driverId.id = 'driver_id';
-    formField.appendChild(driverId);
-    const dOption = document.createElement('option');
-    dOption.text = "select-driver";
-    dOption.disabled = true;
-    dOption.selected = true;
-    driverId.appendChild(dOption);
+    // const driverId = document.createElement('select');
+    // driverId.id = 'driver_id';
+    // formField.appendChild(driverId);
+    // const dOption = document.createElement('option');
+    // dOption.text = "select-driver";
+    // dOption.disabled = true;
+    // dOption.selected = true;
+    // driverId.appendChild(dOption);
 
     // populate truckId and driverId with options from db
     loadSelectIdFields(); 
@@ -153,14 +279,8 @@ function loadDeliveryPlanPart3() {
     formField.appendChild(loadPlanButton);
 
     loadPlanButton.addEventListener('click', function(){
-        //let's make sure driver/truck is selected
-        if (!driverId.value.includes("select") && !truckId.value.includes("select")) {
-            loadDeliveryPlanPart4();
-            loadPlanButton.remove();
-        }
-        else {
-            console.log("Select driver and/or truck id!");
-        }
+        loadDeliveryPlanPart4();
+        loadPlanButton.remove();
     })  
 }
 
@@ -243,8 +363,9 @@ function loadDeliveryPlanPart4() {
     const DeliveryPlanId = document.getElementById('delivery_id_field');  
     // checking if truck and Driver has been selected
     const tableField = document.createElement('table');
-    tableField.style = "width:100%"
+    //tableField.style = "width:100%"
     tableField.id = 'tour_table';
+    tableField.classList = "table table-striped";
     formField.appendChild(tableField);
     const headerRow = document.createElement('tr');
     tableField.appendChild(headerRow);
@@ -287,6 +408,7 @@ function loadDeliveryPlanPart4() {
                     const inputField = document.createElement('input');
                     inputField.type = "time";
                     inputField.id = `${element}:${value}`;
+                    inputField.classList = "form-control";
                     cell.appendChild(inputField);
                 }
                 else if (listInputCells.includes(element)) {
@@ -294,7 +416,8 @@ function loadDeliveryPlanPart4() {
                     inputField.type = "number";
                     inputField.id = `${element}:${value}`;
                     inputField.classList = `pallets_in${value}`;
-                    inputField.placeholder = `pallets`;
+                    inputField.placeholder = `0`;
+                    inputField.classList = "form-control";
                     cell.appendChild(inputField);
                     inputField.addEventListener('change', recountTotal);
                 }

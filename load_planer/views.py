@@ -515,17 +515,7 @@ def register_delivery_point(request):
             destination = Destination.objects.get(destination_id=destination)
         except:
             return JsonResponse({"error":"provided destination is not registred"})
-        # data = {
-        #         'tour_id': tour_id.tour_id,
-        #         'destination':destination.destination_id,
-        #         'delivery_time': delivery_time,
-        #         'fpallets':fpallets,
-        #         'cpallets':cpallets,
-        #         'dpallets':dpallets
-        #     }
-        # return JsonResponse(data, safe=False)
         try:
-            
             register = DeliveryPoint.objects.create(
                 tour_id = tour_id, # FOREIGN KEY
                 delivery_time = delivery_time, #%H:%M
@@ -533,12 +523,10 @@ def register_delivery_point(request):
                 f_pallets = int(fpallets),
                 c_pallets = int(cpallets),
                 d_pallets = int(dpallets)
-
             )
             register.save()
             return JsonResponse({"destination":destination.destination_id, "tour_id":tour_id.tour_id})
         except:
-            tour_id.delete() # REMOVE AFTER TESTING!
             return JsonResponse({"error":"destination point not registred"})
 
     else:

@@ -3,7 +3,7 @@
 
 {% block body %}
     
-    <div class="container text-center">
+    <!-- <div class="container text-center">
         <h1> Tur Planing</h1>
         
         <p> TODO: </p>
@@ -19,9 +19,9 @@
             {% endfor %}
         {% else %}
             <p>No Tours to display!</p>
-        {% endif %}
+        {% endif %} -->
 
-<!-- 
+            <!-- 
         {% if tour_form %}
             <form action="#" method="post">
                 {% csrf_token %}
@@ -30,11 +30,36 @@
                 <input type="submit" value="Registre Tour" class="btn btn-primary form-control">
             </form>
         {% endif %} -->
-
+<!-- 
         <div id="tour_plan_form">
             <br><p> Tour Planing Form:</p><br>
+        </div> -->
+    <!-- </div>   -->
+    <div class="container text-center">
+        <div class="row">
+            
+            <div class="col-3 col-md-3" id="sidebar_left">
+                <br><p>THIS SIDEBAR</p>
+            </div>
+            <div class="col-md-9" id="'main_div_right">
+                <div class="row row-cols-3">
+                    <div class="col" id="main_left">
+                        
+                      </div>
+                      <div class="col" id="main_middle">
+                        
+                      </div>
+                      <div class="col" id="main_right">
+                        
+                      </div>
+                </div>
+                <div id="tour_plan_form">
+                    
+                </div>
+            </div>
         </div>
-    </div>  
+    </div>
+
 {% endblock %}
 
 {% block script %}
