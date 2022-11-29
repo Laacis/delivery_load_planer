@@ -454,24 +454,44 @@ def get_delivery_destinations(request, delivery_id):
 def register_tour(request):
     # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 
     if request.method == 'POST':
-        data = json.loads(request.body)
-        delivery_id = data['delivery_id']
-        exec_date = data['exec_date']
-        tour_id = f"{delivery_id}{exec_date}"
+        try:
+            data = json.loads(request.body)
+            truck_id = data['truck_id']
+            driver_id = data['driver_id']
+            delivery_id = data['delivery_id']
+            try:
+                delivery_id = Delivery_plan.objects.get(delivery_id=delivery_id)
+            except:
+                return JsonResponse({"error":"delivery_id doesn't exist"})
 
+            try:
+                driver_id = Driver.objects.get(pk=driver_id)
+            except:
+                return JsonResponse({"error":"driver_id doesn't exist"})
 
-        # TODO : finish this!!!!
+            try:
+                truck_id = Truck.objects.get(pk=truck_id)
+            except:
+                return JsonResponse({"error":"truck_id doesn't exist"})
+            exec_date = data['exec_date']
+            tour_id = f"{delivery_id.delivery_id}:{exec_date}"
+            
+            
+            register = Tour.objects.create(
+                tour_id = tour_id,
+                delivery_id = delivery_id,
+                driver_id = driver_id,
+                truck_id = truck_id,
+                exec_date = exec_date
+            )
+            register.save()
+            return JsonResponse({"tour_id":tour_id})
+        except:
+            return JsonResponse({"tour_id":""})
 
-
-        return JsonResponse({"tour_id":tour_id})
     else:
         return JsonResponse({"response":"wrong request"})
-    # tour_id = 
-    # delivery_id = 
-    # driver_id = 
-    # truck_id = 
-    # exec_date =
-    return JsonResponse({"message":"registring Tour!"})
+
 
 
 @csrf_exempt
@@ -479,12 +499,48 @@ def register_delivery_point(request):
     # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 
     if request.method == 'POST':
         data = json.loads(request.body)
-        destination = data['destination']
-        tour_id = data['tour_id']
-        # TODO : finish this!!!!
+        # return JsonResponse(data, safe=False)
+        tour_id = data.get('tour_id')
+        delivery_time = data.get('delivery_time')
+        destination = data.get('destination')
+        fpallets = data.get('fpallets')
+        cpallets = data.get('cpallets')
+        dpallets = data.get('dpallets')
+        try:
+            tour_id = Tour.objects.get(pk=tour_id)
+        except:
+            return JsonResponse({"error":"provided tour_id is not registred"})
 
+        try: 
+            destination = Destination.objects.get(destination_id=destination)
+        except:
+            return JsonResponse({"error":"provided destination is not registred"})
+        # data = {
+        #         'tour_id': tour_id.tour_id,
+        #         'destination':destination.destination_id,
+        #         'delivery_time': delivery_time,
+        #         'fpallets':fpallets,
+        #         'cpallets':cpallets,
+        #         'dpallets':dpallets
+        #     }
+        # return JsonResponse(data, safe=False)
+        try:
+            
+            register = DeliveryPoint.objects.create(
+                tour_id = tour_id, # FOREIGN KEY
+                delivery_time = delivery_time, #%H:%M
+                destination = destination, # FOREIGN KEY
+                f_pallets = int(fpallets),
+                c_pallets = int(cpallets),
+                d_pallets = int(dpallets)
 
-        return JsonResponse({"destination":destination, "tour_id":tour_id})
+            )
+            register.save()
+            return JsonResponse({"destination":destination.destination_id, "tour_id":tour_id.tour_id})
+        except:
+            tour_id.delete() # REMOVE AFTER TESTING!
+            return JsonResponse({"error":"destination point not registred"})
+
     else:
         return JsonResponse({"response":"wrong request"})
 

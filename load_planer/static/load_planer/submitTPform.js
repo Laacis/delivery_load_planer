@@ -156,8 +156,17 @@ function registerTour(){
     .then(data => {
         const tour_id = data['tour_id'];
         console.log(tour_id);
-        /* data has to return tour_id to be user to register delivery points*/
-        registerDeliveryPoint(tour_id);
+        /* data has to return tour_id to be user to register delivery points
+            if tour_id is empty:  Drop Error alert
+        */
+        if(data['error']) {
+            alert(data['error']);
+        }
+        else {
+            registerDeliveryPoint(tour_id);
+            console.log(data);
+        }
+        
     })
 }
 
@@ -181,7 +190,7 @@ function registerDeliveryPoint(tour_id){
             body: JSON.stringify({
                 tour_id: tour_id,
                 destination: destination.innerHTML,
-                time : deliveryTime.value,
+                delivery_time : deliveryTime.value,
                 fpallets: fPallets.value,
                 cpallets: cPallets.value,
                 dpallets: dPallets.value,
