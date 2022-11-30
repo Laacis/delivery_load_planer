@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     const sideBar = document.getElementById('sidebar_left');
     const newButton = document.createElement('button');
-    newButton.classList = 'btn btn-success';
+    newButton.classList = 'btn btn-success form-control';
     newButton.type = 'submit';
     newButton.textContent = "New Tour";
     sideBar.appendChild(newButton);
@@ -28,33 +28,33 @@ var listDeliveryIds = []
 function loadDeliveryPlanPart1() {
     const formField = document.getElementById('main_left');
     // row here
-    const yqRow = document.createElement('row');
-    yqRow.classList = 'row g-2';
-    yqRow.id = "yRow_g2";
-    formField.appendChild(yqRow);
+    const ddpRow = document.createElement('row');
+    ddpRow.classList = 'row g-2';
+    ddpRow.id = "yRow_g2";
+    formField.appendChild(ddpRow);
 
     //div here
-    const truckDiv = document.createElement('div');
-    truckDiv.classList = "col-md";
-    yqRow.appendChild(truckDiv);
+    const dateDiv = document.createElement('div');
+    dateDiv.classList = "col-md";
+    ddpRow.appendChild(dateDiv);
     //form-floating div
-    const truckDivFormF = document.createElement('div');
-    truckDivFormF.classList = 'form-floating';
-    truckDiv.appendChild(truckDivFormF);
+    const dateDivFormF = document.createElement('div');
+    dateDivFormF.classList = 'form-floating';
+    dateDiv.appendChild(dateDivFormF);
 
     //select year
     const deliveryYearField = document.createElement('select');
     deliveryYearField.id = "delivery_plan_year";
     deliveryYearField.classList = "form-control";
     // creating label
-    const truckLabel = document.createElement('label');
-    truckLabel.for = "delivery_plan_year";
-    truckLabel.classList = "form-label";
-    truckLabel.innerHTML = 'Choose Year:';
+    const dateLabel = document.createElement('label');
+    dateLabel.for = "delivery_plan_year";
+    dateLabel.classList = "form-label";
+    dateLabel.innerHTML = 'Choose Year:';
 
     // putting it together
-    truckDivFormF.appendChild(deliveryYearField);
-    truckDivFormF.appendChild(truckLabel)
+    dateDivFormF.appendChild(deliveryYearField);
+    dateDivFormF.appendChild(dateLabel)
     for (var i = 2022; i < 2025; i++) {
         const option = document.createElement('option')
         option.value = i;
@@ -65,7 +65,7 @@ function loadDeliveryPlanPart1() {
     //div here
     const driverDiv = document.createElement('div');
     driverDiv.classList = "col-md";
-    yqRow.appendChild(driverDiv);
+    ddpRow.appendChild(driverDiv);
     //form-floating div
     const driverDivFormF = document.createElement('div');
     driverDivFormF.classList = 'form-floating';
@@ -92,10 +92,12 @@ function loadDeliveryPlanPart1() {
     }
     // create and style button
     const loadButton = document.createElement('button');
-    loadButton.classList = 'btn btn-primary';
+    loadButton.classList = 'btn btn-primary form-control';
     loadButton.type = 'submit';
     loadButton.textContent = "Load Plans";
-    formField.appendChild(loadButton);
+    // going to set the button in the middle part
+    const midField = document.getElementById('main_middle');
+    midField.appendChild(loadButton);
     loadButton.addEventListener('click', function(){
         fetch(`/get_delivery_list_by_details/${deliveryYearField.value}/${driverIdField.value}`)
         .then(response => response.json())
@@ -123,55 +125,106 @@ function loadDeliveryPlanPart2() {
     
     const formField = document.getElementById('main_middle');
 
-    const pdDiv = document.createElement('div');
-    //pdDiv.classList = "text-end";
-    formField.appendChild(pdDiv);
+    // row here
+    const ddpRow = document.createElement('row');
+    ddpRow.classList = 'row g-2';
+    ddpRow.id = "yRow_g2";
+    formField.appendChild(ddpRow);
 
-    const pdLabel = document.createElement('label');
-    pdLabel.for = "exec_date";
-    pdLabel.classList = "form-label";
-    pdLabel.innerHTML = 'Select date and Delivery Plan:';
+    //div here
+    const dateDiv = document.createElement('div');
+    dateDiv.classList = "col-md";
+    ddpRow.appendChild(dateDiv);
+    //form-floating div
+    const dateDivFormF = document.createElement('div');
+    dateDivFormF.classList = 'form-floating';
+    dateDiv.appendChild(dateDivFormF);
 
-
+    //select date
     const dateField = document.createElement('input');
     dateField.type = 'date';
     dateField.id = 'exec_date';
+    dateField.classList = "form-control";
     dateField.placeholder = "select-date";
     dateField.min = new Date().toISOString().split('T')[0];
-    pdDiv.appendChild(pdLabel);
-    pdDiv.appendChild(dateField);
+    // const deliveryYearField = document.createElement('select');
+    // deliveryYearField.id = "delivery_plan_year";
+    // deliveryYearField.classList = "form-control";
+    // creating label
+    const dateLabel = document.createElement('label');
+    dateLabel.for = "exec_date";
+    dateLabel.classList = "form-label";
+    dateLabel.innerHTML = 'Select date:';
 
-    const deliveryIdField = document.createElement('input');
-    deliveryIdField.placeholder = 'Delivery plan id: AAAA01';
-    deliveryIdField.type = 'text';
-    deliveryIdField.id = 'delivery_id_field';
+    // putting it together
+    dateDivFormF.appendChild(dateField);
+    dateDivFormF.appendChild(dateLabel)
+    /////////////////////////////////////////////////////////
+    // const pdDiv = document.createElement('div');
+    // //pdDiv.classList = "text-end";
+    // formField.appendChild(pdDiv);
 
-    pdDiv.appendChild(document.createElement('br'));
-    pdDiv.appendChild(deliveryIdField);
+    // const pdLabel = document.createElement('label');
+    // pdLabel.for = "exec_date";
+    // pdLabel.classList = "form-label";
+    // pdLabel.innerHTML = ' and Delivery Plan:';
+
+
+
+    //div here
+    const dplanDiv = document.createElement('div');
+    dplanDiv.classList = "col-md";
+    ddpRow.appendChild(dplanDiv);
+    //form-floating div
+    const dplanDivFormF = document.createElement('div');
+    dplanDivFormF.classList = 'form-floating';
+    dplanDiv.appendChild(dplanDivFormF);
+
+    //select date
+    const dpField = document.createElement('input');
+    dpField.placeholder = 'AAAA01';
+    dpField.type = 'text';
+    dpField.id = 'delivery_id_field';
+    dpField.classList = "form-control";
+
+    // const deliveryYearField = document.createElement('select');
+    // deliveryYearField.id = "delivery_plan_year";
+    // deliveryYearField.classList = "form-control";
+    // creating label
+    const dpLabel = document.createElement('label');
+    dpLabel.for = "exec_date";
+    dpLabel.classList = "form-label";
+    dpLabel.innerHTML = 'Delivery id:';
+
+    // putting it together
+    dplanDivFormF.appendChild(dpField);
+    dplanDivFormF.appendChild(dpLabel)
+///////////////////////////////////
+
     //adding event listeners to every input field of deliveryIdField
-    deliveryIdField.addEventListener("keyup", suggestion_list);
+    dpField.addEventListener("keyup", suggestion_list);
 
     //adding ul field for destination list to display suggestions
     const destination_list = document.createElement('ul');
     destination_list.id = 'destination_list:';
-    pdDiv.appendChild(destination_list);
+    dplanDiv.appendChild(destination_list);
 
 
-
+    
     const loadButton = document.createElement('button');
-    loadButton.classList = 'btn btn-primary';
+    loadButton.classList = 'btn btn-primary form-control';
     loadButton.type = 'submit';
     loadButton.textContent = "Load Plans";
-
-    pdDiv.appendChild(loadButton);
+    const rightField = document.getElementById('main_right');
+    rightField.appendChild(loadButton);
     loadButton.addEventListener('click', function(){
         // let's checks if the delivery plan id is matching one from the list
         const checkingSet = new Set(listDeliveryIds);
-        const isItemInSet = checkingSet.has(deliveryIdField.value);
+        const isItemInSet = checkingSet.has(dpField.value);
         if (isItemInSet && dateField.value != "") {
             //if item is valid we disable the input fields, enamble button and listener
             dateField.disabled = true;
-            deliveryIdField.disabled = true;
+            dpField.disabled = true;
             loadButton.remove();
             loadDeliveryPlanPart3();
         }
@@ -183,8 +236,8 @@ function loadDeliveryPlanPart2() {
             else {
                 //if delivery id not valid - set focus on it and write to console
                 console.log("Wrong Delivery Plan ID!");
-                deliveryIdField.focus();
-                deliveryIdField.placeholder = "Valid Delivery plan id!";
+                dpField.focus();
+                dpField.placeholder = "Valid Delivery plan id!";
             }
         }    
     })
@@ -197,33 +250,33 @@ function loadDeliveryPlanPart2() {
 function loadDeliveryPlanPart3() {
     const formField = document.getElementById('main_right');
     // row here
-    const yqRow = document.createElement('row');
-    yqRow.classList = 'row g-2';
-    yqRow.id = "TruckRow_g2";
-    formField.appendChild(yqRow);
+    const ddpRow = document.createElement('row');
+    ddpRow.classList = 'row g-2';
+    ddpRow.id = "TruckRow_g2";
+    formField.appendChild(ddpRow);
     
     //div here
-    const truckDiv = document.createElement('div');
-    truckDiv.classList = "col-md";
-    yqRow.appendChild(truckDiv);
+    const dateDiv = document.createElement('div');
+    dateDiv.classList = "col-md";
+    ddpRow.appendChild(dateDiv);
     //form-floating div
-    const truckDivFormF = document.createElement('div');
-    truckDivFormF.classList = 'form-floating';
-    truckDiv.appendChild(truckDivFormF);
+    const dateDivFormF = document.createElement('div');
+    dateDivFormF.classList = 'form-floating';
+    dateDiv.appendChild(dateDivFormF);
 
     //select truck
     const truckId = document.createElement('select'); 
     truckId.id = 'truck_id';
     truckId.classList = "form-control";
     // creating label
-    const truckLabel = document.createElement('label');
-    truckLabel.for = "truck_id";
-    truckLabel.classList = "form-label";
-    truckLabel.innerHTML = 'Select Truck:';
+    const dateLabel = document.createElement('label');
+    dateLabel.for = "truck_id";
+    dateLabel.classList = "form-label";
+    dateLabel.innerHTML = 'Select Truck:';
 
     // putting it together
-    truckDivFormF.appendChild(truckId);
-    truckDivFormF.appendChild(truckLabel);
+    dateDivFormF.appendChild(truckId);
+    dateDivFormF.appendChild(dateLabel);
 
     // options for truckId
     // const dOptionTruck = document.createElement('option');
@@ -236,7 +289,7 @@ function loadDeliveryPlanPart3() {
     //div here
     const driverDiv = document.createElement('div');
     driverDiv.classList = "col-md";
-    yqRow.appendChild(driverDiv);
+    ddpRow.appendChild(driverDiv);
     //form-floating div
     const driverDivFormF = document.createElement('div');
     driverDivFormF.classList = 'form-floating';
@@ -273,7 +326,7 @@ function loadDeliveryPlanPart3() {
     
     // create button
     const loadPlanButton = document.createElement('button');
-    loadPlanButton.classList = 'btn btn-secondary';
+    loadPlanButton.classList = 'btn btn-secondary form-control';
     loadPlanButton.type = 'submit';
     loadPlanButton.textContent = "Load Delivery Plan";
     formField.appendChild(loadPlanButton);
@@ -290,7 +343,8 @@ function suggestion_list(event) {
         //convert to lover case and comapre to each item in destination list
         if (item.toLowerCase().startsWith( event.target.value.toLowerCase()) && event.target.value != "") { 
             let itemList = document.createElement("li");
-            itemList.classList.add(`item-list:`);
+            // itemList.classList.add(`item-list:`);
+            itemList.classList = "list-group-item item-list:"
             itemList.style.cursor = "pointer";
             itemList.setAttribute("onclick", `dispplayDestinations('${item}', '${event.target.id}')`);
             let match_d = "<b>" + item.substring(0, event.target.value.length) + "</b>";
