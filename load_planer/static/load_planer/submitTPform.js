@@ -67,7 +67,7 @@ function verificateTableData(event) {
             if (destIsValid && timeIsValid && fPisValid && cPisValid &&dPisValid) {
                 // check if total number of pallets is < maxPallets    
                 console.log("row valid and none of above!");
-                targetRow.style = "background-color:#66FF99"; //green
+                targetRow.classList = "table-success"; //green
 
                 totalFrozenPallets += parseInt(fPallets.value);
                 totalCDPallets += parseInt(cPallets.value) + parseInt(dPallets.value);
@@ -75,7 +75,7 @@ function verificateTableData(event) {
                 let result = false;
                 if (totalPalletCount > maxPalletCount) {
                     console.log("Number of pallets exceeds the maximum volume!");
-                    targetRow.style = "background-color:#E33C3C"; //red
+                    targetRow.classList = "table-danger"; //red
                     validationValue -= 1;
                 }
                 // // some calculation for the F/CD pallets load
@@ -83,7 +83,7 @@ function verificateTableData(event) {
                     result = totalFrozenPallets/maxPalletCount <= 1/truckZones;
                     if (!result) {
                         console.log("Number of Frozen pallets exceeds the maximum volume: 1/2 of load");
-                        targetRow.style = "background-color:#FFE666"; //yellow
+                        targetRow.classList = "table-warning"; //yellow
                         validationValue -= 1;
                     }
                 }
@@ -91,14 +91,14 @@ function verificateTableData(event) {
                     result = totalFrozenPallets/maxPalletCount <= 0.8;
                     if (!result) {
                         console.log("But number of Frozen pallets exceeds the maximum volume: 80% of load");
-                        targetRow.style = "background-color:#FFE666"; //yellow
+                        targetRow.classList = "table-warning"; //yellow
                         validationValue -= 1;
                     }
                 }
                validationValue += 1;  
             }
             else {
-                targetRow.style = "background-color:#E33C3C"; //red
+                targetRow.classList = "table-danger"; //red
             }
         }
         if (validationValue == (rows-1)) {

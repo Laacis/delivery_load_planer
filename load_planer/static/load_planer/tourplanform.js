@@ -419,7 +419,7 @@ function loadDeliveryPlanPart4() {
     const tableField = document.createElement('table');
     //tableField.style = "width:100%"
     tableField.id = 'tour_table';
-    tableField.classList = "table table-striped";
+    tableField.classList = "table table-hover";
     formField.appendChild(tableField);
     const headerRow = document.createElement('tr');
     tableField.appendChild(headerRow);
@@ -469,16 +469,18 @@ function loadDeliveryPlanPart4() {
                     const inputField = document.createElement('input');
                     inputField.type = "number";
                     inputField.id = `${element}:${value}`;
-                    inputField.classList = `pallets_in${value}`;
+                    inputField.classList = `pallets_in${value} form-control`;
                     inputField.placeholder = `0`;
-                    inputField.classList = "form-control";
+                    // inputField.classList = "form-control";
                     cell.appendChild(inputField);
                     inputField.addEventListener('change', recountTotal);
                 }
                 else if (element === 'total'){
-                    const inputField = document.createElement('p');
+                    const inputField = document.createElement('strong');
+
                     inputField.id = `total:${value}`;
                     inputField.innerHTML = 0;
+                    //inputField.classList = "form-control";
                     cell.appendChild(inputField);
                 }
                 row.appendChild(cell);
