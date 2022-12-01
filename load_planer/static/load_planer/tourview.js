@@ -49,17 +49,20 @@ function getTourList(date){
     tableL.id = 'tour_table'
     tableL.classList = "table table-hover";
     tourList.appendChild(tableL);
+    // adding table head
+    const tlHead = document.createElement('thead');
+    tableL.appendChild(tlHead);
     const trHead = document.createElement('tr');
-    tableL.appendChild(trHead);
+    tlHead.appendChild(trHead);
     const trHeadList = ['Tour id', 'Delivery id', 'Driver id', 'Truck id', 'Destinations'];
-    const trHeadListids = ['tour_id', 'delivery_id', 'driver_id', 'truck_id', 'destination_count'];
-
     trHeadList.forEach( item => {
         const thItem = document.createElement('th');
         thItem.innerHTML = item;
         trHead.appendChild(thItem);
     }) 
-
+     // adding table body
+    const tBody = document.createElement('tbody');
+    tableL.appendChild(tBody);
 
 
     // getting data
@@ -68,13 +71,14 @@ function getTourList(date){
     .then(data => {
         data.forEach(element => {
             const rowL = document.createElement('tr');
-            tableL.appendChild(rowL);
+            tBody.appendChild(rowL);
             console.log(element);
             Object.entries(element).forEach(entry => {
                 const [key, value] = entry
                 console.log(entry);
                 const rowData = document.createElement('td');
                 rowData.innerHTML = value;
+                rowData.classList = 'table-control';
                 rowL.appendChild(rowData);
             });
         })

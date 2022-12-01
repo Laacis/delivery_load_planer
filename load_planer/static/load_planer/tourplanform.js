@@ -422,8 +422,12 @@ function loadDeliveryPlanPart4() {
     tableField.id = 'tour_table';
     tableField.classList = "table table-hover";
     formField.appendChild(tableField);
+    // adding table head
+
+    const tHeadd = document.createElement('thead');
+    tableField.appendChild(tHeadd);
     const headerRow = document.createElement('tr');
-    tableField.appendChild(headerRow);
+    tHeadd.appendChild(headerRow);
     //creating headers for first row and appending to header row
     const listHeaders = ['Nr.', 'Destination', 'time', 'frozen', 'chilled', 'dry', 'total']
     const listInputCells = ['frozen', 'chilled', 'dry'];
@@ -434,7 +438,9 @@ function loadDeliveryPlanPart4() {
         headerRow.appendChild(thElement);
     })
 
-
+    // creating tbody
+    const tBodyF = document.createElement('tbody');
+    tableField.appendChild(tBodyF);
     fetch(`/get_delivery_destinations/${DeliveryPlanId.value}`)
     .then(response => response.json())
     .then(data => { 
@@ -443,7 +449,7 @@ function loadDeliveryPlanPart4() {
             const [key, value] = entry
             const row = document.createElement('tr');
             row.id = `row:${value}`;
-            tableField.appendChild(row);
+            tBodyF.appendChild(row);
             listHeaders.forEach(element => {
                 const cell = document.createElement('td');
                 if (element === 'Nr.') {
