@@ -1,5 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
+    // let's make the page display Tours for today when loaded
+    const todaydate = new Date().toISOString().split('T')[0];
+    getTourList(todaydate);
     crdateInpandButton();
+
+    // load the top navigation
+    loadTopNav();
 });
 
 // createing input field
@@ -14,7 +20,7 @@ function crdateInpandButton() {
     //creating label for input
     const dateLabel = document.createElement('label');
     dateLabel.for = 'view_date_input';
-    dateLabel.innerHTML = 'Select date:';
+    dateLabel.innerHTML = 'Date:';
     dateLabel.classList = "form-label";
     sideBar.appendChild(dateLabel);
 
@@ -26,6 +32,9 @@ function crdateInpandButton() {
     showToursButton.textContent = "Find Tours";
     buttonField.appendChild(showToursButton);
     showToursButton.addEventListener('click', function(){
+        //cleaning up all data in tour_display_list if any
+        const tourDisp = document.getElementById('tour_display_list');
+        tourDisp.replaceChildren();
         //get value from viewDate input
         if (viewDate.value != "") {
             getTourList(viewDate.value);
@@ -64,7 +73,6 @@ function getTourList(date){
     const tBody = document.createElement('tbody');
     tableL.appendChild(tBody);
 
-
     // getting data
     fetch(`/get_tour_list/${date}`)
     .then(response => response.json())
@@ -83,4 +91,32 @@ function getTourList(date){
             });
         })
     })
+}
+
+
+/** Function creates the top navigation A tags as button elements that 
+ * redirects  the Planner in case to manage the displayed elements
+ */
+function loadTopNav() {
+    const topNavRow = document.getElementById('top_nav_row');
+    const navItemNames = ['Trucks', 'Drivers', 'Destinations', 'Delivery plans']
+    navItemNames.forEach( element => {
+        //div col
+        const colMdDiv = document.createElement('div');
+        colMdDiv.classList = 'col-md';
+        topNavRow.appendChild(colMdDiv);
+        // a tag as button
+        const aTagB = document.createElement('a');
+        aTagB.classList = 'btn btn-outline-secondary form-control';
+        aTagB.role = 'button';
+        aTagB.innerHTML = element;
+        if (element.includes("plans")){
+            aTagB.href = `/delivery_plans`;
+        }
+        else {
+            aTagB.href = `/${element.toLowerCase()}`;
+        }
+        colMdDiv.appendChild(aTagB);
+    })
+
 }

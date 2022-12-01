@@ -9,11 +9,9 @@ document.addEventListener("DOMContentLoaded", function() {
     newButton.addEventListener('click', function(){
         document.getElementById('view_date_input').disabled = true;
         newButton.disabled = true;
+         document.getElementById('tour_display_list').replaceChildren();
         loadDeliveryPlanPart1();
     })
-
-
-    
 });
 
 var listDeliveryIds = []
@@ -51,7 +49,7 @@ function loadDeliveryPlanPart1() {
     const dateLabel = document.createElement('label');
     dateLabel.for = "delivery_plan_year";
     dateLabel.classList = "form-label";
-    dateLabel.innerHTML = 'Choose Year:';
+    dateLabel.innerHTML = 'Year:';
 
     // putting it together
     dateDivFormF.appendChild(deliveryYearField);
@@ -80,7 +78,7 @@ function loadDeliveryPlanPart1() {
     const driverLabel = document.createElement('label');
     driverLabel.for = "delivery_plan_quarter";
     driverLabel.classList = "form-label";
-    driverLabel.innerHTML = 'Choose Quarter:';
+    driverLabel.innerHTML = 'Quarter:';
 
     driverDivFormF.appendChild(driverIdField);
     driverDivFormF.appendChild(driverLabel);
@@ -148,9 +146,7 @@ function loadDeliveryPlanPart2() {
     dateField.classList = "form-control";
     dateField.placeholder = "select-date";
     dateField.min = new Date().toISOString().split('T')[0];
-    // const deliveryYearField = document.createElement('select');
-    // deliveryYearField.id = "delivery_plan_year";
-    // deliveryYearField.classList = "form-control";
+
     // creating label
     const dateLabel = document.createElement('label');
     dateLabel.for = "exec_date";
@@ -160,17 +156,6 @@ function loadDeliveryPlanPart2() {
     // putting it together
     dateDivFormF.appendChild(dateField);
     dateDivFormF.appendChild(dateLabel)
-    /////////////////////////////////////////////////////////
-    // const pdDiv = document.createElement('div');
-    // //pdDiv.classList = "text-end";
-    // formField.appendChild(pdDiv);
-
-    // const pdLabel = document.createElement('label');
-    // pdLabel.for = "exec_date";
-    // pdLabel.classList = "form-label";
-    // pdLabel.innerHTML = ' and Delivery Plan:';
-
-
 
     //div here
     const dplanDiv = document.createElement('div');
@@ -187,11 +172,6 @@ function loadDeliveryPlanPart2() {
     dpField.type = 'text';
     dpField.id = 'delivery_id_field';
     dpField.classList = "form-control";
-
-    // const deliveryYearField = document.createElement('select');
-    // deliveryYearField.id = "delivery_plan_year";
-    // deliveryYearField.classList = "form-control";
-    // creating label
     const dpLabel = document.createElement('label');
     dpLabel.for = "exec_date";
     dpLabel.classList = "form-label";
@@ -200,7 +180,6 @@ function loadDeliveryPlanPart2() {
     // putting it together
     dplanDivFormF.appendChild(dpField);
     dplanDivFormF.appendChild(dpLabel)
-///////////////////////////////////
 
     //adding event listeners to every input field of deliveryIdField
     dpField.addEventListener("keyup", suggestion_list);
@@ -210,8 +189,6 @@ function loadDeliveryPlanPart2() {
     destination_list.id = 'destination_list:';
     dplanDiv.appendChild(destination_list);
 
-
-    
     const loadButton = document.createElement('button');
     loadButton.classList = 'btn btn-primary form-control';
     loadButton.type = 'submit';
@@ -273,18 +250,11 @@ function loadDeliveryPlanPart3() {
     const dateLabel = document.createElement('label');
     dateLabel.for = "truck_id";
     dateLabel.classList = "form-label";
-    dateLabel.innerHTML = 'Select Truck:';
+    dateLabel.innerHTML = 'Truck:';
 
     // putting it together
     dateDivFormF.appendChild(truckId);
     dateDivFormF.appendChild(dateLabel);
-
-    // options for truckId
-    // const dOptionTruck = document.createElement('option');
-    // dOptionTruck.text = "";
-    // dOptionTruck.disabled = true;
-    // dOptionTruck.selected = true;
-    // truckId.appendChild(dOptionTruck);
 
     /* here goes the same for the Driver select */
     //div here
@@ -304,22 +274,10 @@ function loadDeliveryPlanPart3() {
     const driverLabel = document.createElement('label');
     driverLabel.for = "driver_id";
     driverLabel.classList = "form-label";
-    driverLabel.innerHTML = 'Select Driver:';
+    driverLabel.innerHTML = 'Driver:';
 
     driverDivFormF.appendChild(driverIdField);
     driverDivFormF.appendChild(driverLabel);
-
-
-    ///////////////////////////////////////
-    //create input field for driver id
-    // const driverId = document.createElement('select');
-    // driverId.id = 'driver_id';
-    // formField.appendChild(driverId);
-    // const dOption = document.createElement('option');
-    // dOption.text = "select-driver";
-    // dOption.disabled = true;
-    // dOption.selected = true;
-    // driverId.appendChild(dOption);
 
     // populate truckId and driverId with options from db
     loadSelectIdFields(); 
