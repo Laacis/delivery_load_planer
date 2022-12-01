@@ -537,3 +537,7 @@ def get_truck_details(request, truck_id):
     # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 
     truck_data = Truck.objects.get(truck_id=truck_id)
     return JsonResponse(truck_data.serialize())
+
+
+def get_tour_list(request, date):
+    return JsonResponse({"messge":f"reqeusted {date}"})

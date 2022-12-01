@@ -1,12 +1,13 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const sideBar = document.getElementById('sidebar_left');
+    const sideBar = document.getElementById('new_tour_button_field');
     const newButton = document.createElement('button');
     newButton.classList = 'btn btn-success form-control';
     newButton.type = 'submit';
     newButton.textContent = "New Tour";
+    
     sideBar.appendChild(newButton);
     newButton.addEventListener('click', function(){
-
+        document.getElementById('view_date_input').disabled = true;
         newButton.disabled = true;
         loadDeliveryPlanPart1();
     })
@@ -303,7 +304,7 @@ function loadDeliveryPlanPart3() {
     const driverLabel = document.createElement('label');
     driverLabel.for = "driver_id";
     driverLabel.classList = "form-label";
-    driverLabel.innerHTML = 'Choose Driver:';
+    driverLabel.innerHTML = 'Select Driver:';
 
     driverDivFormF.appendChild(driverIdField);
     driverDivFormF.appendChild(driverLabel);
@@ -455,6 +456,7 @@ function loadDeliveryPlanPart4() {
                     aLink.href = `/destination/${key}`;
                     aLink.target = "_blank";
                     aLink.innerHTML = key;
+                    aLink.classList = 'form-control';
                     aLink.id = `${element}:${value}`;
                     cell.appendChild(aLink);
                 }
@@ -480,7 +482,7 @@ function loadDeliveryPlanPart4() {
 
                     inputField.id = `total:${value}`;
                     inputField.innerHTML = 0;
-                    //inputField.classList = "form-control";
+                    inputField.classList = "form-control";
                     cell.appendChild(inputField);
                 }
                 row.appendChild(cell);

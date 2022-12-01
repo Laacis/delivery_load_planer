@@ -33,4 +33,5 @@ urlpatterns = [
     path("register_delivery_point", views.register_delivery_point, name="register_delivery_point"),
     path("get_truck_details/<str:truck_id>", views.get_truck_details, name="get_truck_details"),
     path("register_tour", views.register_tour, name='register"tour'),
+    path("get_tour_list/<slug:date>", views.get_tour_list, name="get_tour_list"),
 ]
