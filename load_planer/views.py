@@ -1,6 +1,5 @@
 import json
 from django import forms
-from django.core.serializers import serialize
 from django.forms import formset_factory
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -540,4 +539,24 @@ def get_truck_details(request, truck_id):
 
 
 def get_tour_list(request, date):
-    return JsonResponse({"messge":f"reqeusted {date}"})
+    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 
+    try:
+        tour_list = Tour.objects.filter(exec_date = date)
+        result = []
+
+        for x in tour_list:
+            destination_count = DeliveryPoint.objects.filter(tour_id = x.tour_id).count()
+            result.append({
+                'tour_id': x.tour_id,
+                'delivery_id':x.delivery_id.delivery_id,
+                'driver_id': x.driver_id.driver_id,
+                'truck_id': x.truck_id.truck_id,
+                'destination_count': destination_count,
+            })
+        
+        #result = json.dumps(tour_list)
+        return JsonResponse(result, safe=False)
+
+    except:
+        return JsonResponse({"message":f"couldn't find Tour for: {date}"})
+    

@@ -127,6 +127,17 @@ class Tour(models.Model):
     def __str__(self):
         return f"delivery:{self.delivery_id} on {self.exec_date} driver {self.driver_id} on truck {self.truck_id}."
 
+    def serialize(self):
+        # destination counte returns number of destinations having this Tour_id
+        destination_count = DeliveryPoint.objects.filter(tour_id = self.tour_id).count()
+        return {
+            'tour_id':self.tour_id,
+            'delivery_id':self.delivery_id,
+            'driver_id':self.driver_id,
+            'truck_id':self.truck_id,
+            'destination_count': destination_count,
+        }
+
 """
 DeliveryPoint 
     tour_id = FK from Tour
