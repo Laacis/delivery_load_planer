@@ -38,9 +38,45 @@ function crdateInpandButton() {
 }
 
 function getTourList(date){
+    const tourList = document.getElementById('tour_display_list');
+
+    const headderL = document.createElement('h4');
+    headderL.innerHTML = `Tour list for: ${date}`
+    tourList.appendChild(headderL);
+
+    // make table
+    const tableL = document.createElement('table');
+    tableL.id = 'tour_table'
+    tableL.classList = "table table-hover";
+    tourList.appendChild(tableL);
+    const trHead = document.createElement('tr');
+    tableL.appendChild(trHead);
+    const trHeadList = ['Tour id', 'Delivery id', 'Driver id', 'Truck id', 'Destinations'];
+    const trHeadListids = ['tour_id', 'delivery_id', 'driver_id', 'truck_id', 'destination_count'];
+
+    trHeadList.forEach( item => {
+        const thItem = document.createElement('th');
+        thItem.innerHTML = item;
+        trHead.appendChild(thItem);
+    }) 
+
+
+
+    // getting data
     fetch(`/get_tour_list/${date}`)
     .then(response => response.json())
     .then(data => {
-        console.log(data);
+        data.forEach(element => {
+            const rowL = document.createElement('tr');
+            tableL.appendChild(rowL);
+            console.log(element);
+            Object.entries(element).forEach(entry => {
+                const [key, value] = entry
+                console.log(entry);
+                const rowData = document.createElement('td');
+                rowData.innerHTML = value;
+                rowL.appendChild(rowData);
+            });
+        })
     })
 }

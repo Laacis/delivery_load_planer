@@ -554,7 +554,6 @@ def get_tour_list(request, date):
                 'destination_count': destination_count,
             })
         
-        #result = json.dumps(tour_list)
         return JsonResponse(result, safe=False)
 
     except:
