@@ -241,6 +241,19 @@ def profile(request, profileid):
             }
         return render(request, 'load_planer/profile.html', context)
 
+@login_required
+def tour(request, tour_id):
+    # let's check if the tour_id exists
+    try:
+        tour_data = Tour.objects.get(pk=tour_id)
+    except:
+        return HttpResponse("Error: Tour not found!")
+    context = {
+        "tour_id":tour_id
+        }
+    return render(request, "load_planer/tour.html", context=context)
+
+    
 
 
 @login_required
