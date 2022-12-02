@@ -132,9 +132,9 @@ class Tour(models.Model):
         destination_count = DeliveryPoint.objects.filter(tour_id = self.tour_id).count()
         return {
             'tour_id':self.tour_id,
-            'delivery_id':self.delivery_id,
-            'driver_id':self.driver_id,
-            'truck_id':self.truck_id,
+            'delivery_id':self.delivery_id.delivery_id,
+            'driver_id':self.driver_id.driver_id,
+            'truck_id':self.truck_id.truck_id,
             'destination_count': destination_count,
         }
 

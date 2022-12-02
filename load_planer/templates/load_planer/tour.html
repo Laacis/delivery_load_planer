@@ -4,12 +4,11 @@
 {% block body %}
     
     <div class="container text-center">
-        <h3> Tour: {{tour_id}}</h3>
-        
-
-
+        <h3> Tour:</h3><h5 id="tour_id_field">{{tour_id}}</h5>
     </div>  
+    <div class="container text-center" id="tour_details_container"></div>
+    <div class="container text-center" id="load_details_container"></div>
 {% endblock %}
 {% block script %}
-
+<script src="{% static 'load_planer/tourload.js' %}" type="text/javascript"></script>
 {% endblock %}

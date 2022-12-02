@@ -248,6 +248,7 @@ def tour(request, tour_id):
         tour_data = Tour.objects.get(pk=tour_id)
     except:
         return HttpResponse("Error: Tour not found!")
+
     context = {
         "tour_id":tour_id
         }
@@ -556,19 +557,21 @@ def get_tour_list(request, date):
     try:
         tour_list = Tour.objects.filter(exec_date = date)
         result = []
-
         for x in tour_list:
-            destination_count = DeliveryPoint.objects.filter(tour_id = x.tour_id).count()
-            result.append({
-                'tour_id': x.tour_id,
-                'delivery_id':x.delivery_id.delivery_id,
-                'driver_id': x.driver_id.driver_id,
-                'truck_id': x.truck_id.truck_id,
-                'destination_count': destination_count,
-            })
-        
+            result.append(x.serialize())        
         return JsonResponse(result, safe=False)
 
     except:
         return JsonResponse({"message":f"couldn't find Tour for: {date}"})
+
+
+# API related to load Tour:
+
+def get_tour_details(request, tour_id):
+    # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 
+    try:
+        tour_details = Tour.objects.get(pk=tour_id)
+    except:
+        return JsonResponse({"message":f":{tour_id} not found"})
     
+    return JsonResponse(tour_details.serialize(), safe=False)

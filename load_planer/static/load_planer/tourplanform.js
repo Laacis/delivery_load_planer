@@ -404,7 +404,7 @@ function loadDeliveryPlanPart4() {
     .then(data => { 
         data = JSON.parse(data);
         Object.entries(data).forEach(entry => {
-            const [key, value] = entry
+            const [key, value] = entry;
             const row = document.createElement('tr');
             row.id = `row:${value}`;
             tBodyF.appendChild(row);
