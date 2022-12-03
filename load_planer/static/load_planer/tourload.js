@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("LOADED!");
     createTourDetailsStruct();
 });
 
@@ -15,77 +14,155 @@ function createTourDetailsStruct() {
     containerDiv.appendChild(cardDiv);
 
     const clList = {'main':'col-12 col-md-8', 'side':'col-6 col-md-4'}
-    Object.entries(clList).forEach(entry => {
-        const [key, value] = entry;
-        const colDiv = document.createElement('div');
-        colDiv.classList = value;
-        colDiv.id = key;
-        colDiv.innerHTML = value;
-        cardDiv.appendChild(colDiv);
-    })
-    loadTourData();
+    // Object.entries(clList).forEach(entry => {
+    //     const [key, value] = entry;
+    //     const colDiv = document.createElement('div');
+    //     colDiv.classList = value;
+    //     colDiv.id = key;
+    //     cardDiv.appendChild(colDiv);
+    // })
+    createMyDivs(clList, cardDiv)
+    const tourId = document.getElementById('tour_id_field');
+    document.getElementById('tour_id_field_div').style.display = 'none';
+    loadTourData(tourId.innerHTML);
 }
 
 /** this function fetches Tour data from db 
  * and creates a Bootstrap Card for the Tour details fetched
 */
-function loadTourData() {
+function loadTourData(tourId) {
     // fetching data bout the Tour
-    const tourId = document.getElementById('tour_id_field').innerHTML;
+    
     fetch(`/get_tour_details/${tourId}`)
     .then(response => response.json())
     .then(data => {
-        console.log(data);
-        const sideDetDict = {
-            'delivery_id':"Delivery:", 
-            'driver_id':'Driver:', 
-            'truck_id': 'Truck:',
-            'destination_count':'Number of destinations:'
-        };
-        const mainDiv = document.getElementById('main');
+        if ('error' in data) {
+            document.getElementById('main').innerHTML = data['error'];
+            return;
+        }
+        else {
+            const sideDetDict = {
+                'delivery_id':"Delivery:", 
+                'driver_id':'Driver:', 
+                'truck_id': 'Truck:',
+                'destination_count':'Number of destinations:'
+            };
+            const mainDiv = document.getElementById('main');
 
-        const cardDiv = document.createElement('div');
-        cardDiv.classList = 'card text-center';
-        // cardDiv.style = 'width: 18rem;';
-        mainDiv.appendChild(cardDiv);
+            const cardDiv = document.createElement('div');
+            cardDiv.classList = 'card text-center';
+            // cardDiv.style = 'width: 18rem;';
+            mainDiv.appendChild(cardDiv);
 
-        const cardHead = document.createElement('div');
-        cardHead.classList = 'card-header';
-        cardHead.innerHTML = 'Tour details';
-        cardHead.id = 'card_header'
-        cardDiv.appendChild(cardHead);
-
-        const cardBody = document.createElement('div');
-        cardBody.classList = 'card-body';
-        cardBody.id = 'card_body';
-        cardDiv.appendChild(cardBody);
-
-        // card title 
-        const cardTitle = document.createElement('h5');
-        cardTitle.classList = 'card-title';
-        cardTitle.innerHTML = `Tour id: ${data['tour_id']}`;
-        cardBody.appendChild(cardTitle);
+            const cardHead = document.createElement('div');
+            cardHead.classList = 'card-header';
+            cardHead.innerHTML = 'Tour details';
+            cardHead.id = 'card_header'
+            cardDiv.appendChild(cardHead);
 
 
-        // creating group list for details
-        const listGr = document.createElement('ul');
-        listGr.classList = 'list-group list-group-flush';
-        cardBody.appendChild(listGr);
+            const cardBody = document.createElement('div');
+            cardBody.classList = 'card-body';
+            cardBody.id = 'cardbody';
+            cardDiv.appendChild(cardBody);
+
+            // card title 
+            const cardTitle = document.createElement('h5');
+            cardTitle.classList = 'card-title';
+            cardTitle.innerHTML = `Tour id: ${data['tour_id']}`;
+            cardBody.appendChild(cardTitle);
 
 
-        Object.entries(data).forEach(entry => {
-            const [key, value] = entry;
-            if (key in sideDetDict){
-                console.log(sideDetDict[key]);
-                // creating li for every entry
-                const liElement = document.createElement('li');
-                liElement.classList = 'list-group-item';
-                liElement.innerHTML = `${sideDetDict[key]} ${value}`;
-                listGr.appendChild(liElement);
-                
-            }
-        })
+            // creating group list for details
+            const listGr = document.createElement('ul');
+            listGr.classList = 'list-group list-group-flush';
+            cardBody.appendChild(listGr);
 
+
+            Object.entries(data).forEach(entry => {
+                const [key, value] = entry;
+                if (key in sideDetDict){
+                    // creating li for every entry
+                    const liElement = document.createElement('li');
+                    liElement.classList = 'list-group-item';
+                    liElement.innerHTML = `${sideDetDict[key]} ${value}`;
+                    listGr.appendChild(liElement);
+                    
+                }
+            })
+
+            //next step: Load the list of destinations
+            loadDestinationList(data['tour_id'], data['destination_count'], data['truck_id']);
+            
+        }
     })
+}
 
+/** this fucntions creates a table of destination point = destinations
+ * and generates schema for pallets visualization based on truck_id
+ */
+function loadDestinationList(tour_id, destinations, truck_id) {
+    const mainCont = document.getElementById('load_details_container');
+    // add a row and children div x2  for Truck load and Delivery points
+    const detailRow = document.createElement('div');
+    detailRow.classList = 'row';
+    mainCont.appendChild(detailRow);
+
+    const dictToLoad = {'truck_field':'col-6 col-md-4', 'delivery_points':'col-12 col-md-8'}
+    createMyDivs(dictToLoad, detailRow);
+
+    const deliveryDiv = document.getElementById('delivery_points');
+    const listTableHeaders = ['Nr.', 'Destination', 'time', 'frozen', 'chilled', 'dry', 'total']
+    //create a table
+    const tableT = document.createElement('table');
+    tableT.classList = 'table table-hover';
+    deliveryDiv.appendChild(tableT);
+    const tHead = document.createElement('thead');
+    tableT.appendChild(tHead);
+    const tBody = document.createElement('tbody');
+    tableT.appendChild(tBody)
+    for (let i = 0; i <= destinations; i++) {
+        if (i == 0){
+            //create Table head and headder row
+            
+            const headR = document.createElement('tr');
+            tHead.appendChild(headR);
+            listTableHeaders.forEach(item => {
+                const tHeadEl = document.createElement('th');
+                tHeadEl.scope = 'col';
+                tHeadEl.innerHTML = item;
+                headR.appendChild(tHeadEl);
+            })
+
+        }
+        else {
+            const tRoww = document.createElement('tr');
+            tBody.appendChild(tRoww);
+            listTableHeaders.forEach(item => {
+                const tdElement = document.createElement('td');
+                (item == 'Nr.') ? tdElement.innerHTML = `${i}.` : tdElement.innerHTML = item;
+                tdElement.id = `${item}:${i}`;
+                tRoww.appendChild(tdElement);
+            })
+        }
+    }
+
+    /** fetch data about truck: zones adn pallet_size
+     * use this data to generate Turck load simulation
+     */
+    
+
+
+}
+
+/** function generates two Div and appendChild them to given div.row */
+function createMyDivs(dictionary_f, parentRow) {
+    Object.entries(dictionary_f).forEach(entry => {
+        const [key, value] = entry;
+        const colDiv = document.createElement('div');
+        colDiv.classList = value;
+        colDiv.innerHTML = value;
+        colDiv.id = key;
+        parentRow.appendChild(colDiv);
+    })
 }

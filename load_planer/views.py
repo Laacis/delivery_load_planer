@@ -341,7 +341,7 @@ def register(request):
 
 class TruckForm(forms.ModelForm):
     zones = forms.TypedChoiceField(choices=[(2, 2), (3, 3)], coerce=int)
-    pallet_size = forms.TypedChoiceField(choices=[(20, 20), (33, 33)], coerce=int)
+    pallet_size = forms.TypedChoiceField(choices=[(20, 20), (14, 14)], coerce=int)
 
     class Meta:
         model = Truck
@@ -572,6 +572,6 @@ def get_tour_details(request, tour_id):
     try:
         tour_details = Tour.objects.get(pk=tour_id)
     except:
-        return JsonResponse({"message":f":{tour_id} not found"})
+        return JsonResponse({"error":f"{tour_id} not found"})
     
     return JsonResponse(tour_details.serialize(), safe=False)
