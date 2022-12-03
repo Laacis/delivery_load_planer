@@ -548,8 +548,11 @@ def register_delivery_point(request):
 
 def get_truck_details(request, truck_id):
     # TODO ! REMEMBER TO CHECK WHOS requesting Driver/Planner ? 
-    truck_data = Truck.objects.get(truck_id=truck_id)
-    return JsonResponse(truck_data.serialize())
+    try:
+        truck_data = Truck.objects.get(truck_id=truck_id)
+        return JsonResponse(truck_data.serialize())
+    except:
+        return JsonResponse({'error':f'Truck {truck_id} not found!'})
 
 
 def get_tour_list(request, date):

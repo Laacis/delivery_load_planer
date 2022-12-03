@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     createTourDetailsStruct();
 });
 
+
 /** this function is loading the details about the Tour in general
  * like details whos the driver, what Truck, later some aditional 
  * information about the Load will be add
@@ -151,7 +152,30 @@ function loadDestinationList(tour_id, destinations, truck_id) {
      * use this data to generate Turck load simulation
      */
     
+    fetch(`/get_truck_details/${truck_id}`)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        const truckField = document.getElementById('truck_field');
+        if ('error' in data) {
+            truckField.innerHTML = data['error'];
+            return;
+        }
+        else {
+            // we get keys: truck_id, pallet_size, zones 
+            const pallet_size = data['pallet_size'];
+            const zones = data['zones'];
+            const truckHeadRow = document.createElement('div');
+            truckHeadRow.classList = 'row';
+            truckField.appendChild(truckHeadRow);
+            const truckHeadDiv = document.createElement('div');
+            truckHeadDiv.innerHTML = `Truck ${data['truck_id']} fit ${pallet_size} and has ${zones} temperature zones.`;
+            truckField.appendChild(truckHeadDiv);
 
+            //generate truck pallet cells
+            generateTruckCells(pallet_size, zones);
+        }
+    })
 
 }
 
@@ -165,4 +189,41 @@ function createMyDivs(dictionary_f, parentRow) {
         colDiv.id = key;
         parentRow.appendChild(colDiv);
     })
+}
+
+/** function generates pallet cells inside the truck/Reefer 
+ * takes two arguments: pallet_size and zones
+ * structure for every line is:
+ * <row .row g-2><div .col-md><div .form-floating> <div r(nr)_(r or l )>+LABEL</...
+*/
+function generateTruckCells(pallet_size, zones) {
+    //Nr of rows = pallet_size/2
+    const truckField = document.getElementById('truck_field');
+
+    //this should be in loop
+    for ( let i = 1; i <= pallet_size/2; i++) {
+        const rowG2 = document.createElement('row');
+        rowG2.classList = 'row g-2';
+        truckField.appendChild(rowG2);
+
+        // pallets in row: <div #r(nr)_l> <div #r(nr)_r>
+        const solu_rl = ['l','r'];
+        solu_rl.forEach(item => {
+            const divCol = document.createElement('div');
+            divCol.classList = 'col-md';
+            rowG2.appendChild(divCol);
+            const divFFl = document.createElement('div');
+            divFFl.classList = 'form-floating';
+            divCol.appendChild(divFFl);
+            const r_l = document.createElement('div');
+            r_l.id = `r${i}_${item}`;
+            r_l.classList = 'form-control';
+            divFFl.appendChild(r_l);
+            const label_r_l = document.createElement('label');
+            label_r_l.for = `r${i}_${item}`;
+            label_r_l.classList = 'form-label';
+            label_r_l.innerHTML = 'destination_id'; // change this later
+            divFFl.appendChild(label_r_l);
+        })
+    }
 }
