@@ -578,3 +578,39 @@ def get_tour_details(request, tour_id):
         return JsonResponse({"error":f"{tour_id} not found"})
     
     return JsonResponse(tour_details.serialize(), safe=False)
+
+
+
+
+# THIS PART IS TO BE CHANGED IN THE FUTURE!
+def try_load_truck(request, tour_id):
+    # getting list of destinations
+    try:
+        dest_point_list = DeliveryPoint.objects.filter(tour_id = tour_id)
+        if dest_point_list.count() == 0 :
+            return JsonResponse({"error": f"Tour id: {tour_id} generated list is empty."})
+    except:
+        return JsonResponse({"error": f"Delivery point with {tour_id} not found."})
+    # getting the del_order JSON from Delivery plan 
+    try:
+        delivery_order = Tour.objects.get(pk=tour_id).delivery_id.del_order
+    except:
+        return JsonResponse({"error": f"Tour with {tour_id} not found."})
+
+    # this builds up a JSON with details about  every delivery point.
+    result = {}
+    for item in dest_point_list:
+        if item.destination.destination_id in delivery_order.keys():
+            result[delivery_order[item.destination.destination_id]] = {
+                "destination_id":  item.destination.destination_id,
+                "time": item.delivery_time,
+                "f": item.f_pallets,
+                "c": item.c_pallets,
+                "d":item.d_pallets
+            }
+
+
+
+
+    return JsonResponse(result)      
+    
