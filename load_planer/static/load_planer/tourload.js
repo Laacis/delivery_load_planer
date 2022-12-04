@@ -91,10 +91,8 @@ function loadTourData(tourId) {
                     
                 }
             })
-
-            //next step: Load the list of destinations
+            // Load the list of destinations
             loadDestinationList(data['tour_id'], data['destination_count'], data['truck_id']);
-            
         }
     })
 }
@@ -157,6 +155,9 @@ function loadDestinationList(tour_id, destinations, truck_id) {
     .then(data => {
         console.log(data);
         const truckField = document.getElementById('truck_field');
+        const truckDivcont = document.createElement('div');
+        truckDivcont.style = 'border:1px solid black;';
+        truckField.appendChild(truckDivcont);
         if ('error' in data) {
             truckField.innerHTML = data['error'];
             return;
@@ -167,10 +168,10 @@ function loadDestinationList(tour_id, destinations, truck_id) {
             const zones = data['zones'];
             const truckHeadRow = document.createElement('div');
             truckHeadRow.classList = 'row';
-            truckField.appendChild(truckHeadRow);
+            truckDivcont.appendChild(truckHeadRow);
             const truckHeadDiv = document.createElement('div');
             truckHeadDiv.innerHTML = `Truck ${data['truck_id']} fit ${pallet_size} and has ${zones} temperature zones.`;
-            truckField.appendChild(truckHeadDiv);
+            truckDivcont.appendChild(truckHeadDiv);
 
             //generate truck pallet cells
             generateTruckCells(pallet_size, zones);
@@ -199,12 +200,14 @@ function createMyDivs(dictionary_f, parentRow) {
 function generateTruckCells(pallet_size, zones) {
     //Nr of rows = pallet_size/2
     const truckField = document.getElementById('truck_field');
-
-    //this should be in loop
+        // div to set up border 
+        const borderDiv = document.createElement('div');
+        borderDiv.style = 'border:5px solid black; padding: 0.2rem';
+        truckField.appendChild(borderDiv);
     for ( let i = 1; i <= pallet_size/2; i++) {
         const rowG2 = document.createElement('row');
         rowG2.classList = 'row g-2';
-        truckField.appendChild(rowG2);
+        borderDiv.appendChild(rowG2);
 
         // pallets in row: <div #r(nr)_l> <div #r(nr)_r>
         const solu_rl = ['l','r'];
