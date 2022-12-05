@@ -40,5 +40,5 @@ urlpatterns = [
     path("get_tour_list/<slug:date>", views.get_tour_list, name="get_tour_list"),
     path('get_tour_details/<str:tour_id>', views.get_tour_details, name="get_tour_details"),
 
-    path("try_load_truck/<str:tour_id>", views.try_load_truck, name="try_load_truck"),
+    path("get_delivery_point_table/<str:tour_id>", views.get_delivery_point_table, name="get_delivery_point_table"),
 ]

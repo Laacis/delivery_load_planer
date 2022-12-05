@@ -583,7 +583,7 @@ def get_tour_details(request, tour_id):
 
 
 # THIS PART IS TO BE CHANGED IN THE FUTURE!
-def try_load_truck(request, tour_id):
+def get_delivery_point_table(request, tour_id):
     # getting list of destinations
     try:
         dest_point_list = DeliveryPoint.objects.filter(tour_id = tour_id)
@@ -602,11 +602,11 @@ def try_load_truck(request, tour_id):
     for item in dest_point_list:
         if item.destination.destination_id in delivery_order.keys():
             result[delivery_order[item.destination.destination_id]] = {
-                "destination_id":  item.destination.destination_id,
+                "Destination":  item.destination.destination_id,
                 "time": item.delivery_time,
-                "f": item.f_pallets,
-                "c": item.c_pallets,
-                "d":item.d_pallets
+                "frozen": item.f_pallets,
+                "chilled": item.c_pallets,
+                "dry":item.d_pallets
             }
 
 
