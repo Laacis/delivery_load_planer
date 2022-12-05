@@ -606,11 +606,8 @@ def get_delivery_point_table(request, tour_id):
                 "time": item.delivery_time,
                 "frozen": item.f_pallets,
                 "chilled": item.c_pallets,
-                "dry":item.d_pallets
+                "dry":item.d_pallets,
+                "total":item.f_pallets + item.c_pallets + item.d_pallets,
             }
-
-
-
-
     return JsonResponse(result)      
     

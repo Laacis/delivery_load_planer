@@ -175,9 +175,10 @@ function loadDestinationList(tour_id, destinations, truck_id) {
 
             //generate truck pallet cells
             generateTruckCells(pallet_size, zones);
+            // populate the table with data from db
+            populateDetailsDelPoints(tour_id, pallet_size, zones);
         }
-        // populate the table with data from db
-        populateDetailsDelPoints(tour_id);
+
     })
 
 }
@@ -226,6 +227,7 @@ function generateTruckCells(pallet_size, zones) {
             divFFl.appendChild(r_l);
             const label_r_l = document.createElement('label');
             label_r_l.for = `r${i}_${item}`;
+            label_r_l.id = `r${i}_${item}_label`;
             label_r_l.classList = 'form-label';
             label_r_l.innerHTML = 'destination_id'; // change this later
             divFFl.appendChild(label_r_l);
@@ -237,38 +239,22 @@ function generateTruckCells(pallet_size, zones) {
 /** function fetches data from db and populates the table od Destinations
  * 
  */
-function populateDetailsDelPoints(tour_id) {
-
-
+function populateDetailsDelPoints(tour_id, pallet_size,  zones) {
+    console.log(zones);
     fetch(`/get_delivery_point_table/${tour_id}`)
     .then(response => response.json())
     .then(data => {
-        //console.log(data);
         Object.entries(data).forEach(entry => {
             const [key, value] = entry;
-            //console.log(value);
             const rowNr = key;
-            let totalRowWalue = document.getElementById(`total:${rowNr}`);
-            let totalValueInt = 0;
             
             Object.entries(value).forEach(entry => {
                 const [key, value] = entry
-                //console.log(key);
-                // td id = key:rowNr
                 const targetTd = document.getElementById(`${key}:${rowNr}`);
                 targetTd.innerHTML = value;
-                
-                
-                if (['frozen', 'chilled', 'dry'].includes(key)) {
-                    totalValueInt += value;
-                    console.log(totalValueInt);
-                }
-
             })
-            //updating total value
-            totalRowWalue.innerHTML = totalValueInt;
-                
+  
         })
-            
+        loadPLanMain(data, pallet_size, zones);
     })
 }
