@@ -72,7 +72,7 @@ function loadPLanMain(data, pallet_size, zones) {
  */
 function monoLoadEasy(data, nrOfDeliveries, totalPallets) {
     //only going to look at values that have keys of  types, frozen chilled and dry
-    const palletTypes = ["frozen", "chilled", "dry"]
+    const palletTypes = {"frozen":"alert-primary", "chilled":"alert-success", "dry":"alert-warning"}
     console.log(data);
     const palletCountEven = (totalPallets % 2 == 0)? true: false;
     //pallets will be add to startingRrow, we have two pallets per row: r(rowNr)_l and .._r
@@ -89,11 +89,12 @@ function monoLoadEasy(data, nrOfDeliveries, totalPallets) {
             if (key == "Destination") {
                 destinationId = value;
             }
-            else if (palletTypes.includes(key)) {
+            else if (key in palletTypes) {
                 for ( var i = value; i > 0; i--) {
                     const l_r_rowLoca = (switchL)? "l" : "r";
                     const targetId = document.getElementById(`r${startingRow}_${l_r_rowLoca}`);
                     targetId.innerHTML = destinationId;
+                    targetId.classList.add(palletTypes[key]);
                     const targetLabel = document.getElementById(`r${startingRow}_${l_r_rowLoca}_label`);
                     targetLabel.innerHTML = key;
                     // flip the switch
