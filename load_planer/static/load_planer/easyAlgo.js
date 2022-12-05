@@ -59,7 +59,7 @@ function loadPLanMain(data, pallet_size, zones) {
    // CHANGE THIS!!!!!!!!
    //rurrning the monoLoad on purpouse: 
    cdMonoLoad = true;
-   if (fMonoLoad || cdMonoLoad) {monoLoadEasy(data, nrOfDeliveries, totalPalletsInDelivery);}
+   if (fMonoLoad || cdMonoLoad) {monoLoadEasy(data, totalPalletsInDelivery);}
 
    
 
@@ -70,16 +70,18 @@ function loadPLanMain(data, pallet_size, zones) {
  * pick number of pallets from the data JSON and assign number of palelts to 
  * preloaded schema of reefer, only one temperature zone is neede in this case
  */
-function monoLoadEasy(data, nrOfDeliveries, totalPallets) {
+function monoLoadEasy(data, totalPallets) {
     //only going to look at values that have keys of  types, frozen chilled and dry
     const palletTypes = {"frozen":"alert-primary", "chilled":"alert-success", "dry":"alert-warning"}
-    console.log(data);
     const palletCountEven = (totalPallets % 2 == 0)? true: false;
     //pallets will be add to startingRrow, we have two pallets per row: r(rowNr)_l and .._r
     var startingRow = Math.round(totalPallets / 2);
-    // this switch is telling algo if the left pallet in the row is free to use, else use right
-    let switchL = true;
-    console.log(startingRow);
+    /**
+     * this switch is telling algo if the left pallet in the row is free to use, else use right
+     * if the palletCount of the load is EVEN switch is true, if ODD = switch os false, 
+     * so we have only one pallet in the startingRow
+     */
+    let switchL = palletCountEven? true : false;
     Object.entries(data).forEach(entry => {
         const [key, value] = entry;
         let destinationId = "";

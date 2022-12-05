@@ -27,8 +27,6 @@ function submitTourPlaningForm(){
     row by row checking if the input is filled out.
     Server side verification is going to happen as well.
 
-    If ever some messages that supply additional information 
-    about driver or  truck, that needs to be add here!
 */
 function verificateTableData(event) {
     //making sure the subbmit button is disabled.
@@ -49,7 +47,7 @@ function verificateTableData(event) {
         // fetched value is set to max pallet count
         maxPalletCount = response["pallet_size"];
         truckZones = response['zones'];
-        
+        console.log(response);
         for (var i = 1; i < rows; i++){
             //getting vital values:
             const targetRow = document.getElementById(`row:${i}`);
@@ -68,34 +66,74 @@ function verificateTableData(event) {
                 // check if total number of pallets is < maxPallets    
                 console.log("row valid and none of above!");
                 targetRow.classList = "table-success"; //green
-
+                validationValue += 1; 
                 totalFrozenPallets += parseInt(fPallets.value);
                 totalCDPallets += parseInt(cPallets.value) + parseInt(dPallets.value);
                 totalPalletCount += parseInt(fPallets.value) + parseInt(cPallets.value) + parseInt(dPallets.value);
                 let result = false;
                 if (totalPalletCount > maxPalletCount) {
-                    console.log("Number of pallets exceeds the maximum volume!");
-                    targetRow.classList = "table-danger"; //red
                     validationValue -= 1;
+                    targetRow.classList = "table-danger"; //red
+                    console.log("Maximum of pallets count exceded!");
                 }
-                // // some calculation for the F/CD pallets load
-                else if (truckZones == 2) {
-                    result = totalFrozenPallets/maxPalletCount <= 1/truckZones;
-                    if (!result) {
-                        console.log("Number of Frozen pallets exceeds the maximum volume: 1/2 of load");
-                        targetRow.classList = "table-warning"; //yellow
-                        validationValue -= 1;
+                else if ( totalPalletCount == maxPalletCount){
+                    console.log('FULL LOAD!');
+                    /** If full load: minimum number of f/cd pallets in a mixed load (NOT MONOLOAD)
+                     * can be 4 pallets, this rule goes for both reefers of load (20 or 14) 
+                     * and (2 or 3) zones of temperature control.
+                     ! In full load number of f/cd pallets totals must be EVEN, odd pallen count can't be loaded.
+                    */ 
+                    const smallLoad = (totalCDPallets > totalFrozenPallets)? totalCDPallets : totalCDPallets;
+                    if (smallLoad == 0) {
+                        // this case is MONOLOAD FULL LOAD
+                        console.log("MONOLOAD!");
                     }
-                }
-                else if ( truckZones == 3) {
-                    result = totalFrozenPallets/maxPalletCount <= 0.8;
-                    if (!result) {
-                        console.log("But number of Frozen pallets exceeds the maximum volume: 80% of load");
-                        targetRow.classList = "table-warning"; //yellow
-                        validationValue -= 1;
+                    else if (smallLoad >= 4 && (smallLoad % 2 == 0)) {
+                        // this is MIXED load and we need to check for
+                        console.log("MIXED LOAD, Pallets EVEN, smallLoad >=4");
+
                     }
+                    else {
+                        validationValue -= 1;
+                        targetRow.classList = "table-danger"; //red
+                        if (!smallLoad >= 4) {
+                            console.log("The smallest load of (frozen or chilled+dry) must be at least 4 pallets.");
+                        }
+                        else if (smallLoad % 2 != 0) {
+                            console.log("In full load pallet count to every type of goods must be EVEN.");
+                        }
+                    }
+                    
+
                 }
-               validationValue += 1;  
+
+
+
+
+                // THIS HAS TO BE CHANGED! SINCE IT DOESN'T fit the MONOLOAD rules inplemented later
+            //     if (totalPalletCount > maxPalletCount) {
+            //         console.log("Number of pallets exceeds the maximum volume!");
+            //         targetRow.classList = "table-danger"; //red
+            //         validationValue -= 1;
+            //     }
+            //     // // some calculation for the F/CD pallets load
+            //     else if (truckZones == 2) {
+            //         result = totalFrozenPallets/maxPalletCount <= 1/truckZones;
+            //         if (!result) {
+            //             console.log("Number of Frozen pallets exceeds the maximum volume: 1/2 of load");
+            //             targetRow.classList = "table-warning"; //yellow
+            //             validationValue -= 1;
+            //         }
+            //     }
+            //     else if ( truckZones == 3) {
+            //         result = totalFrozenPallets/maxPalletCount <= 0.8;
+            //         if (!result) {
+            //             console.log("But number of Frozen pallets exceeds the maximum volume: 80% of load");
+            //             targetRow.classList = "table-warning"; //yellow
+            //             validationValue -= 1;
+            //         }
+            //     }
+            //    validationValue += 1;  
             }
             else {
                 targetRow.classList = "table-danger"; //red
