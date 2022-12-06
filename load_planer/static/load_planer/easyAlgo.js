@@ -153,6 +153,9 @@ function mixedLoadTryEasy(data, smallLoad, smalloadCount, pallet_size, zones, fu
     //console.log(jsonPlanData);
     //console.log(hardLoadV1);
 
+    // implementiing neighbour test
+    let testThis = neighbourIndex(hardLoadV1); 
+    console.log(testThis);
     /** Now let's get the JSON into actual pallets on the SCHEMA */
     mixedLOadHard(hardLoadV1, palletTypes);
 }
@@ -258,7 +261,7 @@ function getJsonLoadingPlan(data, totalPallets, palletTypes, startingRow) {
     return result;
 }
 
-/** FUnction takes JSON and uses keys to target pallet IDs in the schema, by adding value to the 
+/** Function takes JSON and uses keys to target pallet IDs in the schema, by adding value to the 
  * divs and labels
  */
 function mixedLOadHard(hardLoadV1, palletTypes) {
@@ -273,4 +276,55 @@ function mixedLOadHard(hardLoadV1, palletTypes) {
         targetLabel.innerHTML =value['label'];
 
     })
+}
+
+
+/**
+ * Testing this JSON for neighbour relationships
+ */
+function neighbourIndex(data) {
+    let dataToTest ={};
+    Object.entries(data).forEach(entry => {
+        const[key, value] = entry;
+        if (value['Destination'] in dataToTest) {
+            dataToTest[value['Destination']].push(key);
+        }
+        else {
+            dataToTest[value['Destination']] = [key];
+        }
+    })
+    console.log(dataToTest);
+    let resultData = {};
+    Object.entries(dataToTest).forEach(entry => {
+        const [key, value] = entry;
+        var points = 0;
+        for ( let i = 0; i < value.length; i++) {
+            let first = value[i];
+            let second = value[i+1];
+            if (second == undefined) { break;}
+            console.log(`${key}   == 1:${first}  2:${second}`);
+
+            /*
+             * going to compare the two strings by cutting part of it
+             * if first and second .slice(0, -1) are equal, means they are on the same row 
+             * and this gives the +1 point, if .slice(-2) - this shows if they are in the same column
+             * and  casted parseInt(first.slice(1,-2)) +1 ==  means same 
+             * column and next row, gives +2 points.
+             */
+            if ( first.slice(0,-1) == second.slice(0,-1)) { points++;}
+            else if ( parseInt(first.slice(1,-2)) + 1 == parseInt(second.slice(1,-2))) {points += 2;}
+            
+        }
+        resultData[key] = (points / value.length);
+    })
+
+    // get the average value:
+    var indexSum = 0;
+    Object.entries(resultData).forEach(entry => {
+        const [key, value] = entry;
+        indexSum +=value;
+
+    })
+    var result = (indexSum / Object.keys(resultData).length).toFixed(2);
+    return result;
 }
