@@ -84,10 +84,19 @@ function getTourList(date){
             Object.entries(element).forEach(entry => {
                 const [key, value] = entry
                 console.log(entry);
+
                 const rowData = document.createElement('td');
                 rowData.innerHTML = value;
                 rowData.classList = 'table-control';
                 rowL.appendChild(rowData);
+                if (key == "tour_id"){
+                    rowData.innerHTML = "";
+                    const aTag = document.createElement('a');
+                    aTag.href = `/tour/${value}`;
+                    aTag.innerHTML = value;
+                    aTag.target = "_blank";
+                    rowData.appendChild(aTag);
+                }
             });
         })
     })

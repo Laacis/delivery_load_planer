@@ -229,7 +229,7 @@ function generateTruckCells(pallet_size, zones) {
             label_r_l.for = `r${i}_${item}`;
             label_r_l.id = `r${i}_${item}_label`;
             label_r_l.classList = 'form-label';
-            label_r_l.innerHTML = 'destination_id'; // change this later
+            label_r_l.innerHTML = 'empty'; // change this later
             divFFl.appendChild(label_r_l);
         })
     }
