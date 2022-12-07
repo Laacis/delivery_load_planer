@@ -41,13 +41,11 @@ function loadPLanMain(data, pallet_size, zones) {
                 cdPalletsTotal += value;
                 totalPalletsInDelivery += value;
             }
-
         })
 
     })
     if (cdPalletsTotal + fPalletsTotal == pallet_size) { fulload = true;}
     
-
     /* checking if it monoload type (all load consists only of F or CD goods, not mixed)
     * this is supposed to be easy, as algo don't has to sort pallets of temperature control
     * case when monoload is true, is to be rare and should not happen often in practice
@@ -57,8 +55,7 @@ function loadPLanMain(data, pallet_size, zones) {
 
     const smallLoad = [];
     // if it's monoload we start the monoLoadEasy, else we define the smallLoad array to be frozen or chilles/dry
-    (monoLoadBool) ? monoLoadEasy(data, totalPalletsInDelivery) : (fPalletsTotal < cdPalletsTotal)? smallLoad.push('frozen') : smallLoad.push('chilled', 'dry');
-    console.log(smallLoad);
+    (monoLoadBool) ? tryAndTestColRowLoads(data, smallLoad, smalloadCount=0, zones, totalPalletsInDelivery) : (fPalletsTotal < cdPalletsTotal)? smallLoad.push('frozen') : smallLoad.push('chilled', 'dry');
  
     /** If it's not a monoload but mixed load, we assume that the there's at 
      * least 4 pallets of the smallest load type either Frozen or Chilled+Dry.
@@ -70,76 +67,12 @@ function loadPLanMain(data, pallet_size, zones) {
      */
     if (smallLoad.length != 0) {
         const smalloadCount = (smallLoad.includes('frozen'))? fPalletsTotal : cdPalletsTotal;
-        mixedLoadTryEasy(data, smallLoad, smalloadCount, pallet_size, zones, fulload, totalPalletsInDelivery, nrOfDeliveries);
-        // console.log("running mixed LOAD");
+        tryAndTestColRowLoads(data, smallLoad, smalloadCount, zones, totalPalletsInDelivery);
     }
-    
-    /**
-     * compare fPalletsTotal and cdPalletsTotal the smallest one is the small load.
-     * then start tracking the small load counting pallets:
-     * 1) if plcaing them from the first row to the last
-     * 2) and the same counting from the last to the first 
-     * to make the load easy, we will place the small load in the segment of rows,
-     * covering from the mentioned calculations, but it must be placed according to the reefer zones.
-     * ! if only zones are 3
-     * in case of 2 zones we have to place the small load in row 1+2++ or 10+9--
-     */
-    
-
-    /** If  f and c+d pallets number are equal,  we agree that it's only possible in our example as
-     * a 20 pallets max load reefer, as 14 pallets load can't be 50/50 of F and C+D pallets due to 
-     * not being able to provide EVEN count of pallets per row if fulload = true;
-     */
-    const evenLoad = (fPalletsTotal ==  cdPalletsTotal);
 }
 
 
-/** this function will take every delivery point starting from last,
- * pick number of pallets from the data JSON and assign number of palelts to 
- * preloaded schema of reefer, only one temperature zone is neede in this case
- */
-function monoLoadEasy(data, totalPallets) {
-    //only going to look at values that have keys of  types, frozen chilled and dry
-    const palletTypes = {"frozen":"alert-primary", "chilled":"alert-success", "dry":"alert-warning"}
-    const palletCountEven = (totalPallets % 2 == 0)? true: false;
-    //pallets will be add to startingRrow, we have two pallets per row: r(rowNr)_l and .._r
-    var startingRow = Math.round(totalPallets / 2);
-    /**
-     * this switch is telling algo if the left pallet in the row is free to use, else use right
-     * if the palletCount of the load is EVEN switch is true, if ODD = switch os false, 
-     * so we have only one pallet in the startingRow
-     */
-    let switchL = palletCountEven? true : false;
-    Object.entries(data).forEach(entry => {
-        const [key, value] = entry;
-        let destinationId = "";
-        Object.entries(value).forEach(entry => {
-            const [key, value] = entry
-            
-            if (key == "Destination") {
-                destinationId = value;
-            }
-            else if (key in palletTypes) {
-                for ( var i = value; i > 0; i--) {
-                    const l_r_rowLoca = (switchL)? "l" : "r";
-                    const targetId = document.getElementById(`r${startingRow}_${l_r_rowLoca}`);
-                    targetId.innerHTML = destinationId;
-                    targetId.classList.add(palletTypes[key]);
-                    const targetLabel = document.getElementById(`r${startingRow}_${l_r_rowLoca}_label`);
-                    targetLabel.innerHTML = key;
-                    // flip the switch
-                    switchL = !switchL;
-                    // if pallet in right position was filled then chage row
-                    if ( l_r_rowLoca == "r") {startingRow -= 1;}
-                }
-            }
-        })
-
-    })
-}
-
-function mixedLoadTryEasy(data, smallLoad, smalloadCount, pallet_size, zones, fulload, totalPallets, nrOfDeliveries) {
-    //console.log(fulload);
+function tryAndTestColRowLoads(data, smallLoad, smalloadCount, zones, totalPallets) {
 
     const palletTypes = {"frozen":"alert-primary", "chilled":"alert-success", "dry":"alert-warning"}
     const palletCountEven = (totalPallets % 2 == 0)? true: false;
@@ -148,21 +81,16 @@ function mixedLoadTryEasy(data, smallLoad, smalloadCount, pallet_size, zones, fu
     let jsonPlanData =  getJsonLoadingPlan(data, totalPallets, palletTypes, startingRow);
     // now when we have the JSON data for the laod, we ned to rearrange it, based on the zones
 
-    // we go for the 2 zones reefer first here
-    let RowAlgoResult = algLoadEasy(jsonPlanData, smallLoad, smalloadCount, zones, totalPallets, colStyle = false);
-    //console.log(jsonPlanData);
-    //console.log(RowAlgoResult);
-
-    // implementiing neighbour test
-    let testRowResults = neighbourIndex(RowAlgoResult); 
-    console.log(testRowResults);
-
+    // we go for the loading style by row
+    let finalResultData = algLoadEasy(jsonPlanData, smallLoad, smalloadCount, zones, totalPallets, colStyle = false);
+    // implementing neighbour test
+    let testRowResults = neighbourIndex(finalResultData); 
+    // let's try the Column loading style
     let colAlgoResult = algLoadEasy(jsonPlanData, smallLoad, smalloadCount, zones, totalPallets, colStyle = true);
     /** Now let's get the JSON into actual pallets on the SCHEMA */
     let testColResults = neighbourIndex(colAlgoResult);
-    console.log(testColResults);
-
-    mixedLOadHard((testColResults > testRowResults? colAlgoResult: RowAlgoResult), palletTypes);
+    // comapres two results and 
+    drowThePallets((testColResults >= testRowResults? colAlgoResult: finalResultData), palletTypes);
 }
 
 /** 
@@ -201,7 +129,6 @@ function algLoadEasy(jsonPlanData, smallLoad, smalloadCount, zones, totalPallets
     let smallLoadAtDoor = ((smallLoadFirst >= smallLoadLast)&& !smallLoadinMid)? true : false;
     row_Nrs.reverse(); // row_Nrs now start from r1_r to r(n)_l
     pallets.reverse();
-    console.log(`smallLoadinMid : ${smallLoadinMid} first: ${smallLoadFirst}, mid: ${smallLoadMid}, last: ${smallLoadLast}`);
     /** let's get smallLoad ids
      * if it's 2 zones, we slice the number of smalload from the wor_Nrs at start
      * or end demepding on the smallLoadAtDoor boolean
@@ -209,12 +136,8 @@ function algLoadEasy(jsonPlanData, smallLoad, smalloadCount, zones, totalPallets
      */
     let smallLoadRowIds = 0;
     if ( zones == 3 && smallLoadinMid) {
-        console.log('been HER!');
         smallLoadRowIds = row_Nrs.slice(4, (smalloadCount + 4))
         row_Nrs = row_Nrs.filter(item => !(new Set(smallLoadRowIds).has(item)));
-        // TEST THIS!!!!! !!!!!!!!!!!!!!!!!!!!!!!!! TODO!!!!
-        console.log(smallLoadRowIds);
-        console.log(row_Nrs);
     }
     
     else {
@@ -232,19 +155,15 @@ function algLoadEasy(jsonPlanData, smallLoad, smalloadCount, zones, totalPallets
     }
     /** now we rearrange the row_Nrs[] and smallLoadRowIds as we need them to be in sequesnce of columns */
     if (colStyle) {
-        row_Nrs = makeThisRowType(row_Nrs);
-        smallLoadRowIds = makeThisRowType(smallLoadRowIds);
+        row_Nrs = makeThisColType(row_Nrs);
+        smallLoadRowIds = makeThisColType(smallLoadRowIds);
     }
     let result = rowPalletMerge(pallets, row_Nrs, smallLoadRowIds, smallLoad);
-
-    console.log(row_Nrs);
-
     return result;
 }
 
 /** support function to merge rows and pallets into JSON data */
 function rowPalletMerge(pallets, row_Nrs, smallLoadRowIds, smallLoad){
-    console.log(smallLoadRowIds);
     let result = {};
     pallets.forEach(item => {
         /** here if we check label value for being in smallLoad, we can sent the item to 
@@ -264,7 +183,7 @@ function rowPalletMerge(pallets, row_Nrs, smallLoadRowIds, smallLoad){
 }
 
 /** a support function to rearrange the row_id data in an array, in a sequesnce of rows _r or _l */
-function makeThisRowType(rowData) {
+function makeThisColType(rowData) {
     let leftRow = [];
     let rightRow = [];
     rowData.forEach(element => {
@@ -314,17 +233,14 @@ function getJsonLoadingPlan(data, totalPallets, palletTypes, startingRow) {
 /** Function takes JSON and uses keys to target pallet IDs in the schema, by adding value to the 
  * divs and labels
  */
-function mixedLOadHard(RowAlgoResult, palletTypes) {
-    console.log(RowAlgoResult);
-
-    Object.entries(RowAlgoResult).forEach(entry => {
+function drowThePallets(finalResultData, palletTypes) {
+    Object.entries(finalResultData).forEach(entry => {
         const[key, value] = entry;
         const targetDiv = document.getElementById(key);
         targetDiv.innerHTML = value['Destination'];
         targetDiv.classList.add(palletTypes[value['label']]);
         const targetLabel = document.getElementById(`${key}_label`);
         targetLabel.innerHTML =value['label'];
-
     })
 }
 
@@ -343,7 +259,6 @@ function neighbourIndex(data) {
             dataToTest[value['Destination']] = [key];
         }
     })
-    console.log(dataToTest);
     let resultData = {};
     Object.entries(dataToTest).forEach(entry => {
         const [key, value] = entry;
@@ -352,17 +267,15 @@ function neighbourIndex(data) {
             let first = value[i];
             let second = value[i+1];
             if (second == undefined) { break;}
-            // console.log(`${key}   == 1:${first}  2:${second}`);
-
             /*
              * going to compare the two strings by cutting part of it
              * if first and second .slice(0, -1) are equal, means they are on the same row 
              * and this gives the +1 point, if .slice(-2) - this shows if they are in the same column
              * and  casted parseInt(first.slice(1,-2)) +1 ==  means same 
-             * column and next row, gives +2 points.
+             * column and next row, gives +1 points.
              */
             if ( first.slice(0,-1) == second.slice(0,-1)) { points++;}
-            else if ( parseInt(first.slice(1,-2)) + 1 == parseInt(second.slice(1,-2))) {points += 2;}
+            else if ( parseInt(first.slice(1,-2)) + 1 == parseInt(second.slice(1,-2))) {points += 1;}
             
         }
         resultData[key] = (points / value.length);
@@ -373,7 +286,6 @@ function neighbourIndex(data) {
     Object.entries(resultData).forEach(entry => {
         const [key, value] = entry;
         indexSum +=value;
-
     })
     var result = (indexSum / Object.keys(resultData).length).toFixed(2); 
     //fixed returns a string, need to cast result into float
