@@ -240,7 +240,6 @@ function generateTruckCells(pallet_size, zones) {
  * 
  */
 function populateDetailsDelPoints(tour_id, pallet_size,  zones) {
-    console.log(zones);
     fetch(`/get_delivery_point_table/${tour_id}`)
     .then(response => response.json())
     .then(data => {
