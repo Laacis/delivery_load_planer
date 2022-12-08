@@ -1,5 +1,5 @@
 import json
-from django import forms
+
 from django.forms import formset_factory
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -12,6 +12,9 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 
 from .models import *
+from .forms import *
+from .util import *
+
 
 # Create your views here.
 
@@ -146,9 +149,8 @@ def destination(request, destination_id):
         destination = Destination.objects.get(destination_id=destination_id)
     except:
         return HttpResponse(f"Destination  id: {destination_id} doesn't exist!")
-
-    user = User.objects.get(pk=request.user.id)
-    if user.is_planner() or user.is_driver():
+    # checking who's reqeusting
+    if is_req_planner(request) or is_req_driver(request):
         context = {
             "destination_id":destination.destination_id,
             "address":destination.address
@@ -163,8 +165,7 @@ def destination(request, destination_id):
 def reg_destination(request):
     # only Planner may send request and only POST reqest is accepted
     try:
-        planner = User.objects.get(pk=request.user.id)
-        if request.method != 'POST' or not planner.is_planner():
+        if request.method != 'POST' or not is_req_planner(request):
             return HttpResponse("Error: Forbidden method or wrong user!")
         else:
             # Register a new Destination
@@ -188,9 +189,8 @@ def reg_destination(request):
 @login_required
 def profile(request, profileid):
     # if the user is requesting own profile
-    requesting_user = User.objects.get(pk=request.user.id)
-    # Checking if the user is a planner
-    if requesting_user.is_planner():
+    
+    if is_req_planner(request):
         try:
             #checking if profile exists:
             profile_data = User.objects.get(pk=profileid)
@@ -202,10 +202,9 @@ def profile(request, profileid):
             verification_data = Profile.objects.get(username=profileid)
         except:
             # if the planner is viewing own profile it will have no driver_data
-            if profileid == requesting_user.id:
+            if profileid == request.user.id:
                 driver_data = None
                 verification_data = Profile.objects.get(username=profileid)
-                # return HttpResponse("Planner viewing own profile")
             else:
                 driver_data = None
                 verification_data = None
@@ -216,9 +215,9 @@ def profile(request, profileid):
             "driver_form": None
         }
         return render(request, 'load_planer/profile.html', context)
-        # return HttpResponse(f"IS Planner {requesting_user.is_planner()}")
     else:
         # If not a Planner, user can only view own account
+        requesting_user = User.objects.get(pk = profileid)
         if profileid != request.user.id:
             #if the user is trying to view another users profile, redirect back to own profile
             return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
@@ -232,6 +231,7 @@ def profile(request, profileid):
                 "verified": verification_data,
                 "driver_form": None
             }
+        # if no Driver details provided, giving user the FOrm to fill out.
         except:
             context = {
                 "profile":requesting_user,
@@ -264,8 +264,7 @@ def verify_driver(request, profileid):
         return HttpResponse("Error: Forbidden method!")
     else:
         # Only planner should be able to verify drivers
-        planer = User.objects.get(pk=request.user.id)
-        if planer.is_planner():
+        if is_req_planner(request):
             try:
                 user = User.objects.get(pk=profileid)
                 driver = Profile.objects.get(username=user)
@@ -335,43 +334,10 @@ def register(request):
         return HttpResponseRedirect(reverse("gateway"))
     else:
         return render(request, "load_planer/register.html")
-
-
-# FORMS
-
-class TruckForm(forms.ModelForm):
-    zones = forms.TypedChoiceField(choices=[(2, 2), (3, 3)], coerce=int)
-    pallet_size = forms.TypedChoiceField(choices=[(20, 20), (14, 14)], coerce=int)
-
-    class Meta:
-        model = Truck
-        fields = ["truck_id", "pallet_size", "zones"]
-        truck_id = forms.CharField(label="Truck ID", required=True, )
-        # widgets = {
-        #     'truck_id' : forms.Textarea(attrs={'placeholder':'Truck ID: AA000', 'rows':1, 'class':"form-control"}),
-        # }
-
-    
-class DriverForm(forms.ModelForm):
-    class Meta:
-        model = Driver
-        fields = ["first_name", "last_name", "driver_id"]
-        first_name = forms.CharField()
-        last_name = forms.CharField()
-        driver_id = forms.CharField()
-
-
-class DestinationForm(forms.ModelForm):
-    class Meta:
-        model = Destination
-        fields = ["destination_id", "address"]
-        destinationid = forms.CharField()
-        address = forms.CharField()
-
-    
-    
+  
 # API
 def get_destination_list(request):
+    # Only Planner may request this. 
     # TODO: Check if the user sending request is a Planner?!
     destinations = list(Destination.objects.values('destination_id'))
     result = json.dumps(destinations)
@@ -582,7 +548,7 @@ def get_tour_details(request, tour_id):
 
 
 
-# THIS PART IS TO BE CHANGED IN THE FUTURE!
+
 def get_delivery_point_table(request, tour_id):
     # getting list of destinations
     try:

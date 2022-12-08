@@ -139,7 +139,6 @@ function algLoadEasy(jsonPlanData, smallLoad, smalloadCount, zones, totalPallets
         smallLoadRowIds = row_Nrs.slice(4, (smalloadCount + 4))
         row_Nrs = row_Nrs.filter(item => !(new Set(smallLoadRowIds).has(item)));
     }
-    
     else {
         
                 // if small at the door we slize the rowNrs from the end( at the door)
@@ -243,7 +242,6 @@ function drowThePallets(finalResultData, palletTypes) {
         targetLabel.innerHTML =value['label'];
     })
 }
-
 
 /**
  * Testing this JSON for neighbour relationships
