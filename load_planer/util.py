@@ -12,7 +12,7 @@ def is_req_planner(request):
 def is_req_driver(request):
     result = False
     requesting_user = User.objects.get(pk=request.user.id)
-    result = requesting_user.is_planner()
+    result = requesting_user.is_driver()
     return result
 
 

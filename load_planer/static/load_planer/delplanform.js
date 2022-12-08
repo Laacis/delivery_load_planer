@@ -169,7 +169,7 @@ function send_delivery_plan(event) {
         "order": del_order,
       });
     console.log(some);
-    fetch("/reg_destination_plan", {
+    fetch("/reg_delivery_plan", {
         method: 'POST',
         body: JSON.stringify({
             delivery_id: delivery_id,

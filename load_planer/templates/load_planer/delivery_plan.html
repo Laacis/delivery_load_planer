@@ -11,6 +11,10 @@
 
         {{ plan.del_order }}
 
+        {% if error %}
+        {{ error }}
+        {% endif %}
+
         <br><br>
         <h6>LIST:</h6>
         <div id="delivery_plan_list">

@@ -399,7 +399,7 @@ function loadDeliveryPlanPart4() {
     // creating tbody
     const tBodyF = document.createElement('tbody');
     tableField.appendChild(tBodyF);
-    fetch(`/get_delivery_destinations/${DeliveryPlanId.value}`)
+    fetch(`/get_delivery_plan_list/${DeliveryPlanId.value}`)
     .then(response => response.json())
     .then(data => { 
         data = JSON.parse(data);
