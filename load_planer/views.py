@@ -680,6 +680,7 @@ def get_delivery_point_table(request, tour_id):
     else:
         return JsonResponse({'error':"You are not Driver nor Planner!"})
 
+
 @login_required
 def trucks_list(request):
     """ 
