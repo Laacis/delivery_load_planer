@@ -13,24 +13,24 @@
             </div>
             <div id="truck_right" class="col-6 col-md-4">
                 <div class="col-md text-start">
-                        <h5> Register New Truck:</h5><br>
+                        <h5> Register new Reefer/Truck:</h5><br>
                         <form action="{% url 'trucks' %}" method="post">
                             {% csrf_token %}
                             <div class="form-group row">
-                                <label for="id_truck_id" class="col-sm-4 col-form-label">Truck id</label>
+                                <label for="id_truck_id" class="col-sm-4 col-form-label">Truck id:</label>
                                 <div class="col-sm-8">
                                     {{ truck_form.truck_id }}
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <div for="id_pallet_size" class="col-sm-6 col-form-label">Max pallets:</div>
-                                <div class="col-sm-6">
+                                <div for="id_pallet_size" class="col-sm-8 col-form-label">Maximum loaded pallets:</div>
+                                <div class="col-sm-4">
                                     {{ truck_form.pallet_size }}
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="id_zones" class="col-sm-4 col-form-label">Truck id</label>
-                                <div class="col-sm-8">
+                                <label for="id_zones" class="col-sm-8 col-form-label">Temperature zones:</label>
+                                <div class="col-sm-4">
                                     {{ truck_form.zones }}
                                 </div>
                             </div>
@@ -49,8 +49,8 @@
 
 
 
-<!-- 
-    <div class="container text-center">
+
+    <!-- <div class="container text-center">
         <h1> Trucks</h1>
         
         <p> TODO: </p>

@@ -50,8 +50,7 @@ def tour_planning(request):
 @login_required
 def trucks(request):
     form = TruckForm()
-    trucks = Truck.objects.all()
-    if request.method == 'POST':
+    if request.method == 'POST' and is_req_planner(request):
         # REMEMBER TO MAKE SURE THE USER ADDING Truck is A PLANNER, not a driver!!!
         truck_form = TruckForm(request.POST)
         if truck_form.is_valid():
@@ -61,7 +60,7 @@ def trucks(request):
             try:
                 add_truck = Truck(truck_id=truck_id, pallet_size=pallet_size, zones=zones)
                 add_truck.save()
-                return render(request, 'load_planer/trucks.html', {"truck_form": form, "trucks": trucks})
+                return render(request, 'load_planer/trucks.html', {"truck_form": form})
             except: 
                 return HttpResponse("Error: Unable to save this truck!")
         
@@ -70,7 +69,7 @@ def trucks(request):
 
     else:
         
-        return render(request, 'load_planer/trucks.html', {"truck_form": form, "trucks": trucks})
+        return render(request, 'load_planer/trucks.html', {"truck_form": form})
 
 @login_required
 def drivers(request):
@@ -680,4 +679,21 @@ def get_delivery_point_table(request, tour_id):
         return JsonResponse(result)      
     else:
         return JsonResponse({'error':"You are not Driver nor Planner!"})
+
+@login_required
+def trucks_list(request):
+    """ 
+        Returns a list of truck as JSON serialized
+        used to generate cards of Trucks on the /trucks page
+        only Planner may request this.
+    """
+    if(is_req_planner(request)):
+        trucks = Truck.objects.all()
+        result = []
+        for item in trucks:
+            result.append(item.serialize())
+        result = json.dumps(result)
+        return JsonResponse(result, safe=False)
+    else:
+        return JsonResponse({"error":"No Planner status!"})
     
