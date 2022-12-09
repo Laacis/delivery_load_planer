@@ -6,7 +6,50 @@
     <div class="container text-center" >
         <div class="row row-cols-4" id="top_nav_row"></div>
         <br>
+        <div class="row">
+            <div id="truck_main" class="col-12 col-md-8">
+                col-12 col-md-8
+                LIST OF TRUCK HERE!
+            </div>
+            <div id="truck_right" class="col-6 col-md-4">
+                <div class="col-md text-start">
+                        <h5> Register New Truck:</h5><br>
+                        <form action="{% url 'trucks' %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group row">
+                                <label for="id_truck_id" class="col-sm-4 col-form-label">Truck id</label>
+                                <div class="col-sm-8">
+                                    {{ truck_form.truck_id }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div for="id_pallet_size" class="col-sm-6 col-form-label">Max pallets:</div>
+                                <div class="col-sm-6">
+                                    {{ truck_form.pallet_size }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="id_zones" class="col-sm-4 col-form-label">Truck id</label>
+                                <div class="col-sm-8">
+                                    {{ truck_form.zones }}
+                                </div>
+                            </div>
+                            <br>
+                            
+                
+                            <input type="submit" value="Register Truck" class="btn btn-primary form-control">
+                        </form>
+
+                </div>
+            </div>
+
+        </div>
     </div>
+
+
+
+
+<!-- 
     <div class="container text-center">
         <h1> Trucks</h1>
         
@@ -16,7 +59,7 @@
 
         <form action="{% url 'trucks' %}" method="post">
             {% csrf_token %}
-            {{ truck_form }}
+            {{ truck_form.as_p }}
 
             <input type="submit" value="Register Truck" class="btn btn-primary form-control">
         </form>
@@ -24,8 +67,9 @@
                 <p> {{ item }} </p>
             {% endfor %}
 
-    </div>  
+    </div>   -->
 {% endblock %}
 {% block script %}
-   <script src="{% static 'load_planer/plannerNav.js' %}" type="text/javascript"></script>
+    <script src="{% static 'load_planer/plannerNav.js' %}" type="text/javascript"></script>
+    <script src="{% static 'load_planer/trucks.js' %}" type="text/javascript"></script>
 {% endblock %}

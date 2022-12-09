@@ -358,6 +358,8 @@ def register(request):
         return render(request, "load_planer/register.html")
   
 # API
+
+
 @login_required
 def get_destination_list(request):
     """
@@ -403,6 +405,7 @@ def reg_delivery_plan(request):
     else:
         return HttpResponse("Error: Forbidden method!")
 
+
 @login_required
 def get_delivery_plan_list(request,delivery_id):
     """
@@ -438,6 +441,7 @@ def get_delivery_list_by_details(request,year, quarter):
     else:
         return JsonResponse({"error":"Not a Planner!"})
 
+
 @login_required
 def get_driver_list(request, date):
     """
@@ -463,6 +467,7 @@ def get_driver_list(request, date):
         return JsonResponse(result, safe=False)
     else:
         return JsonResponse({"error":"Not a Planner!"})
+
 
 @login_required
 def get_truck_list(request, date):
@@ -603,6 +608,7 @@ def get_tour_list(request, date):
 
 # API related to load Tour:
 
+
 @login_required
 def get_truck_details(request, truck_id):
     """
@@ -618,6 +624,7 @@ def get_truck_details(request, truck_id):
             return JsonResponse({'error':f'Truck {truck_id} not found!'})
     else:
         return JsonResponse({'error':"You are not Driver nor Planner!"})
+
 
 @login_required
 def get_tour_details(request, tour_id):
@@ -635,8 +642,6 @@ def get_tour_details(request, tour_id):
         return JsonResponse(tour_details.serialize(), safe=False)
     else:
         return JsonResponse({'error':"You are not Driver nor Planner!"})
-
-
 
 
 @login_required
