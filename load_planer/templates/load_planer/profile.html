@@ -2,7 +2,67 @@
 {% load static %}
 
 {% block body %}
-    
+    <div class="container text-center" >
+        <div class="row row-cols-4" id="top_nav_row"></div>
+        <br>
+        <div class="row">
+            <div id="profile_main" class="col-12 col-md-9">
+                <div class="row">
+                    <h4>Driver details:</h4>
+                    
+                </div>
+                <div class="row row-cols-2">
+                    <div class="col text-end">
+                        <img src="{% static 'load_planer/img/profile.png' %}" style="width:200px;height:250px;border-radius:2%;" alt="My image">
+                    </div>
+                    <div class="col"> 
+                        <div class="card mb-3">
+                            <div class="card-header" id="profile_id:{{ profile.id }}">
+                                 priofile id: <strong id="profile_strong">{{ profile.id }}</strong>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item card-text" id="username">username: {{ profile }}</li>
+                                <li class="list-group-item card-text" id="first_name">Name: {{ profile_details.first_name }}</li>
+                                <li class="list-group-item card-text" id="last_name">Lastname: {{ profile_details.last_name }}</li>
+                                <li class="list-group-item card-text" id="driver_id">driver ID: <strong>{{ profile_details.driver_id }}</strong></li>
+
+                                {% if verified.is_driver == True%}
+                                <li class="list-group-item card-text" id="v_verified">Verified </li>
+                                {% elif verified.is_driver == None %}
+                                    <li class="list-group-item card-text" id="v_awaiting">Lacking personal data </li>
+                                {% elif verified.is_planner == True %}
+                                        <li class="list-group-item card-text" id="v_planner">You are a Planner! </li>
+                                {% else %}
+                                <li class="list-group-item card-text" id="v_not_verified">Not verified! </li>
+                                {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+ 
+            </div>
+            <div id="profile_right" class="col-6 col-md-3">
+                <div class="col-md text-center">
+                    {% if driver_form %}
+                        <div class="row ">
+                            <h5>Register as Driver:</h5>
+                        </div>
+                        <div class="row" id="unver_driver">
+                            
+                            <form action="{% url 'reg_driver' %}" method="post">
+                                {% csrf_token %}
+                                {{ driver_form }}
+                                <input type="submit" value="Register" class="btn btn-success form-control">
+                            </form>
+                            
+                        </div>  
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
     <div class="container text-center">
         <h1> Profile: {{ profile }} id:{{ profile.id }}</h1>
         {% if profile_details %}
@@ -42,7 +102,7 @@
             {% csrf_token %}
             {{ driver_form }}
 
-            <input type="submit" value="Register" class="btn btn-primary form-control">
+        <input type="submit" value="Register" class="btn btn-primary form-control">
         </form>
         {% else %}
             {% if verified.is_driver == True%}
@@ -56,4 +116,7 @@
             {% endif %}
         {% endif %}
     </div>  
+{% endblock %}
+{% block script %}
+   <script src="{% static 'load_planer/profileView.js' %}" type="text/javascript"></script>
 {% endblock %}

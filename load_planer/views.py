@@ -99,10 +99,11 @@ def drivers(request):
                 verified_drivers.append(x)
             else:
                 un_verified_drivers.append(x)
-        # sort the list of unverified drivers to display the new registred first
+        # sort the lists to display the new registred first
         def sortUnVerif(e):
             return e.username.id
         un_verified_drivers.sort(reverse=True, key=sortUnVerif)
+        verified_drivers.sort(reverse=True, key=sortUnVerif)
         # we only return first results
         un_verified_drivers = un_verified_drivers[0:1]
 
@@ -265,6 +266,11 @@ def profile(request, profileid):
         }
         return render(request, 'load_planer/profile.html', context)
     else:
+        try:
+            #checking if profile exists:
+            profile_data = User.objects.get(pk=profileid)
+        except:
+            return HttpResponse("Requested ID doesn't exist!")
         # If not a Planner, user can only view own account
         requesting_user = User.objects.get(pk = profileid)
         if profileid != request.user.id:
@@ -289,6 +295,7 @@ def profile(request, profileid):
                 "driver_form": DriverForm()
             }
         return render(request, 'load_planer/profile.html', context)
+
 
 @login_required
 def tour(request, tour_id):
@@ -369,6 +376,10 @@ def register(request):
 @login_required
 @csrf_exempt
 def verify_driver(request, profileid):
+    """ 
+        verifies or removes a Driver in the db, changing the is_driver value to True/False
+        Only Planner should have be able to request this.
+    """
     if request.method != 'POST':
         # Only POST method allowed
         return HttpResponse("Error: Forbidden method!")

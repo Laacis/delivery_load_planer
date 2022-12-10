@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", function() {
     makeVerifyButton();
 });
 var uid = 0;
+/** creates a button and add event listener that veryfies a driver
+ * via POST to /verufy_drive/<uid>
+ */
 function makeVerifyButton() {
     const liField = document.getElementById('button_li');
     if (liField == null) {
