@@ -20,20 +20,20 @@
                             <div class="card-header" id="profile_id:{{ profile.id }}">
                                  priofile id: <strong id="profile_strong">{{ profile.id }}</strong>
                             </div>
-                            <ul class="list-group list-group-flush">
+                            <ul class="list-group list-group-flush" id="card_ul">
                                 <li class="list-group-item card-text" id="username">username: {{ profile }}</li>
                                 <li class="list-group-item card-text" id="first_name">Name: {{ profile_details.first_name }}</li>
                                 <li class="list-group-item card-text" id="last_name">Lastname: {{ profile_details.last_name }}</li>
                                 <li class="list-group-item card-text" id="driver_id">driver ID: <strong>{{ profile_details.driver_id }}</strong></li>
-
+                                <li class="list-group-item card-text" id="v_result">
                                 {% if verified.is_driver == True%}
-                                <li class="list-group-item card-text" id="v_verified">Verified </li>
+                                    Verified as Driver.
                                 {% elif verified.is_driver == None %}
-                                    <li class="list-group-item card-text" id="v_awaiting">Lacking personal data </li>
+                                    Lacking personal data!
                                 {% elif verified.is_planner == True %}
-                                        <li class="list-group-item card-text" id="v_planner">You are a Planner! </li>
+                                    You are a Planner.
                                 {% else %}
-                                <li class="list-group-item card-text" id="v_not_verified">Not verified! </li>
+                                    Not verified as Driver.
                                 {% endif %}
                                 </li>
                             </ul>
@@ -63,59 +63,7 @@
 
         </div>
     </div>
-    <div class="container text-center">
-        <h1> Profile: {{ profile }} id:{{ profile.id }}</h1>
-        {% if profile_details %}
-            <p> Got details</p>
-            First name: {{ profile_details.first_name }}<br>
-            Last name: {{ profile_details.last_name }}<br>
-            Driver ID: {{ profile_details.driver_id }}
-            <br><br>
-            {{ verified }}
-        {% else %}
-            <p> Nothing to display, no Profile details provided! </p>
-        {% endif %}
-
-        {% if profile.id == request.user.id %}
-        <br>
-            <br><p> TODO: Let user edit user's profile</p>
-        {% else %}
-            {% if profile_details == None %}
-                <p> This user didn't supply any details to register as Driver</p>
-                {% else %}
-                {% if verified.is_driver == False %}
-                <form action="{% url 'verify_driver' profile.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" value="Verify driver" class="btn btn-secondary form-control">
-                </form>
-                {% else %}
-                <form action="{% url 'verify_driver' profile.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" value="Remove driver" class="btn btn-secondary form-control">
-                </form>
-                {% endif %}
-            {% endif %}
-        {% endif %}
-
-        {% if driver_form %}
-        <form action="{% url 'reg_driver' %}" method="post">
-            {% csrf_token %}
-            {{ driver_form }}
-
-        <input type="submit" value="Register" class="btn btn-primary form-control">
-        </form>
-        {% else %}
-            {% if verified.is_driver == True%}
-            <p> Verified as driver</p> {{ verified }}
-            {% elif verified.is_driver == None %}
-            <p> User didn't supply any details for registration. Let the Planer Edit this profile.</p>
-            {% elif verified.is_planner == True %}
-            <p> You are a Planner!</p>
-            {% else %}
-            <p> Not verified as driver, please await Verification by Planner</p>
-            {% endif %}
-        {% endif %}
-    </div>  
+    
 {% endblock %}
 {% block script %}
    <script src="{% static 'load_planer/profileView.js' %}" type="text/javascript"></script>

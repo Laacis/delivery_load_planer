@@ -42,4 +42,5 @@ urlpatterns = [
     path('get_tour_details/<str:tour_id>', views.get_tour_details, name="get_tour_details"),
 
     path("get_delivery_point_table/<str:tour_id>", views.get_delivery_point_table, name="get_delivery_point_table"),
+    path("am_i_planner", views.am_i_planner, name="am_i_planner"),
 ]

@@ -743,4 +743,14 @@ def trucks_list(request):
         return JsonResponse(result, safe=False)
     else:
         return JsonResponse({"error":"No Planner status!"})
+
+
+
+@login_required
+def am_i_planner(request):
+    """ Returns True of False if requested user is Planner"""
+    if is_req_planner(request):
+        return JsonResponse({"planner":True})
+    else:
+        return JsonResponse({"planner":False})
     
