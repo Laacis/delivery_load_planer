@@ -5,6 +5,11 @@ document.addEventListener("DOMContentLoaded", function() {
     crdateInpandButton();
 });
 
+/** Creates date inputfield and button with even listener
+ * when date is selected, fetches data from db, generates a table of fetched 
+ * tours and display each of them in onw row, with a link to tour page
+ */
+
 // createing input field
 function crdateInpandButton() {
     const sideBar = document.getElementById('view_tours_input_field');

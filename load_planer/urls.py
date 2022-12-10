@@ -17,7 +17,7 @@ urlpatterns = [
 
     path("drivers", views.drivers, name="drivers"),
     path("reg_driver", views.reg_driver, name="reg_driver"),
-    path("verify_driver/<int:profileid>", views.verify_driver, name="verify_driver"),
+    
 
     path("delivery_plans", views.delivery_plans, name="delivery_plans"),
     path("delivery_plan/<str:delivery_plan_id>", views.delivery_plan, name="delivery_plan"),
@@ -27,6 +27,7 @@ urlpatterns = [
     path("destination/<str:destination_id>", views.destination, name="destination"),
 
     # API
+    path("verify_driver/<int:profileid>", views.verify_driver, name="verify_driver"),
     path("get_destination_list", views.get_destination_list, name="get_destination_list"),
     path("reg_delivery_plan", views.reg_delivery_plan, name="reg_delivery_plan"),
     path("get_delivery_plan_list/<str:delivery_id>", views.get_delivery_plan_list, name="get_delivery_plan_list"),

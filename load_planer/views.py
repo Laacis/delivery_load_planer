@@ -49,35 +49,68 @@ def tour_planning(request):
 
 @login_required
 def trucks(request):
+    """ Only Planner should have access to this page"""
     form = TruckForm()
     trucks = Truck.objects.all()
-    if request.method == 'POST' and is_req_planner(request):
-        # REMEMBER TO MAKE SURE THE USER ADDING Truck is A PLANNER, not a driver!!!
-        truck_form = TruckForm(request.POST)
-        if truck_form.is_valid():
-            truck_id = truck_form.cleaned_data['truck_id']
-            pallet_size = truck_form.cleaned_data['pallet_size']
-            zones = truck_form.cleaned_data['zones']
-            try:
-                add_truck = Truck(truck_id=truck_id, pallet_size=pallet_size, zones=zones)
-                add_truck.save()
-                return render(request, 'load_planer/trucks.html', {"truck_form": form, 'trucks':trucks})
-            except: 
-                return HttpResponse("Error: Unable to save this truck!")
-        
-        else:
-            return HttpResponse("Error: Form not valid!")
+    if (is_req_planner(request)):
+        if request.method == 'POST':
+            truck_form = TruckForm(request.POST)
+            if truck_form.is_valid():
+                truck_id = truck_form.cleaned_data['truck_id']
+                pallet_size = truck_form.cleaned_data['pallet_size']
+                zones = truck_form.cleaned_data['zones']
+                try:
+                    add_truck = Truck(truck_id=truck_id, pallet_size=pallet_size, zones=zones)
+                    add_truck.save()
+                    return render(request, 'load_planer/trucks.html', {"truck_form": form, 'trucks':trucks})
+                except: 
+                    return HttpResponse("Error: Unable to save this truck!")
+            
+            else:
+                return HttpResponse("Error: Form not valid!")
 
+        else:
+            # if GET method:
+            return render(request, 'load_planer/trucks.html', {"truck_form": form,'trucks':trucks})
     else:
-        # CHANGE THIS
-        return render(request, 'load_planer/trucks.html', {"truck_form": form,'trucks':trucks})
+        # not Planner redirected to own profile
+        return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
+
 
 @login_required
 def drivers(request):
-    driver_list = Driver.objects.all()
-    # Only show drivers verified of not, don't show planners
-    verified_drivers = Profile.objects.filter(is_planner=False)
-    return render(request, 'load_planer/drivers.html', {"driver_list":driver_list, "verified_drivers":verified_drivers})
+    """
+        return two lists of Queary sets:
+        verified and unverified drivers
+        Unverified drivers are limited to one result.
+        Only Planner should have access to drivers page
+    """
+    if (is_req_planner(request)):
+        driver_list = Driver.objects.all()
+        verified_drivers = []
+        un_verified_drivers = []
+        for x in driver_list:
+            try:
+                driver_verify = Profile.objects.get(username=x.username)
+            except:
+                driver_verify.is_driver = False
+
+            if (driver_verify.is_driver): 
+                verified_drivers.append(x)
+            else:
+                un_verified_drivers.append(x)
+        # sort the list of unverified drivers to display the new registred first
+        def sortUnVerif(e):
+            return e.username.id
+        un_verified_drivers.sort(reverse=True, key=sortUnVerif)
+        # we only return first results
+        un_verified_drivers = un_verified_drivers[0:1]
+
+        return render(request, 'load_planer/drivers.html', {"driver_list":driver_list, "verified_drivers":verified_drivers, "un_verified_drivers":un_verified_drivers})
+    else:
+        # not Planner redirected to own profile
+        return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
+
 
 @login_required
 def reg_driver(request):
@@ -158,7 +191,6 @@ def destinations(request):
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
 
 @login_required
-@require_http_methods(["GET"])
 def destination(request, destination_id):
     # checking if the destination id exists
     try:
@@ -279,32 +311,7 @@ def tour(request, tour_id):
     
 
 
-@login_required
-def verify_driver(request, profileid):
-    if request.method != 'POST':
-        # Only POST method allowed
-        return HttpResponse("Error: Forbidden method!")
-    else:
-        # Only planner should be able to verify drivers
-        if is_req_planner(request):
-            try:
-                user = User.objects.get(pk=profileid)
-                driver = Profile.objects.get(username=user)
-                if driver.is_driver:
-                    # Going to remove the driver from the Verified Drivers
-                    driver.is_driver = False
-                    driver.save()
-                    return HttpResponseRedirect(reverse("profile", kwargs={'profileid':profileid}))
-                else:
-                    # Going to verify driver
-                    driver.is_driver = True
-                    driver.save()
-                    return HttpResponseRedirect(reverse("profile", kwargs={'profileid':profileid}))
-            except:
-                return HttpResponse("Error: Uanbale to register user!")
-        else:
-            return HttpResponse("Error: Only Planner can verify Drivers!")
-        
+      
 
 def login_view(request):
     if request.method == "POST":
@@ -359,6 +366,33 @@ def register(request):
   
 # API
 
+@login_required
+@csrf_exempt
+def verify_driver(request, profileid):
+    if request.method != 'POST':
+        # Only POST method allowed
+        return HttpResponse("Error: Forbidden method!")
+    else:
+        # Only planner should be able to verify drivers
+        if is_req_planner(request):
+            try:
+                user = User.objects.get(pk=profileid)
+                driver = Profile.objects.get(username=user)
+                if driver.is_driver:
+                    # Going to remove the driver from the Verified Drivers
+                    driver.is_driver = False
+                    driver.save()
+                    return JsonResponse({"response":"Driver removed!"})
+                else:
+                    # Going to verify driver
+                    driver.is_driver = True
+                    driver.save()
+                    return JsonResponse({"response":"Driver verified!"})
+            except:
+                return JsonResponse({"Error": "Uanbale to register user!"})
+        else:
+            return JsonResponse({"Error": "Only Planner can verify Drivers!"})
+  
 
 @login_required
 def get_destination_list(request):
