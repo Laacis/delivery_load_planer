@@ -50,6 +50,7 @@ def tour_planning(request):
 @login_required
 def trucks(request):
     form = TruckForm()
+    trucks = Truck.objects.all()
     if request.method == 'POST' and is_req_planner(request):
         # REMEMBER TO MAKE SURE THE USER ADDING Truck is A PLANNER, not a driver!!!
         truck_form = TruckForm(request.POST)
@@ -60,7 +61,7 @@ def trucks(request):
             try:
                 add_truck = Truck(truck_id=truck_id, pallet_size=pallet_size, zones=zones)
                 add_truck.save()
-                return render(request, 'load_planer/trucks.html', {"truck_form": form})
+                return render(request, 'load_planer/trucks.html', {"truck_form": form, 'trucks':trucks})
             except: 
                 return HttpResponse("Error: Unable to save this truck!")
         
@@ -68,8 +69,8 @@ def trucks(request):
             return HttpResponse("Error: Form not valid!")
 
     else:
-        
-        return render(request, 'load_planer/trucks.html', {"truck_form": form})
+        # CHANGE THIS
+        return render(request, 'load_planer/trucks.html', {"truck_form": form,'trucks':trucks})
 
 @login_required
 def drivers(request):

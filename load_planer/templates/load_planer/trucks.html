@@ -8,7 +8,24 @@
         <br>
         <div class="row">
             <div id="truck_main" class="col-12 col-md-8">
-                <h4>List of registred Trucks:</h4>
+                <div class="row">
+                    <h4>List of registred Trucks:</h4>
+                </div>
+                <div class="row row-cols-3">
+
+                    {% for truck in trucks %}
+                    <div class="'col">
+                        <div class="card border-success mb-3">
+                            <div class="card-header">
+                                <strong>{{ truck.truck_id }}</strong>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item card-text">Maximum EUR pallets: {{ truck.pallet_size }}</li>
+                                <li class="list-group-item card-text">Temperature zones: {{ truck.zones }}</li>
+                            </ul>
+                        </div>
+                    </div>{% endfor %}
+                </div>   
             </div>
             <div id="truck_right" class="col-6 col-md-4">
                 <div class="col-md text-start">
