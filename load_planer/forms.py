@@ -23,8 +23,9 @@ class DriverForm(forms.ModelForm):
 class DestinationForm(forms.ModelForm):
     class Meta:
         model = Destination
-        fields = ["destination_id", "address"]
+        fields = ["destination_id", "address", "contact_number"]
         destinationid = forms.CharField()
         address = forms.CharField()
+        contact_number = forms.CharField()
 
    
