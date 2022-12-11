@@ -65,6 +65,7 @@ class Truck(models.Model):
 class Destination(models.Model):
     destination_id = models.CharField(max_length=30, blank=False, unique=True)
     address = models.CharField(max_length=90, blank=False) 
+    zipcode = models.CharField(max_length=7, blank=False, default="0000")
     contact_number = models.CharField(max_length=12, blank=True)
     # Add more detailed address fields if you need to, since this project is not going to have map related components - I don't need more details
 

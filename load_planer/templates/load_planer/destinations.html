@@ -21,11 +21,12 @@
                         <div class="col">
                             <div class="card border-success mb-3">
                                 <div class="card-header">
-                                    <strong>{{ destination.destination_id }}</strong>
+                                    <strong><a href="{% url 'destination' destination.destination_id %}"> {{ destination.destination_id }}</a></strong>
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item card-text">Address: {{destination.address }}</li>
-                                    <li class="list-group-item card-text"> {{ destination.contact_number }}</li>
+                                    <li class="list-group-item card-text">zip/index: {{destination.zipcode }}</li>
+                                    <li class="list-group-item card-text">contact: {{ destination.contact_number }}</li>
                                 </ul>
                             </div>
                         </div>

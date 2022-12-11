@@ -223,8 +223,9 @@ def reg_destination(request):
             if form.is_valid():
                 id = form.cleaned_data["destination_id"]
                 address = form.cleaned_data["address"]
+                zipcode = form.cleaned_data['zipcode']
                 contact_number = form.cleaned_data['contact_number']
-                destination = Destination(destination_id = id, address = address, contact_number=contact_number)
+                destination = Destination(destination_id = id, address = address, contact_number=contact_number, zipcode=zipcode)
                 destination.save()
                 return HttpResponseRedirect(reverse("destination", kwargs={'destination_id':id}))
             else:
