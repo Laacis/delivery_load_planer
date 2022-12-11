@@ -101,10 +101,7 @@ function loadButtons() {
             data.forEach(element => {
                 listDeliveryIds.push(element);
             });
-
-            // wipe prevoius data
-
-            // load results and display
+              // load results and display
             displayFilterResults(listDeliveryIds);
 
         })
@@ -324,14 +321,7 @@ function send_delivery_plan(event) {
  * 
  */
 function displayFilterResults(listDeliveryIds) {
-    // clean up old entries
-    try {
-        const oldTable = document.getElementById('table_field_reset')
-        oldTable.remove();
-    }
-    catch {
-        // must be clean!
-    }
+    clearTable();
     // checking if the right block is display and form is diplay none
     const tableDiv = document.getElementById('dp_list_div');
     tableDiv.style.display = 'block';
@@ -358,6 +348,15 @@ function displayFilterResults(listDeliveryIds) {
     const tbody = document.createElement('tbody');
     tableD.appendChild(tbody);
     let counter = 0;
+    if (listDeliveryIds.length == 0){
+        clearTable();
+        const targetDiv = document.getElementById('result_table_field');
+        //creating div with id 'table_field_reset'
+        const noResDiv = document.createElement('div');
+        noResDiv.id ='table_field_reset';
+        noResDiv.innerHTML = "No Delivery Plans for selected period.";
+        targetDiv.appendChild(noResDiv);
+    }
     listDeliveryIds.forEach(element => {
         counter++;
         const trBodyTag = document.createElement('tr');
@@ -376,4 +375,15 @@ function displayFilterResults(listDeliveryIds) {
 
         })
     })
+}
+
+function clearTable() {
+    // clean up old entries
+    try {
+        const oldTable = document.getElementById('table_field_reset')
+        oldTable.remove();
+    }
+    catch {
+        // must be clean!
+    }
 }
