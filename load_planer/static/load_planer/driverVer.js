@@ -18,7 +18,7 @@ function makeVerifyButton() {
         uid = liField.innerHTML;
         liField.innerHTML = "";
         const buttonLi = document.createElement('button');
-        buttonLi.classList = "btn btn-warning form-control";
+        buttonLi.classList = "btn btn-outline-success form-control";
         buttonLi.textContent = "Quick verify";
         liField.appendChild(buttonLi);
         buttonLi.addEventListener('click', verifyDriver);

@@ -223,7 +223,8 @@ def reg_destination(request):
             if form.is_valid():
                 id = form.cleaned_data["destination_id"]
                 address = form.cleaned_data["address"]
-                destination = Destination(destination_id = id, address = address)
+                contact_number = form.cleaned_data['contact_number']
+                destination = Destination(destination_id = id, address = address, contact_number=contact_number)
                 destination.save()
                 return HttpResponseRedirect(reverse("destination", kwargs={'destination_id':id}))
             else:
@@ -745,7 +746,7 @@ def trucks_list(request):
         return JsonResponse({"error":"No Planner status!"})
 
 
-
+# API to verify status
 @login_required
 def am_i_planner(request):
     """ Returns True of False if requested user is Planner"""
@@ -754,3 +755,4 @@ def am_i_planner(request):
     else:
         return JsonResponse({"planner":False})
     
+

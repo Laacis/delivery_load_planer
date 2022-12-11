@@ -11,17 +11,35 @@
                 <div class="row">
                     <h4>List of Destinations:</h4>
                 </div>
-                <div class="row row-cols-4">
+                <div class="row">
+                    <h6>filter:</h6>
+                    <input type="text">
+                </div>
+                <div class="row row-cols-3">
 
                     {% for destination in destination_list %}
-                        <a href="{% url 'destination' destination.destination_id %}">{{ destination }}</a><br>
+                        <div class="col">
+                            <div class="card border-success mb-3">
+                                <div class="card-header">
+                                    <strong>{{ destination.destination_id }}</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item card-text">Address: {{destination.address }}</li>
+                                    <li class="list-group-item card-text"> {{ destination.contact_number }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- <div class="form-floating">
+                            <a href="#" id="id_{{destination.destination_id}}" class="btn btn-outline-success form-control"> {{destination.destination_id}}</a>
+                            <label for="id_{{destination.destination_id}}" class="form-label"> {{destination.address}}</label>
+                        </div> -->
                     {% endfor %}
 
                 </div>   
             </div>
             <div id="truck_right" class="col-6 col-md-4">
                 <div class="col-md text-start">
-                        <h4 class="text-center"> Register new Destinations:</h4><br>
+                        <h4 class="text-center"> Register new Destinations:</h4>
 
                         <form action="{% url 'reg_destination' %}" method="post">
                             {% csrf_token %}
@@ -65,4 +83,5 @@
 {% endblock %}
 {% block script %}
    <script src="{% static 'load_planer/plannerNav.js' %}" type="text/javascript"></script>
+   <script src="{% static 'load_planer/destinationsView.js' %}" type="text/javascript"></script>
 {% endblock %}
