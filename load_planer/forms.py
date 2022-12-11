@@ -26,7 +26,7 @@ class DestinationForm(forms.ModelForm):
         fields = ["destination_id", "address", "zipcode", "contact_number"]
         destinationid = forms.CharField()
         address = forms.CharField()
-        zipcode = forms.CharField()
-        contact_number = forms.CharField()
+        zipcode = forms.CharField(widget=forms.NumberInput())
+        contact_number = forms.CharField(widget=forms.NumberInput())
 
    

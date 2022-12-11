@@ -28,28 +28,35 @@
             </div>
             <div id="truck_right" class="col-6 col-md-4">
                 <div class="col-md text-start">
-                    <h4 class="text-center"> Register new Reefer/Truck:</h4><br>
+                    <h4 class="text-center"> Register new Reefer/Truck:</h4>
                     <form action="{% url 'trucks' %}" method="post">
                         {% csrf_token %}
-                        <div class="form-group row">
-                            <label for="id_truck_id" class="col-sm-4 col-form-label">Truck id:</label>
-                            <div class="col-sm-8">
+                        <div class="form-row">
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Truck/Reefer id:</div>
+                                </div>
                                 {{ truck_form.truck_id }}
-                            </div>
+                                </div>  
                         </div>
-                        <div class="form-group row">
-                            <div for="id_pallet_size" class="col-sm-8 col-form-label">Maximum loaded pallets:</div>
-                            <div class="col-sm-4">
+                        <div class="form-row">
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Number of full loaded EUR pallets:</div>
+                                </div>
                                 {{ truck_form.pallet_size }}
+                                </div>  
+                        </div>
+                        <div class="form-row">
+                            <div class="col-auto">
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">number of Temperature contol zones:</div>
+                                    </div>
+                                    {{ truck_form.zones }}
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label for="id_zones" class="col-sm-8 col-form-label">Temperature zones:</label>
-                            <div class="col-sm-4">
-                                {{ truck_form.zones }}
-                            </div>
-                        </div>
-                        <br>
                         <input type="submit" value="Register Truck" class="btn btn-success form-control">
                     </form>
                 </div>

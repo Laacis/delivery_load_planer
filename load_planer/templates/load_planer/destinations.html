@@ -7,13 +7,17 @@
         <div class="row row-cols-4" id="top_nav_row"></div>
         <br>
         <div class="row">
-            <div id="truck_main" class="col-12 col-md-8">
-                <div class="row">
-                    <h4>List of Destinations:</h4>
+            <div class="col-12 col-md-8">
+                <div class="row row-cols-3 justify-content-end">
+                    <div class="col-4" style="margin: 1%;">
+                        <h4>List of Destinations:</h4>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control" id="filter_input">
+                    </div>
                 </div>
-                <div class="row">
-                    <h6>filter:</h6>
-                    <input type="text" class="form-control" id="filter_input">
+
+                <div class="row" >
                 </div>
                 <div class="row row-cols-3">
 
@@ -34,17 +38,62 @@
 
                 </div>   
             </div>
-            <div id="truck_right" class="col-6 col-md-4">
-                <div class="col-md text-start">
-                        <h4 class="text-center"> Register new Destinations:</h4>
-
+            <div class="col-6 col-md-4" >
+                <div class="row" style="margin: 2%;">
+                    <h4 class="text-center" > Register new Destinations:</h4>
+                </div>
+                <div class="row" >
+                    <div class="col-md text-start" >
                         <form action="{% url 'reg_destination' %}" method="post">
                             {% csrf_token %}
-                            {{ destination_form.as_p }}
-                            <input type="submit" value="Add delivery destination" class="btn btn-primary form-control">
-                        </form>
+                            <div class="form-group row">
+                                <div class="form-row align-items-center">
+                                    <div class="col-auto">
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">Destination id:</div>
+                                            </div>
+                                            {{ destination_form.destination_id }}
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="form-row align-items-center">
+                                    <div class="col-auto">
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">Address:</div>
+                                            </div>
+                                            {{ destination_form.address }}
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-auto">
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">zip code or post index:</div>
+                                        </div>
+                                    {{ destination_form.zipcode }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">Contact phone number:</div>
+                                        </div>
+                                    {{ destination_form.contact_number }}
+                                    </div>
+                                </div>
 
+                                <div class="col-auto">
+                                    <input type="submit" value="Add delivery destination" class="btn btn-success form-control">
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>
                 </div>
+
             </div>
 
         </div>

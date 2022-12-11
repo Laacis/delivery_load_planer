@@ -8,7 +8,10 @@ function setPlaceholder(){
     const idList = ['id_truck_id', 'id_pallet_size', 'id_zones'];
     idList.forEach(item => {
         const targetIt = document.getElementById(item);
-        targetIt.classList.add('form-control');
+        targetIt.classList = 'form-control mb-2';
+        if (item == 'id_truck_id') {
+            targetIt.placeholder = 'AA00';
+        }
     })
 
 }
