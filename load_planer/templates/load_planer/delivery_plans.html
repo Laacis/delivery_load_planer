@@ -13,9 +13,8 @@
                     <div class="row">
                         <h4>List of Delivery plans:</h4>
                     </div>
-                    {% for delivery_plan in delivery_plan_list%}
-                        <a href="{% url 'delivery_plan' delivery_plan.delivery_id %}"> {{ delivery_plan }}</a><br>
-                    {% endfor %}
+                    <div class="row" id="result_table_field">
+                    </div>
                 </div>
                 
                 <div id="delivery_plan_form">

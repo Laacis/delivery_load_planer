@@ -486,8 +486,8 @@ def get_delivery_list_by_details(request,year, quarter):
             # result.append(item[0])
             result.append({
                 'delivery_id':item.delivery_id,
-                'quarter': item.quarter,
                 'year':item.year,
+                'quarter': item.quarter,
                 'del_order': len(item.del_order)
             })
         result = json.dumps(result)

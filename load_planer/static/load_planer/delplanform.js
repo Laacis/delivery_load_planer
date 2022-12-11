@@ -6,11 +6,17 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 // list of destinations todisplay in the form
 var destination_list =[]
-var listDeliveryIds = []
 
 
-
+/** function generates select and button for Filter Delivery plan 
+ * aswell as for New Delivery plan creating form.
+ * FIlter will fetch list of JSON of deliveries based on year/quarter
+ * request, that will be handed over to function creating the table of 
+ * delivery flan filter result.
+ * New delivery plan button, hides the filter Div and display Form div.
+ */
 function loadButtons() {
+    // Filter select and buttons here 
     const filterDiv = document.getElementById('filter_row');
     const lifterTextDiv = document.createElement('h6');
     lifterTextDiv.innerHTML = "Filter Delivery plans:";
@@ -95,15 +101,15 @@ function loadButtons() {
             data.forEach(element => {
                 listDeliveryIds.push(element);
             });
-            console.log(listDeliveryIds);
+
+            // wipe prevoius data
+
+            // load results and display
+            displayFilterResults(listDeliveryIds);
 
         })
     });
-
-
-    ////
-
-
+    // new Delivery plan buttons and other items HERE
     const newDpDiv = document.getElementById('new_dp_row');
 
     const newTextDiv = document.createElement('h6');
@@ -309,5 +315,65 @@ function send_delivery_plan(event) {
             location.href = `delivery_plan/${delivery_id}`;
 
         
+    })
+}
+
+/** function takes a list of JSON and a table
+ * 
+ * 
+ * 
+ */
+function displayFilterResults(listDeliveryIds) {
+    // clean up old entries
+    try {
+        const oldTable = document.getElementById('table_field_reset')
+        oldTable.remove();
+    }
+    catch {
+        // must be clean!
+    }
+    // checking if the right block is display and form is diplay none
+    const tableDiv = document.getElementById('dp_list_div');
+    tableDiv.style.display = 'block';
+    hideForm();
+
+    //create a table and header row with 
+    const dpListDiv = document.getElementById('result_table_field');
+    const listOfTh = ['#', 'DELIVERY ID', 'YEAR', 'QUARTER', 'DESTINATIONS' ]
+    const tableD = document.createElement('table');
+    tableD.id = 'table_field_reset';
+    dpListDiv.appendChild(tableD);
+    const thead = document.createElement('thead')
+    tableD.appendChild(thead);
+    const trTag = document.createElement('tr');
+    thead.appendChild(trTag)
+    listOfTh.forEach(item => {
+        const thTag = document.createElement('th');
+        thTag.innerHTML = item;
+        thTag.scope = 'col';
+        trTag.appendChild(thTag);
+
+    })
+
+    const tbody = document.createElement('tbody');
+    tableD.appendChild(tbody);
+    let counter = 0;
+    listDeliveryIds.forEach(element => {
+        counter++;
+        const trBodyTag = document.createElement('tr');
+        tbody.appendChild(trBodyTag);
+        const thRowTag = document.createElement('th');
+        thRowTag.scope = 'row';
+        
+        thRowTag.innerHTML = counter;
+        trBodyTag.appendChild(thRowTag);
+        Object.entries(element).forEach(entry => {
+            const [key, value] = entry;
+            const tdTag = document.createElement('td');
+            tdTag.innerHTML = value;
+            trBodyTag.appendChild(tdTag);
+
+
+        })
     })
 }
