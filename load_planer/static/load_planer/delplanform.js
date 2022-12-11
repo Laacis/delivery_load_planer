@@ -6,14 +6,114 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 // list of destinations todisplay in the form
 var destination_list =[]
+var listDeliveryIds = []
+
 
 
 function loadButtons() {
-    const sideDiv = document.getElementById('dp_side');
+    const filterDiv = document.getElementById('filter_row');
+    const lifterTextDiv = document.createElement('h6');
+    lifterTextDiv.innerHTML = "Filter Delivery plans:";
+    filterDiv.appendChild(lifterTextDiv);
+    // row here
+    const ddpRow = document.createElement('row');
+    ddpRow.classList = 'row';
+    ddpRow.id = "yRow_g2";
+    filterDiv.appendChild(ddpRow);
+
+    //div here
+    const dateDiv = document.createElement('div');
+    dateDiv.classList = "col-md mb-2";
+    ddpRow.appendChild(dateDiv);
+    //form-floating div
+    const dateDivFormF = document.createElement('div');
+    dateDivFormF.classList = 'form-floating';
+    dateDiv.appendChild(dateDivFormF);
+
+    //select year
+    const deliveryYearField = document.createElement('select');
+    deliveryYearField.id = "delivery_plan_year";
+    deliveryYearField.classList = "form-control";
+    // creating label
+    const dateLabel = document.createElement('label');
+    dateLabel.for = "delivery_plan_year";
+    dateLabel.classList = "form-label";
+    dateLabel.innerHTML = 'Year:';
+
+    // putting it together
+    dateDivFormF.appendChild(deliveryYearField);
+    dateDivFormF.appendChild(dateLabel)
+    for (var i = 2022; i < 2025; i++) {
+        const option = document.createElement('option')
+        option.value = i;
+        option.text = i;
+        deliveryYearField.appendChild(option);
+    }
+    /* here goes the same for the Quarter select */
+    //div here
+    const driverDiv = document.createElement('div');
+    driverDiv.classList = "col-md";
+    ddpRow.appendChild(driverDiv);
+    //form-floating div
+    const driverDivFormF = document.createElement('div');
+    driverDivFormF.classList = 'form-floating';
+    driverDiv.appendChild(driverDivFormF);
+
+    // select quarter
+    const quarterField = document.createElement('select');
+    quarterField.id = "delivery_plan_quarter";
+    quarterField.classList = "form-control";
+    // creating label
+    const driverLabel = document.createElement('label');
+    driverLabel.for = "delivery_plan_quarter";
+    driverLabel.classList = "form-label";
+    driverLabel.innerHTML = 'Quarter:';
+
+    driverDivFormF.appendChild(quarterField);
+    driverDivFormF.appendChild(driverLabel);
+    //yqDiv.appendChild(quarterField);
+    for (var i = 1; i < 5; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.text = "Q"+i;
+        quarterField.appendChild(option)
+    }
+    // create and style button
+    const loadButton = document.createElement('button');
+    loadButton.classList = 'btn btn-primary form-control';
+    loadButton.type = 'submit';
+    loadButton.textContent = "Load Plans";
+    filterDiv.appendChild(loadButton);
+    loadButton.addEventListener('click', function(){
+        //clear the list
+        listDeliveryIds = [];
+        fetch(`/get_delivery_list_by_details/${deliveryYearField.value}/${quarterField.value}`)
+        .then(response => response.json())
+        .then(data => {
+            // returns a list of values from delivery_id, now push values into listDeliveryIds
+            data = JSON.parse(data);
+            data.forEach(element => {
+                listDeliveryIds.push(element);
+            });
+            console.log(listDeliveryIds);
+
+        })
+    });
+
+
+    ////
+
+
+    const newDpDiv = document.getElementById('new_dp_row');
+
+    const newTextDiv = document.createElement('h6');
+    newTextDiv.innerHTML = "Create new Delivery Plan:";
+    newDpDiv.appendChild(newTextDiv);
+
     const newButton = document.createElement('button');
     newButton.classList = 'btn btn-success';
-    newButton.innerText = 'New Plan';
-    sideDiv.appendChild(newButton);
+    newButton.innerText = 'Create New Plan';
+    newDpDiv.appendChild(newButton);
     newButton.addEventListener('click', function(){
         const formDiv = document.getElementById('delivery_plan_form');
         formDiv.style.display = 'block';

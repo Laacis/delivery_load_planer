@@ -104,7 +104,7 @@ function loadDeliveryPlanPart1() {
             // returns a list of values from delivery_id, now push values into listDeliveryIds
             data = JSON.parse(data);
             data.forEach(element => {
-                listDeliveryIds.push(element);
+                listDeliveryIds.push(element['delivery_id']);
             });
             console.log(listDeliveryIds);
             // when list is updated: create and update the form

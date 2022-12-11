@@ -473,16 +473,23 @@ def get_delivery_plan_list(request,delivery_id):
 @login_required
 def get_delivery_list_by_details(request,year, quarter):
     """ 
-        Returns a list of Destination IDs 
+        Returns a JSON of Destination plan 
         is used to help Planner fill out the Delivery id field 
-        while Registring new tour /tour_planning
+        while Registring new tour /tour_planning and in delivery_plans, 
+        filter and display Plans for selected year and Quarter
         Only Planner can request this.    
     """
     if(is_req_planner(request)):
-        data = Delivery_plan.objects.filter(year=year,quarter=quarter).values_list("delivery_id")
+        data = Delivery_plan.objects.filter(year=year,quarter=quarter)
         result = []
         for item in data:
-            result.append(item[0])
+            # result.append(item[0])
+            result.append({
+                'delivery_id':item.delivery_id,
+                'quarter': item.quarter,
+                'year':item.year,
+                'del_order': len(item.del_order)
+            })
         result = json.dumps(result)
         return JsonResponse(result, safe=False)
     else:
