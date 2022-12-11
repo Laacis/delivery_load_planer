@@ -3,11 +3,23 @@ document.addEventListener("DOMContentLoaded", function() {
     create_form(form_field);
     hideForm();
     loadButtons();
+    // display plans for this year /quarter
+    const todaydate = new Date().toISOString().split('T')[0];
+    const year = todaydate.slice(0,4);
+    const quarter = get_quater(parseInt(todaydate.slice(5,7)));
+    console.log(year, quarter);
+    loadPlansTable(parseInt(year), quarter);
 });
 // list of destinations todisplay in the form
 var destination_list =[]
 
-
+/** a stupid way to get quarter from a month int */
+function get_quater(month) {
+    if (month <= 3) { return 1;}
+    else if( month >3 && month < 7){return 2;}
+    else if( month >= 7 && month < 10){return 3;}
+    else {return 4};
+}
 /** function generates select and button for Filter Delivery plan 
  * aswell as for New Delivery plan creating form.
  * FIlter will fetch list of JSON of deliveries based on year/quarter
@@ -91,21 +103,9 @@ function loadButtons() {
     loadButton.textContent = "Load Plans";
     filterDiv.appendChild(loadButton);
     loadButton.addEventListener('click', function(){
-        //clear the list
-        listDeliveryIds = [];
-        fetch(`/get_delivery_list_by_details/${deliveryYearField.value}/${quarterField.value}`)
-        .then(response => response.json())
-        .then(data => {
-            // returns a list of values from delivery_id, now push values into listDeliveryIds
-            data = JSON.parse(data);
-            data.forEach(element => {
-                listDeliveryIds.push(element);
-            });
-              // load results and display
-            displayFilterResults(listDeliveryIds);
-
-        })
+        loadPlansTable(deliveryYearField.value, quarterField.value);
     });
+
     // new Delivery plan buttons and other items HERE
     const newDpDiv = document.getElementById('new_dp_row');
 
@@ -386,4 +386,21 @@ function clearTable() {
     catch {
         // must be clean!
     }
+}
+
+function loadPlansTable(year, quarter){
+    //clear the list
+    listDeliveryIds = [];
+    fetch(`/get_delivery_list_by_details/${year}/${quarter}`)
+    .then(response => response.json())
+    .then(data => {
+        // returns a list of values from delivery_id, now push values into listDeliveryIds
+        data = JSON.parse(data);
+        data.forEach(element => {
+            listDeliveryIds.push(element);
+        });
+          // load results and display
+        displayFilterResults(listDeliveryIds);
+
+    })
 }
