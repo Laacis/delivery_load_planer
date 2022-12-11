@@ -13,15 +13,15 @@
                 </div>
                 <div class="row">
                     <h6>filter:</h6>
-                    <input type="text">
+                    <input type="text" class="form-control" id="filter_input">
                 </div>
                 <div class="row row-cols-3">
 
                     {% for destination in destination_list %}
-                        <div class="col">
+                        <div class="col" id="id_{{destination.destination_id}}">
                             <div class="card border-success mb-3">
                                 <div class="card-header">
-                                    <strong><a href="{% url 'destination' destination.destination_id %}"> {{ destination.destination_id }}</a></strong>
+                                    <u><a href="{% url 'destination' destination.destination_id %}" id="{{ destination.destination_id }}"> {{ destination.destination_id }}</a></u>
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item card-text">Address: {{destination.address }}</li>
@@ -30,10 +30,6 @@
                                 </ul>
                             </div>
                         </div>
-                        <!-- <div class="form-floating">
-                            <a href="#" id="id_{{destination.destination_id}}" class="btn btn-outline-success form-control"> {{destination.destination_id}}</a>
-                            <label for="id_{{destination.destination_id}}" class="form-label"> {{destination.address}}</label>
-                        </div> -->
                     {% endfor %}
 
                 </div>   
