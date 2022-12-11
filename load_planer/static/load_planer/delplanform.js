@@ -1,9 +1,32 @@
 document.addEventListener("DOMContentLoaded", function() {
     var form_field = document.querySelector('#delivery_plan_form');
     create_form(form_field);
+    hideForm();
+    loadButtons();
 });
 // list of destinations todisplay in the form
 var destination_list =[]
+
+
+function loadButtons() {
+    const sideDiv = document.getElementById('dp_side');
+    const newButton = document.createElement('button');
+    newButton.classList = 'btn btn-success';
+    newButton.innerText = 'New Plan';
+    sideDiv.appendChild(newButton);
+    newButton.addEventListener('click', function(){
+        const formDiv = document.getElementById('delivery_plan_form');
+        formDiv.style.display = 'block';
+        const listDiv = document.getElementById('dp_list_div');
+        listDiv.style.display = 'none';
+    })
+}
+
+function hideForm() {
+    const formDiv = document.getElementById('delivery_plan_form');
+    formDiv.style.display = 'none';
+}
+
 
 function create_form(form_field){
     // delivery_id field

@@ -15,7 +15,7 @@
                     <div class="col">
                         <div class="card border-success mb-3">
                             <div class="card-header">
-                                <strong><a href="{% url 'profile' driver.uid %}"> {{ driver.driver_id }} </a></strong>
+                                <a href="{% url 'profile' driver.uid %}"> {{ driver.driver_id }} </a>
                             </div>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item card-text">username: {{ driver.username }}</li>
@@ -39,7 +39,7 @@
                             <div class="col">
                                 <div class="card border-warning mb-3">
                                     <div class="card-header">
-                                        <strong><a href="{% url 'profile' driver.uid %}"> {{ driver.driver_id }} </a></strong>
+                                        <a href="{% url 'profile' driver.uid %}"> {{ driver.driver_id }} </a>
                                     </div>
                                     <ul class="list-group list-group-flush" >
                                         <li class="list-group-item card-text">username: {{ driver.username }}</li>

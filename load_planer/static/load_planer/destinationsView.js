@@ -14,14 +14,14 @@ let list_to_display = [];
 function styleCleanInput() {
     const inputField = document.getElementById('filter_input');
     inputField.value ="";
-    inputField.placeholder = "filter by ID: AAA000";
+    inputField.placeholder = "filter by ID: AAA00";
     inputField.focus();
 }
 
 /** styling the form field */
 function styleRegForm(){
     const idDict = {
-        "id_destination_id": "id: AAAA00", 
+        "id_destination_id": "id: AAA00", 
         "id_address":"Street name, building Nr. 00", 
         "id_zipcode": "0000", 
         "id_contact_number":"phone number"

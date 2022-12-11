@@ -7,31 +7,24 @@
         <br>
     </div>
     <div class="container text-center">
-        <h1> Delivery plans</h1>
-
-    {% if delivery_plan_list %}
-        {% for delivery_plan in delivery_plan_list%}
-            <a href="{% url 'delivery_plan' delivery_plan.delivery_id %}"> {{ delivery_plan }}</a><br>
-        {% endfor %}
-    {% endif %}
-
-    {% if form %}
-    <p> FORM HERE!</p><br>
-    <!-- <form action="#" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Register" class="btn btn-primary form-control">
-    </form> -->
-    {% else %}
-        <p>No form to display</p>
-    {% endif %}
-        <div id="delivery_plan_form">
-            <br><p> Delivery Plan Form:</p><br>
+        <div class="row">
+            <div class="col-12 col-md-8" id="dp_main">
+                <div id="dp_list_div">
+                    {% for delivery_plan in delivery_plan_list%}
+                        <a href="{% url 'delivery_plan' delivery_plan.delivery_id %}"> {{ delivery_plan }}</a><br>
+                    {% endfor %}
+                </div>
+                
+                <div id="delivery_plan_form">
+                </div>
+            </div>
+            <div class="col-6 col-md-4 text-center" id="dp_side">
+                <p> Delivery Plan Form:</p>
+                
+            </div>
         </div>
-
-    </div>  
-
-    
+    </div>
+   
 {% endblock %}
 
 
