@@ -429,8 +429,6 @@ def reg_delivery_plan(request):
         quarter = data.get("quarter")
         year = data.get('year')
         del_order = data.get("del_order")
-
-        # EDIT THIS, !!!!!! CAN REGISTER EMPTY FIELDS
         try:
             record = Delivery_plan.objects.create(
                 delivery_id = delivery_id,

@@ -406,8 +406,6 @@ function displayFilterResults(listDeliveryIds) {
                 tdTag.innerHTML = value;
             }
             trBodyTag.appendChild(tdTag);
-
-
         })
     })
 }
