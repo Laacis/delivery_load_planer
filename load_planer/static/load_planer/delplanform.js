@@ -133,17 +133,12 @@ function hideForm() {
     formExtr.style.display = 'none';
 }
 
-
-
+/** creates a form to register Delivery plan 
+ * first part let user define year and quarter to register plan for
+ * rest profide fields for Destination id registration
+ * after clicking on submit plann a check up is run.
+*/
 function create_form(){
-    
-   
-    // delivery_id field
-    // const del_id_f = document.createElement('input');
-    // del_id_f.id = "delivery_id";
-    // del_id_f.type = 'text';
-    // del_id_f.classList = 'form-control';
-    // form_field.appendChild(del_id_f);
     // // Quarter field
     const quater_f = document.getElementById('quarter');
     for ( var i = 1; i < 5; i++) {
@@ -216,7 +211,6 @@ function create_form(){
                 inpGr.appendChild(destination_id);
             }
         }
-
         //cleaning up button and choice field
         button_f_request.remove();
         destination_choice.disabled = true;
@@ -266,9 +260,17 @@ function checkUserInput(event) {
             inputList.push(destIdValue.value);
         }
     }
-    console.log('inputlist: '+ inputList);
-    console.log('verified: ' + verified);
+    // check if delivery_id not empty
+    const delIdField = document.getElementById('delivery_id');
+    if ( delIdField.value == "") {
+        verified = false;
+        delIdField.focus();
+    } 
+    if (verified == true) {
+        send_delivery_plan(numberOfInput);
+    }
 }
+
 function resetCheckTools(){
     const numberOfInput = document.getElementById('dest_nr').value;
     for ( let i = 1; i<=numberOfInput; i++) {
@@ -281,8 +283,7 @@ function resetCheckTools(){
     }
     catch{
         //empty i guess.
-    }
-    
+    } 
 }
 
 
@@ -298,26 +299,6 @@ function load_list(){
         //sort the list
         destination_list = destination_list.sort();
     })
-}
-
-function suggestion_list(event){
-    var id = event.target.id.slice(21);
-    clean_list();
-    for ( let item of destination_list){
-        //convert to lover case and comapre to each item in destination list
-        if (item.toLowerCase().startsWith( event.target.value.toLowerCase()) && event.target.value != "") { 
-            let itemList = document.createElement("div");
-            itemList.classList = `form-control item-list:${id}`;
-            itemList.style.cursor = "pointer";
-            itemList.setAttribute("onclick", `dispplayDestinations('${item}', '${event.target.id}')`);
-            let match_d = "<b>" + item.substring(0, event.target.value.length) + "</b>";
-            match_d += item.substring(event.target.value.length);
-
-            itemList.innerHTML =  match_d;
-            document.getElementById(`destination_list:${id}`).appendChild(itemList);
-        }
-        clean_list();
-    }
 }
 
 function dispplayDestinations(value, id) {
@@ -338,14 +319,13 @@ function clean_list() {
     }   
 }
 
-function send_delivery_plan(event) {
-    event.preventDefault();
+function send_delivery_plan(numberOfInput) {
     const delivery_id = document.getElementById("delivery_id").value;
     const quarter = document.getElementById("quarter").value;
     const year = document.getElementById('year').value;
     const del_order = {};
     const fields = document.getElementById('delivery_plan_extra_fields').childNodes;
-    for ( let i = 1; i<fields.length; i++) {
+    for ( let i = 1; i<=numberOfInput; i++) {
         const del_id_value = document.getElementById("destination_field_id:"+i).value;
         var obj1 = {[del_id_value]:i};
         Object.assign(del_order, obj1)
@@ -368,9 +348,8 @@ function send_delivery_plan(event) {
 }
 
 /** function takes a list of JSON and a table
- * 
- * 
- * 
+ *  and builds a table from this JSON
+ *  listing Delivery plans and detials
  */
 function displayFilterResults(listDeliveryIds) {
     clearTable();
@@ -432,7 +411,7 @@ function displayFilterResults(listDeliveryIds) {
         })
     })
 }
-
+// Clears the table
 function clearTable() {
     // clean up old entries
     try {
