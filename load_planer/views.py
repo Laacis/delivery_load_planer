@@ -308,10 +308,6 @@ def tour(request, tour_id):
         # not Driver/Planner redirected to own profile
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
 
-    
-
-
-      
 
 def login_view(request):
     if request.method == "POST":

@@ -222,12 +222,13 @@ function create_form(){
 
         // button field
         const targettt = document.getElementById('button_l');
-        const Plan_submit_button = document.createElement('button');
-        Plan_submit_button.classList = 'btn btn-success';
-        Plan_submit_button.type = 'submit';
-        Plan_submit_button.textContent = "Submit Plan";
-        targettt.appendChild(Plan_submit_button);
-        Plan_submit_button.addEventListener('click', checkUserInput);
+        const checkInputButton = document.createElement('button');
+        checkInputButton.classList = 'btn btn-outline-success';
+        checkInputButton.type = 'submit';
+        checkInputButton.textContent = "Check input";
+        checkInputButton.id = 'check_inp_button';
+        targettt.appendChild(checkInputButton);
+        checkInputButton.addEventListener('click', checkUserInput);
     });
 }
 
@@ -267,7 +268,23 @@ function checkUserInput(event) {
         delIdField.focus();
     } 
     if (verified == true) {
-        send_delivery_plan(numberOfInput);
+        //lock all input and ID field
+        delIdField.disabled = true; 
+        for ( let i = 1; i<=numberOfInput; i++){
+            const destIdValue = document.getElementById(`destination_field_id:${i}`);
+            destIdValue.disabled = true;
+        }
+        // remove old check button
+        const checkButton = document.getElementById('check_inp_button');
+        checkButton.remove()
+        // button field
+        const targettt = document.getElementById('button_l');
+        const submitFormButton = document.createElement('button');
+        submitFormButton.classList = 'btn btn-success';
+        submitFormButton.type = 'submit';
+        submitFormButton.textContent = "Submit Plan";
+        targettt.appendChild(submitFormButton);
+        submitFormButton.addEventListener('click', send_delivery_plan);
     }
 }
 
@@ -319,12 +336,13 @@ function clean_list() {
     }   
 }
 
-function send_delivery_plan(numberOfInput) {
+function send_delivery_plan(event) {
+    event.preventDefault();
+    const numberOfInput = document.getElementById('dest_nr').value;
     const delivery_id = document.getElementById("delivery_id").value;
     const quarter = document.getElementById("quarter").value;
     const year = document.getElementById('year').value;
     const del_order = {};
-    const fields = document.getElementById('delivery_plan_extra_fields').childNodes;
     for ( let i = 1; i<=numberOfInput; i++) {
         const del_id_value = document.getElementById("destination_field_id:"+i).value;
         var obj1 = {[del_id_value]:i};
@@ -342,8 +360,11 @@ function send_delivery_plan(numberOfInput) {
     })
     .then(response => response.json())
     .then(result => {
-        if ( result["Success"] == true)
+        console.log(result);
+        if ( result["Success"] == "True") {
             location.href = `delivery_plan/${delivery_id}`;
+        }
+            
     })
 }
 
