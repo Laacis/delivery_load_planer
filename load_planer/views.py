@@ -459,14 +459,29 @@ def get_delivery_plan_list(request, delivery_id, details):
 
     """
     if (details >= 2):
-        return JsonResponse({'error': "wrong details "})
+        return JsonResponse({'error': "wrong details option"})
     if(is_req_planner(request) or is_req_driver(request)):
         data_list = Delivery_plan.objects.get(pk=delivery_id)
         if (details == 0):
             result = json.dumps(data_list.del_order)
-            return JsonResponse(result, safe=False)
+            
         else:
-            return JsonResponse({'message': 'returning extra details'})
+            result = []
+            jsondata = data_list.del_order
+            for item in jsondata:
+                try:
+                    destination = Destination.objects.get(destination_id=item)
+                    destination = {
+                        'destination_id': destination.destination_id,
+                        'address': destination.address,
+                        'zipcode':destination.zipcode,
+                        'contact_number':destination.contact_number
+                    }
+                except:
+                    destination = [{'destination':'empty'}]
+                result.append(destination)
+            result = json.dumps(result)
+        return JsonResponse(result, safe=False)
     else:
         return JsonResponse({"error":"You are not a planner."})
 
