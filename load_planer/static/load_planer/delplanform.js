@@ -233,9 +233,58 @@ function create_form(){
         Plan_submit_button.type = 'submit';
         Plan_submit_button.textContent = "Submit Plan";
         targettt.appendChild(Plan_submit_button);
-        Plan_submit_button.addEventListener('click', send_delivery_plan);
+        Plan_submit_button.addEventListener('click', checkUserInput);
     });
 }
+
+function checkUserInput(event) {
+    event.preventDefault();
+    resetCheckTools();
+    const targetDPF = document.getElementById('delivery_plan_form');
+    const errorRow = document.createElement('div');
+    errorRow.style.color = 'red';
+    errorRow.id = 'error_fields';
+    errorRow.classList = 'row justify-content-md-center';
+    targetDPF.appendChild(errorRow);
+
+    let inputList = [];
+    console.log("checking");
+    console.log(destination_list)
+    let verified = true;
+    const numberOfInput = document.getElementById('dest_nr').value;
+    for ( let i = 1; i<=numberOfInput; i++) {
+        const destIdValue = document.getElementById(`destination_field_id:${i}`)
+        //checking for wrong entries
+        if (!destination_list.includes(destIdValue.value) || inputList.includes(destIdValue.value)){
+            destIdValue.style ='border: 2px solid red;';
+            errorRow.innerHTML = "Dublicate or Wrong Destination ID's in selected field(s)";
+            verified = false;
+            
+        }
+        else {
+            destIdValue.style ='border: 1px solid light-grey;';
+            inputList.push(destIdValue.value);
+        }
+    }
+    console.log('inputlist: '+ inputList);
+    console.log('verified: ' + verified);
+}
+function resetCheckTools(){
+    const numberOfInput = document.getElementById('dest_nr').value;
+    for ( let i = 1; i<=numberOfInput; i++) {
+        const destIdValue = document.getElementById(`destination_field_id:${i}`);
+        destIdValue.style ='border: 1px solid light-grey;';
+    }
+    try {
+        const errofield = document.getElementById('error_fields');
+        errofield.remove();
+    }
+    catch{
+        //empty i guess.
+    }
+    
+}
+
 
 function load_list(){
     // fetching the list of destinations from db
