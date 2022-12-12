@@ -13,13 +13,14 @@ document.addEventListener("DOMContentLoaded", function() {
 // list of destinations todisplay in the form
 var destination_list =[]
 
-/** a stupid way to get quarter from a month int */
+/** a stupid way to get quarter from a month integer */
 function get_quater(month) {
     if (month <= 3) { return 1;}
     else if( month >3 && month < 7){return 2;}
     else if( month >= 7 && month < 10){return 3;}
     else {return 4};
 }
+
 /** function generates select and button for Filter Delivery plan 
  * aswell as for New Delivery plan creating form.
  * FIlter will fetch list of JSON of deliveries based on year/quarter
@@ -329,8 +330,9 @@ function displayFilterResults(listDeliveryIds) {
 
     //create a table and header row with 
     const dpListDiv = document.getElementById('result_table_field');
-    const listOfTh = ['#', 'DELIVERY ID', 'YEAR', 'QUARTER', 'DESTINATIONS' ]
+    const listOfTh = ['DELIVERY ID', 'YEAR', 'QUARTER', 'DESTINATIONS' ]
     const tableD = document.createElement('table');
+    tableD.classList = 'table table-sm table-hover table-striped';
     tableD.id = 'table_field_reset';
     dpListDiv.appendChild(tableD);
     const thead = document.createElement('thead')
@@ -347,7 +349,6 @@ function displayFilterResults(listDeliveryIds) {
 
     const tbody = document.createElement('tbody');
     tableD.appendChild(tbody);
-    let counter = 0;
     if (listDeliveryIds.length == 0){
         clearTable();
         const targetDiv = document.getElementById('result_table_field');
@@ -358,18 +359,22 @@ function displayFilterResults(listDeliveryIds) {
         targetDiv.appendChild(noResDiv);
     }
     listDeliveryIds.forEach(element => {
-        counter++;
+
         const trBodyTag = document.createElement('tr');
         tbody.appendChild(trBodyTag);
-        const thRowTag = document.createElement('th');
-        thRowTag.scope = 'row';
-        
-        thRowTag.innerHTML = counter;
-        trBodyTag.appendChild(thRowTag);
         Object.entries(element).forEach(entry => {
             const [key, value] = entry;
             const tdTag = document.createElement('td');
-            tdTag.innerHTML = value;
+            if ( key == 'delivery_id'){
+                //create link to del plan page
+                const aTag = document.createElement('a');
+                aTag.href = `/delivery_plan/${value}`;
+                aTag.innerHTML = value;
+                tdTag.appendChild(aTag);
+            }
+            else {
+                tdTag.innerHTML = value;
+            }
             trBodyTag.appendChild(tdTag);
 
 
