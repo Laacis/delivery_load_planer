@@ -162,15 +162,7 @@ def delivery_plan(request, delivery_plan_id):
 def delivery_plans(request):
     # make sure it's only viewed by Planner
     if(is_req_planner(request)):
-        try:
-            delivery_plan_list = Delivery_plan.objects.all()
-        except:
-            delivery_plan_list = []
-
-        context = {
-            "delivery_plan_list": delivery_plan_list,
-            }
-        return render(request, 'load_planer/delivery_plans.html', context)
+        return render(request, 'load_planer/delivery_plans.html')
     else:
         # not Planner redirected to own profile
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
@@ -454,20 +446,45 @@ def reg_delivery_plan(request):
 
 
 @login_required
-def get_delivery_plan_list(request,delivery_id):
+def get_delivery_plan_list(request, delivery_id, details):
     """
         Returns a JSON del_order
         containing sequesnce number  and destination id
-        used on /delivery_plan/<str:delivery_id>  and /tour_planning
+        used in /tour_planning for last part of Tour registration, 
+        drawing table for pallet type and time schedule.
+        details contains an integer: 0 or 1, other options are wrong
+        in case of details==0, only del_order information is returned.
+        details == 1: returns more compex information, used in /delivery_pla/<id>
         Only Planner can request this.
 
     """
+    if (details >= 2):
+        return JsonResponse({'error': "wrong details "})
     if(is_req_planner(request) or is_req_driver(request)):
         data_list = Delivery_plan.objects.get(pk=delivery_id)
-        result = json.dumps(data_list.del_order)
-        return JsonResponse(result, safe=False)
+        if (details == 0):
+            result = json.dumps(data_list.del_order)
+            return JsonResponse(result, safe=False)
+        else:
+            return JsonResponse({'message': 'returning extra details'})
     else:
         return JsonResponse({"error":"You are not a planner."})
+
+
+# @login_required
+# def get_del_plan_destination_details(request, delivery_id):
+#     """
+#         Only Planner may request this
+#     """
+
+#     if (is_req_planner(request)):
+#         # get delivery plan
+#         delivery_plan = Delivery_plan.objects.get(pk=delivery_id)
+#         result = json.dumps(delivery_plan.del_order)
+#         return JsonResponse(result, safe=False)
+#     else:
+#         return JsonResponse({"error":"You are not a planner."})
+    
 
 
 @login_required

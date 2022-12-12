@@ -281,7 +281,6 @@ function loadDeliveryPlanPart3() {
 
     // populate truckId and driverId with options from db
     loadSelectIdFields(); 
-    // checking if users provided Delivery ID is in the list from db
     
     // create button
     const loadPlanButton = document.createElement('button');
@@ -399,7 +398,8 @@ function loadDeliveryPlanPart4() {
     // creating tbody
     const tBodyF = document.createElement('tbody');
     tableField.appendChild(tBodyF);
-    fetch(`/get_delivery_plan_list/${DeliveryPlanId.value}`)
+    const details = 0;
+    fetch(`/get_delivery_plan_list/${DeliveryPlanId.value}/${details}`)
     .then(response => response.json())
     .then(data => { 
         data = JSON.parse(data);
