@@ -82,11 +82,8 @@ function getTourList(date){
         data.forEach(element => {
             const rowL = document.createElement('tr');
             tBody.appendChild(rowL);
-            console.log(element);
             Object.entries(element).forEach(entry => {
                 const [key, value] = entry
-                console.log(entry);
-
                 const rowData = document.createElement('td');
                 rowData.innerHTML = value;
                 rowData.classList = 'table-control';

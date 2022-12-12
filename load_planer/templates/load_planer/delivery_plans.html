@@ -16,11 +16,54 @@
                     <div class="row" id="result_table_field">
                     </div>
                 </div>
-                
+                <!--  THIS HERE! -->
                 <div id="delivery_plan_form">
                     <div class="row">
                         <h4>New Delivery plan form:</h4>
                     </div>
+                    <div class="row justify-content-md-start" id="selection_fields">
+                        
+                        <div class="col-md-auto">
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text">ID</div>
+                                </div>
+                                <input type="text" class="form-control" id="delivery_id" placeholder="id: AAAA00">
+                              </div>
+                        </div>
+                        <div class="col col-lg-2">
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text">Year</div>
+                                </div>
+                                <select id="year" class="form-control"></select>
+                              </div>
+                        </div>
+                        <div class="col col-lg-2">
+
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                      <div class="input-group-text">Q</div>
+                                    </div>
+                                    <select id="quarter" class="form-control"></select>
+                                  </div>
+
+                        </div>
+                        <div class="col col-lg-2">
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text">Nr</div>
+                                </div>
+                                <select id="dest_nr" class="form-control"></select>
+                              </div>
+                        </div>
+                        <div class="col-md-auto" id="button_l">
+                        </div>
+                      </div>
+                </div>
+                
+                <div class="row" id="delivery_plan_extra_fields">
+
                 </div>
             </div>
             <div class="col-6 col-md-4 text-center" id="dp_side">
@@ -32,8 +75,8 @@
                 </div>
             </div>
         </div>
-    </div>
-   
+
+    </div>   
 {% endblock %}
 
 

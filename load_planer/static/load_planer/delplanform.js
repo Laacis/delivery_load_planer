@@ -1,13 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
-    var form_field = document.querySelector('#delivery_plan_form');
-    create_form(form_field);
+    create_form();
     hideForm();
     loadButtons();
     // display plans for this year /quarter
     const todaydate = new Date().toISOString().split('T')[0];
     const year = todaydate.slice(0,4);
     const quarter = get_quater(parseInt(todaydate.slice(5,7)));
-    console.log(year, quarter);
     loadPlansTable(parseInt(year), quarter);
 });
 // list of destinations todisplay in the form
@@ -120,6 +118,8 @@ function loadButtons() {
     newDpDiv.appendChild(newButton);
     newButton.addEventListener('click', function(){
         const formDiv = document.getElementById('delivery_plan_form');
+        const formExtr = document.getElementById('delivery_plan_extra_fields');
+        formExtr.style.display = 'block';
         formDiv.style.display = 'block';
         const listDiv = document.getElementById('dp_list_div');
         listDiv.style.display = 'none';
@@ -129,30 +129,31 @@ function loadButtons() {
 function hideForm() {
     const formDiv = document.getElementById('delivery_plan_form');
     formDiv.style.display = 'none';
+    const formExtr = document.getElementById('delivery_plan_extra_fields');
+    formExtr.style.display = 'none';
 }
 
 
-function create_form(form_field){
-    // delivery_id field
-    const del_id_f = document.createElement('input');
-    del_id_f.id = "delivery_id";
-    del_id_f.type = 'text';
-    form_field.appendChild(del_id_f);
 
-    // Quarter field
-    const quater_f = document.createElement('select');
-    quater_f.id = "quarter";
-    form_field.appendChild(quater_f);
+function create_form(){
+    
+   
+    // delivery_id field
+    // const del_id_f = document.createElement('input');
+    // del_id_f.id = "delivery_id";
+    // del_id_f.type = 'text';
+    // del_id_f.classList = 'form-control';
+    // form_field.appendChild(del_id_f);
+    // // Quarter field
+    const quater_f = document.getElementById('quarter');
     for ( var i = 1; i < 5; i++) {
         var option = document.createElement('option')
         option.value = i;
-        option.text = "Q"+i;
+        option.text = i;
         quater_f.appendChild(option);
     }
-    // Year field
-    const year_f = document.createElement('select');
-    year_f.id = "year";
-    form_field.appendChild(year_f);
+    // // Year field
+    const year_f = document.getElementById('year');
     for ( var i = 2022; i < 2025; i++) {
         var option = document.createElement('option')
         option.value = i;
@@ -161,66 +162,77 @@ function create_form(form_field){
     }
 
     // Let user choose  number of destinations to generate input+texarea * number
-    const destination_choice = document.createElement('select');
-    form_field.appendChild(destination_choice);
+    const destination_choice = document.getElementById('dest_nr');
+
     for (var i = 1; i < 20; i++) {
         var option = document.createElement('option');
         option.value = i;
         option.text = i;
         destination_choice.appendChild(option);
     }
+    const butF = document.getElementById('button_l');
     const button_f_request = document.createElement('button');
     button_f_request.classList = 'btn btn-secondary';
     button_f_request.type = 'submit';
     button_f_request.textContent = "Request form";
     button_f_request.id = "request_field_btn";
-    form_field.appendChild(button_f_request);
+    butF.appendChild(button_f_request);
     button_f_request.addEventListener('click', function() {
-        const extra_fields = document.createElement('div');
-        extra_fields.id = "delivery_plan_extra_fields";
-        extra_fields.textContent = "extra field";
-        form_field.append(extra_fields);
-        for (var i = 0; i < destination_choice.value; i++) {
-            const set_div = document.createElement('div');
-            set_div.id = `destination_div_id:${i+1}`;
-            extra_fields.appendChild(set_div);
-            // Creating Select element for delivery order sequesnce
-            const dest_order = document.createElement('select');
-            dest_order.id = `destination_select_id:${i+1}`;
-            set_div.appendChild(dest_order);
-            var option = document.createElement('option');
-            option.value = i+1;
-            option.text = i+1;
-            option.selected = i+1;
-            option.disabled = true;
-            dest_order.appendChild(option);
-            // Creating input text for Destination id
-            const destination_id = document.createElement('input');
-            destination_id.type = 'text';
-            destination_id.id = `destination_field_id:${i+1}`;
-            set_div.appendChild(destination_id);
-            //adding event listeners to every input field of destination_id
-            destination_id.addEventListener("keyup", suggestion_list);
+        const extra_fields = document.getElementById('delivery_plan_extra_fields');
+        let rowNr = Math.ceil(destination_choice.value / 3);
+        let counter = 0;
+        let totalDestinations = 0;
 
-            //adding ul field for destination list to display suggestions
-            const destination_list = document.createElement('ul');
-            destination_list.id = `destination_list:${i+1}`;
-            set_div.appendChild(destination_list);
-            
+
+        for ( let i = 0; i < rowNr; i++){
+            // crate row
+            const rowD = document.createElement('div');
+            rowD.classList = 'row mb-2';
+            extra_fields.appendChild(rowD);
+
+            for ( let j = 1; j <= 3; j++){
+                if (totalDestinations == destination_choice.value) break;
+                totalDestinations++;
+
+                const colDiv = document.createElement('div');
+                colDiv.classList = 'col-4';
+                rowD.appendChild(colDiv);
+                const inpGr = document.createElement('div');
+                inpGr.classList = 'input-group';
+                colDiv.appendChild(inpGr);
+                const inpGrPrep = document.createElement('div');
+                inpGrPrep.classList = 'input-group-prepend';
+                inpGr.appendChild(inpGrPrep);
+                const prepTExt = document.createElement('div');
+                prepTExt.classList = 'input-group-text';
+                prepTExt.id =`destination_select_id:${totalDestinations}`;
+                prepTExt.innerHTML = totalDestinations;
+                inpGrPrep.appendChild(prepTExt);
+    
+                const destination_id = document.createElement('input');
+                destination_id.type = 'text';
+                destination_id.id = `destination_field_id:${totalDestinations}`;
+                destination_id.classList = 'col col-lg-2 form-control';
+                inpGr.appendChild(destination_id);
+            }
         }
+
         //cleaning up button and choice field
         button_f_request.remove();
-        destination_choice.remove();
+        destination_choice.disabled = true;
+        quater_f.disabled = true;
+        year_f.disabled = true;
         
         // Loading destinations
         load_list();
 
         // button field
+        const targettt = document.getElementById('button_l');
         const Plan_submit_button = document.createElement('button');
-        Plan_submit_button.classList = 'btn btn-primary';
+        Plan_submit_button.classList = 'btn btn-success';
         Plan_submit_button.type = 'submit';
         Plan_submit_button.textContent = "Submit Plan";
-        form_field.appendChild(Plan_submit_button);
+        targettt.appendChild(Plan_submit_button);
         Plan_submit_button.addEventListener('click', send_delivery_plan);
     });
 }
@@ -245,8 +257,8 @@ function suggestion_list(event){
     for ( let item of destination_list){
         //convert to lover case and comapre to each item in destination list
         if (item.toLowerCase().startsWith( event.target.value.toLowerCase()) && event.target.value != "") { 
-            let itemList = document.createElement("li");
-            itemList.classList.add(`item-list:${id}`);
+            let itemList = document.createElement("div");
+            itemList.classList = `form-control item-list:${id}`;
             itemList.style.cursor = "pointer";
             itemList.setAttribute("onclick", `dispplayDestinations('${item}', '${event.target.id}')`);
             let match_d = "<b>" + item.substring(0, event.target.value.length) + "</b>";
@@ -255,6 +267,7 @@ function suggestion_list(event){
             itemList.innerHTML =  match_d;
             document.getElementById(`destination_list:${id}`).appendChild(itemList);
         }
+        clean_list();
     }
 }
 
@@ -288,14 +301,6 @@ function send_delivery_plan(event) {
         var obj1 = {[del_id_value]:i};
         Object.assign(del_order, obj1)
     }
-    let some = JSON.stringify({
-        "delivery_id": delivery_id,
-        "quarter": quarter,
-        "year:": year,
-        "fields": fields.length-1,
-        "order": del_order,
-      });
-    console.log(some);
     fetch("/reg_delivery_plan", {
         method: 'POST',
         body: JSON.stringify({
@@ -309,10 +314,7 @@ function send_delivery_plan(event) {
     .then(response => response.json())
     .then(result => {
         if ( result["Success"] == true)
-            console.log(result);
             location.href = `delivery_plan/${delivery_id}`;
-
-        
     })
 }
 
