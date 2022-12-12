@@ -30,6 +30,7 @@ urlpatterns = [
     path("verify_driver/<int:profileid>", views.verify_driver, name="verify_driver"),
     path("get_destination_list", views.get_destination_list, name="get_destination_list"),
     path("reg_delivery_plan", views.reg_delivery_plan, name="reg_delivery_plan"),
+    path("delete_delivery_plan/<str:delivery_id>", views.delete_delivery_plan, name="delete_delivery_plan"),
     path("get_delivery_plan_list/<str:delivery_id>/<int:details>", views.get_delivery_plan_list, name="get_delivery_plan_list"),
     path("get_delivery_list_by_details/<int:year>/<int:quarter>", views.get_delivery_list_by_details, name="get_delivery_list_by_details"),
     path("get_driver_list/<slug:date>", views.get_driver_list, name="get_driver_list"),

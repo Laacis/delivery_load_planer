@@ -151,8 +151,7 @@ def delivery_plan(request, delivery_plan_id):
             }
             return render(request, 'load_planer/delivery_plan.html', context)
         except:
-            context = {'error':f"Plan: {delivery_plan_id} doesn't exist!"}
-            return render(request, 'load_planer/delivery_plan.html', context)
+           return HttpResponseRedirect(reverse("delivery_plans"))
     else:
         # not Planner redirected to own profile
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
@@ -489,19 +488,24 @@ def get_delivery_plan_list(request, delivery_id, details):
         return JsonResponse({"error":"You are not a planner."})
 
 
-# @login_required
-# def get_del_plan_destination_details(request, delivery_id):
-#     """
-#         Only Planner may request this
-#     """
+@login_required
+def delete_delivery_plan(request, delivery_id):
+    """
+        Deletes requested delivery from db
+        Only Planner can request this. 
+    """
+    if(is_req_planner(request)):
+        try:
+            delivery = Delivery_plan.objects.get(delivery_id=delivery_id)
+            delivery.delete()
+            return JsonResponse({'success': True})
+        except:
+            return JsonResponse({'success': False, 'message': f"delivery:{delivery_id} doesn't exist."})
+        
+    else:
+        return JsonResponse({"error":"Not a Planner!"})
+    
 
-#     if (is_req_planner(request)):
-#         # get delivery plan
-#         delivery_plan = Delivery_plan.objects.get(pk=delivery_id)
-#         result = json.dumps(delivery_plan.del_order)
-#         return JsonResponse(result, safe=False)
-#     else:
-#         return JsonResponse({"error":"You are not a planner."})
     
 
 

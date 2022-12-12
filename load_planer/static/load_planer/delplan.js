@@ -1,35 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
-    var delivery_id = document.getElementById('delivery_id').innerHTML;
-    // get_delivery_order_list(delivery_id);
     loadSideNav();
     loadDetails();
 });
-
-
-// REWORK THIS JSON {'MCD01':1...} doesn't suits new desing solution
-
-// function get_delivery_order_list(delivery_id) {
-//     fetch(`/get_delivery_plan_list/${delivery_id}`)
-//     .then(response => response.json())
-//     .then(data => {
-//         console.log(data);
-//         data = JSON.parse(data);
-//         const div_list = document.getElementById('delivery_plan_list');
-//         Object.entries(data).forEach(entry => {
-//             const [value, key] = entry;
-//             const row = document.createElement('div');
-//             const record = document.createElement('p');
-//             const link = document.createElement('a');
-//             link.href = `/destination/${value}`;
-//             link.innerHTML = value;
-//             record.innerHTML = `${key}:`;
-//             div_list.appendChild(row);
-//             row.appendChild(record);
-//             record.append(link);
-//         })
-
-//     })
-// } 
 
 /** function load a button to the side div
  * on click should delete this delivery plan
@@ -40,13 +12,27 @@ function loadSideNav() {
     button.classList = 'btn btn-outline-warning form-control';
     button.textContent = 'DELETE';
     sideDiv.appendChild(button);
-    console.log("been here");
-    // NOT FINISHED! HERE!!!!!!!!!!
+    button.addEventListener('click', function(){
+        const delPlanId = document.getElementById('delivery_id').innerHTML;
+        fetch(`/delete_delivery_plan/${delPlanId}`)
+        .then(response => response.json())
+        .then(response => {
+            if (response['success'] == true) {
+                location.reload();
+            }
+            else {
+                console.log(response['message']);
+            }
+        })
+    })
 }
 
+/** function generates a table and populates it with information from fetched data
+ * adding links to destination id' and support information about every record
+ */
 function loadDetails() {
     const detailsDiv = document.getElementById('delivery_plan_details');
-    const listOfTh = ['#', 'DELIVERY ID', 'ADDRESS', 'ZIP/POST', 'TEL.' ]
+    const listOfTh = ['#', 'DESTINATION ID', 'ADDRESS', 'ZIP/POST', 'TEL.' ]
     const tableD = document.createElement('table');
     tableD.classList = 'table table-sm table-hover table-striped';
     tableD.id = 'table_field_reset';
@@ -91,8 +77,6 @@ function loadDetails() {
                     tdTag.innerHTML = value;
                 }
                 trBodyTag.appendChild(tdTag);
-    
-    
             })
         })
 
