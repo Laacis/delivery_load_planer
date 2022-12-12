@@ -468,10 +468,13 @@ def get_delivery_plan_list(request, delivery_id, details):
         else:
             result = []
             jsondata = data_list.del_order
+            counter = 0
             for item in jsondata:
+                counter = counter+1
                 try:
                     destination = Destination.objects.get(destination_id=item)
                     destination = {
+                        'nr':counter,
                         'destination_id': destination.destination_id,
                         'address': destination.address,
                         'zipcode':destination.zipcode,
