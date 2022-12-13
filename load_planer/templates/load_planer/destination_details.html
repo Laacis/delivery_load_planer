@@ -8,60 +8,22 @@
     <div class="row">
         <div id="profile_main" class="col-12 col-md-9">
             <div class="row">
-                <h4>Destination details:</h4>
-                
+                <h4>Destination details:</h4> 
             </div>
             <div class="row row-cols-2">
                 <div class="col text-end">
                     <img src="{% static 'load_planer/img/map.jpg' %}" style="width:400px;height:300px;border-radius:2%;" alt="My image">
                 </div>
                 <div class="col"> 
-                    <div class="card mb-3">
-                        </div>
-                        <ul class="list-group">
-                            <li class="list-group-item list-group-item-success"><strong>{{destination_id}}</strong></li>
-                            <li class="list-group-item">Address: {{address}}</li>
-                            <li class="list-group-item">zip/post index: {{zipcode}}</li>
-                            <li class="list-group-item">tel. {{contact_number}}</li>
-                          </ul>
-                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-success"><strong>{{destination_id}}</strong></li>
+                        <li class="list-group-item">Address: {{address}}</li>
+                        <li class="list-group-item">zip/post index: {{zipcode}}</li>
+                        <li class="list-group-item">tel. {{contact_number}}</li>
+                    </ul>
                 </div>
             </div>
-
         </div>
-        <div id="profile_right" class="col-6 col-md-3">
-            <div class="col-md text-center">
-                {% if driver_form %}
-                    <div class="row ">
-                        <h5>Register as Driver:</h5>
-                    </div>
-                    <div class="row" id="unver_driver">
-                        
-                        <form action="{% url 'reg_driver' %}" method="post">
-                            {% csrf_token %}
-                            {{ driver_form }}
-                            <input type="submit" value="Register" class="btn btn-success form-control">
-                        </form>
-                        
-                    </div>  
-                {% endif %}
-            </div>
-        </div>
-
     </div>
 </div>
-    <!-- <div class="container text-center">
-        <h1> Destination id:{{ destination_id }}</h1>
-        <p> Address: {{ address }}</p>
-
-        {% if request.user.is_planer %}
-        <br>
-        <p>TODO: Write Javascript to DELETE / Edit details on the Destination For a PLANER!</p>
-        {% endif %}
-        123
-    </div>   -->
-{% endblock %}
-
-{% block script %}
-    <script src="{% static 'load_planer/destination.js' %}" type="text/javascript"></script>    
 {% endblock %}
