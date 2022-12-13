@@ -193,7 +193,9 @@ def destination(request, destination_id):
     if is_req_planner(request) or is_req_driver(request):
         context = {
             "destination_id":destination.destination_id,
-            "address":destination.address
+            "address":destination.address,
+            "zipcode":destination.zipcode,
+            "contact_number":destination.contact_number
         }
         return render(request, 'load_planer/destination_details.html', context)
 

@@ -360,11 +360,9 @@ function send_delivery_plan(event) {
     })
     .then(response => response.json())
     .then(result => {
-        console.log(result);
         if ( result["Success"] == "True") {
             location.href = `delivery_plan/${delivery_id}`;
-        }
-            
+        }    
     })
 }
 

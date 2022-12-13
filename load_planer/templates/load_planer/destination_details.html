@@ -2,8 +2,34 @@
 {% load static %}
 
 {% block body %}
-    
-    <div class="container text-center">
+<div class="container text-center" >
+    <div class="row row-cols-4" id="top_nav_row"></div>
+    <br>
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <div class="row" id="main_header">
+                
+            </div>
+
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="col-md text-center">
+                <div class="row">
+                    <h4>Destination detials:</h4>
+                </div>
+                <div class="row" id="unver_driver">
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-success"><strong>{{destination_id}}</strong></li>
+                        <li class="list-group-item">Address: {{address}}</li>
+                        <li class="list-group-item">zip/post index: {{zipcode}}</li>
+                        <li class="list-group-item">tel. {{contact_number}}</li>
+                      </ul>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- <div class="container text-center">
         <h1> Destination id:{{ destination_id }}</h1>
         <p> Address: {{ address }}</p>
 
@@ -11,5 +37,10 @@
         <br>
         <p>TODO: Write Javascript to DELETE / Edit details on the Destination For a PLANER!</p>
         {% endif %}
-    </div>  
+        123
+    </div>   -->
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'load_planer/destination.js' %}" type="text/javascript"></script>    
 {% endblock %}
