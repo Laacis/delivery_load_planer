@@ -17,10 +17,15 @@ from .util import *
 
 
 def index(request):
+    # if driver return his tour for today
+    # if (is_req_planner(request)):
+    #     return HttpResponseRedirect((reverse("tour_planning")))
+    # else:
     return render(request, "load_planer/index.html")
+    #if Planner redirect to Tour Planning
 
 
-@login_required
+@login_required(login_url="login")
 def gateway(request):
 
     # TODO REWORK THIS !!!
@@ -47,7 +52,7 @@ def tour_planning(request):
         }
     return render(request, "load_planer/tour_planning.html", context=context)
 
-@login_required
+@login_required(login_url="login")
 def trucks(request):
     """ Only Planner should have access to this page"""
     form = TruckForm()
@@ -77,7 +82,7 @@ def trucks(request):
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
 
 
-@login_required
+@login_required(login_url="login")
 def drivers(request):
     """
         return two lists of Queary sets:
@@ -113,7 +118,7 @@ def drivers(request):
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
 
 
-@login_required
+@login_required(login_url="login")
 def reg_driver(request):
     if request.method != 'POST':
         return HttpResponse("Error: Forbidden method!")
@@ -140,7 +145,7 @@ def reg_driver(request):
                 return HttpResponse("Error: Form could not be saved!")
         return HttpResponse("Error: form is not valid!")
 
-@login_required
+@login_required(login_url="login")
 def delivery_plan(request, delivery_plan_id):
     # Only Planner can request this
     if(is_req_planner(request)):
@@ -157,7 +162,7 @@ def delivery_plan(request, delivery_plan_id):
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
 
 
-@login_required
+@login_required(login_url="login")
 def delivery_plans(request):
     # make sure it's only viewed by Planner
     if(is_req_planner(request)):
@@ -167,7 +172,7 @@ def delivery_plans(request):
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
 
 
-@login_required
+@login_required(login_url="login")
 def destinations(request):
     # make sure it's only viewed by Planner
     if(is_req_planner(request)):
@@ -182,7 +187,7 @@ def destinations(request):
         # not Planner redirected to own profile
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
 
-@login_required
+@login_required(login_url="login")
 def destination(request, destination_id):
     # checking if the destination id exists
     try:
@@ -204,7 +209,7 @@ def destination(request, destination_id):
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id}))
 
 
-@login_required
+@login_required(login_url="login")
 def reg_destination(request):
     # only Planner may send request and only POST reqest is accepted
     try:
@@ -231,7 +236,7 @@ def reg_destination(request):
 
 
 
-@login_required
+@login_required(login_url="login")
 def profile(request, profileid):
     # if the user is requesting own profile
     if is_req_planner(request):
@@ -292,7 +297,7 @@ def profile(request, profileid):
         return render(request, 'load_planer/profile.html', context)
 
 
-@login_required
+@login_required(login_url="login")
 def tour(request, tour_id):
     # should only be accessed by Driver and Planner
     if(is_req_planner(request) or is_req_driver(request)):
