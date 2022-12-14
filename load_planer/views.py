@@ -17,22 +17,27 @@ from .util import *
 
 
 def index(request):
-    # if driver return his tour for today
-    # if (is_req_planner(request)):
-    #     return HttpResponseRedirect((reverse("tour_planning")))
-    # else:
-    return render(request, "load_planer/index.html")
-    #if Planner redirect to Tour Planning
+    # if user authenticated
+    if (request.user.is_authenticated):
+
+        if is_req_planner(request):
+            return HttpResponseRedirect((reverse("tour_planning")))
+        else:
+            return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
+
+    else:
+        return render(request, "load_planer/index.html")
 
 
 @login_required(login_url="login")
 def gateway(request):
-
-    # TODO REWORK THIS !!!
-    try:
-        is_driver = Profile.objects.get(username = request.user.id)
-        return render(request,"load_planer/gateway.html", {"driver": is_driver})
-    except:
+    """
+        if authenticated user is Planner or Driver redirect to index, else
+        render gateway.html
+    """
+    if is_req_planner(request) or is_req_driver(request):
+        return HttpResponseRedirect((reverse("index")))
+    else:
         driver_form = DriverForm()
         return render(request,"load_planer/gateway.html", {"driver": "You are not verified as Driver/Planer.", "driver_form": driver_form})
 

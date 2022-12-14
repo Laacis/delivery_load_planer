@@ -44,20 +44,49 @@
             </div>
             <div id="profile_right" class="col-6 col-md-3">
                 <div class="col-md text-center">
-                    {% if driver_form %}
-                        <div class="row ">
-                            <h5>Register as Driver:</h5>
+            {% if driver_form %}
+            <h5>We're lacking info about you:</h5>
+            <form action="{% url 'reg_driver' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <div class="form-row align-items-center">
+                        <div class="col">
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Name:</div>
+                                </div>
+                                {{ driver_form.first_name }}
+                            </div>
                         </div>
-                        <div class="row" id="unver_driver">
-                            
-                            <form action="{% url 'reg_driver' %}" method="post">
-                                {% csrf_token %}
-                                {{ driver_form }}
-                                <input type="submit" value="Register" class="btn btn-success form-control">
-                            </form>
-                            
-                        </div>  
-                    {% endif %}
+                    </div> 
+                    <div class="form-row align-items-center">
+                        <div class="col">
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Last name:</div>
+                                </div>
+                                {{ driver_form.last_name }}
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="form-group row">
+                    <div class="form-row align-items-center">
+                        <div class="col">
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">driver id:</div>
+                                </div>
+                                {{ driver_form.driver_id }}
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-auto">
+                    <input type="submit" value="Register" class="btn btn-success form-control">
+                </div>
+            </form>
+            {% endif %}
                 </div>
             </div>
 
@@ -67,4 +96,5 @@
 {% endblock %}
 {% block script %}
    <script src="{% static 'load_planer/profileView.js' %}" type="text/javascript"></script>
+   <script src="{% static 'load_planer/gateway.js' %}" type="text/javascript"></script>
 {% endblock %}
