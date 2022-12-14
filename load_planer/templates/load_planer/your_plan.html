@@ -2,8 +2,44 @@
 {% load static %}
 
 {% block body %}
-    
-    <div class="container text-center">
-        <h1> Your plan!</h1>
-    </div>  
+     
+    <div class="container text-center" >
+        <div class="row row-cols-4" id="top_nav_row"></div>
+        <br>
+        <div class="row">
+            <div class="col-2 col-md-2" id="sidebar_left">
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="form-floating">
+                            <div  id="new_tour_button_field">
+                                <p>Select another date:</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+                        <div class="form-floating" id="view_tours_input_field">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+                        <div  id="view_tours_button_field">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-10" id="'main_div_right">
+
+                <div class="row" id="tour_display_list">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'load_planer/tourview.js' %}" type="text/javascript"></script>
+
 {% endblock %}

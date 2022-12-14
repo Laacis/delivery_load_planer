@@ -13,15 +13,7 @@ function createTourDetailsStruct() {
     const cardDiv = document.createElement('div');
     cardDiv.classList = 'row';
     containerDiv.appendChild(cardDiv);
-
     const clList = {'main':'col-12 col-md-8', 'side':'col-6 col-md-4'}
-    // Object.entries(clList).forEach(entry => {
-    //     const [key, value] = entry;
-    //     const colDiv = document.createElement('div');
-    //     colDiv.classList = value;
-    //     colDiv.id = key;
-    //     cardDiv.appendChild(colDiv);
-    // })
     createMyDivs(clList, cardDiv)
     const tourId = document.getElementById('tour_id_field');
     document.getElementById('tour_id_field_div').style.display = 'none';
@@ -32,8 +24,7 @@ function createTourDetailsStruct() {
  * and creates a Bootstrap Card for the Tour details fetched
 */
 function loadTourData(tourId) {
-    // fetching data bout the Tour
-    
+    // fetching data bout the Tour  
     fetch(`/get_tour_details/${tourId}`)
     .then(response => response.json())
     .then(data => {
@@ -61,7 +52,6 @@ function loadTourData(tourId) {
             cardHead.id = 'card_header'
             cardDiv.appendChild(cardHead);
 
-
             const cardBody = document.createElement('div');
             cardBody.classList = 'card-body';
             cardBody.id = 'cardbody';
@@ -72,7 +62,6 @@ function loadTourData(tourId) {
             cardTitle.classList = 'card-title';
             cardTitle.innerHTML = `Tour id: ${data['tour_id']}`;
             cardBody.appendChild(cardTitle);
-
 
             // creating group list for details
             const listGr = document.createElement('ul');
@@ -88,7 +77,6 @@ function loadTourData(tourId) {
                     liElement.classList = 'list-group-item';
                     liElement.innerHTML = `${sideDetDict[key]} ${value}`;
                     listGr.appendChild(liElement);
-                    
                 }
             })
             // Load the list of destinations
@@ -106,7 +94,6 @@ function loadDestinationList(tour_id, destinations, truck_id) {
     const detailRow = document.createElement('div');
     detailRow.classList = 'row';
     mainCont.appendChild(detailRow);
-
     const dictToLoad = {'truck_field':'col-6 col-md-4', 'delivery_points':'col-12 col-md-8'}
     createMyDivs(dictToLoad, detailRow);
 
@@ -122,8 +109,7 @@ function loadDestinationList(tour_id, destinations, truck_id) {
     tableT.appendChild(tBody)
     for (let i = 0; i <= destinations; i++) {
         if (i == 0){
-            //create Table head and headder row
-            
+            //create Table head and headder row     
             const headR = document.createElement('tr');
             tHead.appendChild(headR);
             listTableHeaders.forEach(item => {
@@ -132,7 +118,6 @@ function loadDestinationList(tour_id, destinations, truck_id) {
                 tHeadEl.innerHTML = item;
                 headR.appendChild(tHeadEl);
             })
-
         }
         else {
             const tRoww = document.createElement('tr');
@@ -189,7 +174,6 @@ function createMyDivs(dictionary_f, parentRow) {
         const [key, value] = entry;
         const colDiv = document.createElement('div');
         colDiv.classList = value;
-        colDiv.innerHTML = value;
         colDiv.id = key;
         parentRow.appendChild(colDiv);
     })
@@ -235,7 +219,6 @@ function generateTruckCells(pallet_size, zones) {
     }
 }
 
-
 /** function fetches data from db and populates the table od Destinations
  * 
  */
@@ -252,7 +235,6 @@ function populateDetailsDelPoints(tour_id, pallet_size,  zones) {
                 const targetTd = document.getElementById(`${key}:${rowNr}`);
                 targetTd.innerHTML = value;
             })
-  
         })
         loadPLanMain(data, pallet_size, zones);
     })

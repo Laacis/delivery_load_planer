@@ -705,13 +705,17 @@ def get_tour_list(request, date):
     """
     if (is_req_driver(request) or is_req_planner(request)):
         try:
-            tour_list = Tour.objects.filter(exec_date = date)
+            if (is_req_driver(request)):
+                driver_id = Driver.objects.get(username=request.user.id).driver_id
+                tour_list = Tour.objects.filter(exec_date = date, driver_id = driver_id)
+            else:
+                tour_list = Tour.objects.filter(exec_date = date)
             result = []
             for x in tour_list:
                 result.append(x.serialize())        
             return JsonResponse(result, safe=False)
         except:
-            return JsonResponse({"message":f"couldn't find Tour for: {date}"})
+            return JsonResponse({"message":f"couldn't find Tour for: { Tour.objects.filter(exec_date = date).driver_id.driver_id.first()}"})
     else:
         return JsonResponse({'error':"You are not Driver nor Planner!"})
 
