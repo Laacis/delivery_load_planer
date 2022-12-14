@@ -47,8 +47,11 @@ def your_plan(request):
     if is_req_planner(request):
         # Planner can't have a tour plan, redirect to Tour planning page
        return HttpResponseRedirect(reverse("tour_planning"))
-    else:
+    elif is_req_driver(request):
         return render(request, "load_planer/your_plan.html")
+    else:
+        return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
+
 
 def tour_planning(request):
 
