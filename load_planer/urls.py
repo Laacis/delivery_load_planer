@@ -12,6 +12,7 @@ urlpatterns = [
     path("gateway", views.gateway, name="gateway"),
     path('tour/<str:tour_id>', views.tour , name="tour"),
     path("tour_planning", views.tour_planning, name="tour_planning"),
+    path("your_plan", views.your_plan, name="your_plan"),
 
     path("trucks", views.trucks, name="trucks"),
 

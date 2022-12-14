@@ -28,7 +28,7 @@
                             <a class="nav-link active" aria-current="page" href="{% url 'profile' user.id %}">{{ user.username }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Your plan</a>
+                            <a class="nav-link active" aria-current="page" href="{% url 'your_plan' %}">Your plan</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Log out</a>
