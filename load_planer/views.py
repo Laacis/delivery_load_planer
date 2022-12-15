@@ -22,8 +22,9 @@ def index(request):
 
         if is_req_planner(request):
             return HttpResponseRedirect((reverse("tour_planning")))
+        elif is_req_driver(request):
+            return HttpResponseRedirect((reverse("your_plan")))
         else:
-            # TODO redirect to YourPlan if driver
             return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
 
     else:
@@ -42,6 +43,7 @@ def gateway(request):
         driver_form = DriverForm()
         return render(request,"load_planer/gateway.html", {"driver": "You are not verified as Driver/Planer.", "driver_form": driver_form})
 
+
 @login_required
 def your_plan(request):
     if is_req_planner(request):
@@ -50,6 +52,7 @@ def your_plan(request):
     elif is_req_driver(request):
         return render(request, "load_planer/your_plan.html")
     else:
+        # not a driver/planner redirected to own profile
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
 
 

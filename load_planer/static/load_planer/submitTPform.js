@@ -183,6 +183,7 @@ function registerDeliveryPoint(tour_id){
     // rows is a number of rows in the table
     // rows is including header row!
     const rows = document.getElementById('tour_table').rows.length;
+    let counter = 1;
     for (var i = 1; i < rows; i++){
         //getting vital values:
         const destination = document.getElementById(`Destination:${i}`);
@@ -206,7 +207,20 @@ function registerDeliveryPoint(tour_id){
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            counter++;
+            console.log(`row ${rows}, counter ${counter}, tour id ${tour_id}`);
+            relocateAfterDone(rows, counter, tour_id);
         })
     }
+
+}
+
+/** redirect user to plan page if rows and counter match */
+function relocateAfterDone(rows, counter, tour_id) {
+    if (rows == counter) {
+        // after all registration done - redirect to new Tour - /tour/<id>
+        location.href = `tour/${tour_id}`;  
+        console.log(`row ${rows}, counter ${counter}, tour id ${tour_id}`)
+    }
+
 }
