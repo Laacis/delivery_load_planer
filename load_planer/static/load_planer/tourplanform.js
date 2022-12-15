@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
     })
 });
 
+// globals :
 var listDeliveryIds = []
 
 /* loads the first part of the Tour form:
@@ -362,6 +363,22 @@ function loadSelectIdFields() {
         })
     })
 
+    //on chang listener for truck id
+    const mainRIght = document.getElementById('main_right');
+    const detailsDiv = document.createElement('div');
+    detailsDiv.id = 'truck_details_divV';
+    detailsDiv.classList = 'col text-center';
+    detailsDiv.style.color = "green";
+    mainRIght.appendChild(detailsDiv);
+    truckId.addEventListener('change', (event) => {
+        const truck_id = document.getElementById("truck_id").value
+        fetch(`/get_truck_details/${truck_id}`)
+        .then(response => response.json())
+        .then(data => {
+            detailsDiv.innerHTML = ""; //clean up.
+            detailsDiv.innerHTML = `Truck: <b>${data['truck_id']}</b> load:<b> ${data['pallet_size']} </b>pallets, <b>${data['zones']}</b> temp. zones.`;
+        })
+    });
 }
 
 /* loads the forth part of the Tour form:

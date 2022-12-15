@@ -64,7 +64,6 @@ function verificateTableData(event) {
             const dPisValid = /^[0-9]?[0-9]+$/.test(dPallets.value) && dPallets.value <= maxPalletCount;
             if (destIsValid && timeIsValid && fPisValid && cPisValid &&dPisValid) {
                 // check if total number of pallets is < maxPallets    
-                console.log("row valid and none of above!");
                 targetRow.classList = "table-success"; //green
                 validationValue += 1; 
                 totalFrozenPallets += parseInt(fPallets.value);
@@ -91,7 +90,6 @@ function verificateTableData(event) {
                     else if (smallLoad >= 4 && (smallLoad % 2 == 0)) {
                         // this is MIXED load and we need to check for
                         console.log("MIXED LOAD, Pallets EVEN, smallLoad >=4");
-
                     }
                     else {
                         validationValue -= 1;
@@ -120,11 +118,8 @@ function verificateTableData(event) {
 
 }
 
+/** locks input and select fields */
 function verifyTourData(){
-
-    /* TODO now we need to write a way to grab tada from the table
-        and send a reqeust to registed each row as a tour */
-
     // lock all buttons
     const verifyButton = document.getElementById('verify_button');
     verifyButton.disabled = true;
@@ -173,8 +168,7 @@ function registerTour(){
         else {
             registerDeliveryPoint(tour_id);
             console.log(data);
-        }
-        
+        }    
     })
 }
 
@@ -193,7 +187,6 @@ function registerDeliveryPoint(tour_id){
         const dPallets = document.getElementById(`dry:${i}`);
         
         /* if form is valid we fetch registration for every line */
-    
         fetch('/register_delivery_point', {
             method: "POST",
             body: JSON.stringify({
@@ -208,11 +201,9 @@ function registerDeliveryPoint(tour_id){
         .then(response => response.json())
         .then(data => {
             counter++;
-            console.log(`row ${rows}, counter ${counter}, tour id ${tour_id}`);
             relocateAfterDone(rows, counter, tour_id);
         })
     }
-
 }
 
 /** redirect user to plan page if rows and counter match */
@@ -220,7 +211,5 @@ function relocateAfterDone(rows, counter, tour_id) {
     if (rows == counter) {
         // after all registration done - redirect to new Tour - /tour/<id>
         location.href = `tour/${tour_id}`;  
-        console.log(`row ${rows}, counter ${counter}, tour id ${tour_id}`)
     }
-
 }
