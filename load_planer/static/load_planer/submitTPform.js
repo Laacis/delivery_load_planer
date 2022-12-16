@@ -1,26 +1,52 @@
 function submitTourPlaningForm(){
     // create a button and append to formfield
     const formField = document.getElementById('tour_plan_form');
+    const buttonRow = document.createElement('div');
+    buttonRow.classList = "row";
+    buttonRow.id = "error_button_row";
+    formField.appendChild(buttonRow);
+
+    const errorDiv = document.createElement('div');
+    errorDiv.id = "error_message_div";
+    errorDiv.classList = "col";
+    buttonRow.appendChild(errorDiv);
+
+    const buttonsDivV = document.createElement('div');
+    buttonsDivV.id = "buttons_ver_reg_div";
+    buttonsDivV.classList = "col-md-auto";
+    buttonRow.appendChild(buttonsDivV);
+
     const verificateButton = document.createElement('button');
-    verificateButton.classList = 'btn btn-primary btn-block';
+    verificateButton.classList = 'btn btn-primary';
     verificateButton.type = 'submit';
     verificateButton.textContent = "Verify Tour";
     verificateButton.id = 'verify_button';
-    formField.append(verificateButton);
+    buttonsDivV.append(verificateButton);
     verificateButton.addEventListener('click', verificateTableData);
 
     //creating registration button
     const submitButton = document.createElement('button');
-    submitButton.classList = 'btn btn-success btn-block';
+    submitButton.classList = 'btn btn-outline-success btn-block';
     submitButton.type = 'submit';
     submitButton.textContent = "Register Tour";
     submitButton.disabled = true;
     submitButton.id = "submit_button";
-    formField.append(submitButton);
+    buttonsDivV.append(submitButton);
     submitButton.addEventListener('click', verifyTourData);
 
+    tableErrorMessage(message="", color="");
 }
 
+function tableErrorMessage(message, color) {
+    const errorDiv = document.getElementById('error_message_div');
+    if ( message == "") {
+        const defaultMessage = "Rules for fully loaded Reefer/Truck: The smallest load of (frozen or chilled+dry) must be at least 4 pallets.</br> Pallet count to every type of goods must be EVEN."
+        message = defaultMessage;
+        color = "black";
+    }
+    errorDiv.innerHTML = `<small>${message}</small>`;
+    errorDiv.style.color = color;
+}
 
 /* 
     This function is going to verify all the data in table
@@ -47,7 +73,6 @@ function verificateTableData(event) {
         // fetched value is set to max pallet count
         maxPalletCount = response["pallet_size"];
         truckZones = response['zones'];
-        console.log(response);
         for (var i = 1; i < rows; i++){
             //getting vital values:
             const targetRow = document.getElementById(`row:${i}`);
@@ -70,36 +95,73 @@ function verificateTableData(event) {
                 totalCDPallets += parseInt(cPallets.value) + parseInt(dPallets.value);
                 totalPalletCount += parseInt(fPallets.value) + parseInt(cPallets.value) + parseInt(dPallets.value);
                 let result = false;
+                const smallLoad = (totalCDPallets > totalFrozenPallets)? totalCDPallets : totalCDPallets;
+                /** REWORKING THIS
+                 * now let's check for two conditions:
+                 * 1) if the planner has used all the available pallet slots
+                 * if yes, validate the total values of loaded pallets
+                 * 2) if the user hit the last row (i == rows)
+                 * then check if full load, and if all condition right, validate the total pallets
+                 * 
+                 * !! if not full load: make sure the reefer can take the number of smallLoad
+                 * it may be less than 4 if the (maxPalletCount - (totalPalletCount - smallLoad)) is >= 4  ???!!!
+                 */
                 if (totalPalletCount > maxPalletCount) {
                     validationValue -= 1;
                     targetRow.classList = "table-danger"; //red
-                    console.log("Maximum of pallets count exceded!");
+                    let message = "Maximum of pallet exceeded!";
+                    tableErrorMessage(message, color="red");
                 }
-                else if ( totalPalletCount == maxPalletCount){
-                    console.log('FULL LOAD!');
+                else if (totalPalletCount == maxPalletCount) {
                     /** If full load: minimum number of f/cd pallets in a mixed load (NOT MONOLOAD)
                      * can be 4 pallets, this rule goes for both reefers of load (20 or 14) 
                      * and (2 or 3) zones of temperature control.
                      ! In full load number of f/cd pallets totals must be EVEN, odd pallen count can't be loaded.
                     */ 
-                    const smallLoad = (totalCDPallets > totalFrozenPallets)? totalCDPallets : totalCDPallets;
-                    if (smallLoad == 0) {
-                        // this case is MONOLOAD FULL LOAD
-                        console.log("MONOLOAD!");
-                    }
-                    else if (smallLoad >= 4 && (smallLoad % 2 == 0)) {
+                    if (!(smallLoad >= 4 && (smallLoad % 2 == 0))) {
                         // this is MIXED load and we need to check for
-                        console.log("MIXED LOAD, Pallets EVEN, smallLoad >=4");
-                    }
-                    else {
                         validationValue -= 1;
                         targetRow.classList = "table-danger"; //red
-                        if (!smallLoad >= 4) {
-                            console.log("The smallest load of (frozen or chilled+dry) must be at least 4 pallets.");
+                        let message = "The smallest load of (frozen or chilled+dry) must be at least 4 pallets.";
+                        if (smallLoad % 2 != 0) {
+                            message = "In full load pallet count to every type of goods must be EVEN.";
                         }
-                        else if (smallLoad % 2 != 0) {
-                            console.log("In full load pallet count to every type of goods must be EVEN.");
+                        tableErrorMessage(message, color="red");
+                    }
+                }
+                else if (i == (rows - 1)){
+
+                    /**
+                     * last row ot the table, check if it's fullLoad
+                     * if true: check Smalload >= 4 and Even count values of pallet types
+                     * if false: (maxPalletCount - (totalPalletCount - smallLoad)) is >= 4 
+                     * and at least one type of goods has EVEN number of loaded pallets
+                     */
+                    if (totalPalletCount == maxPalletCount) {
+                        // fulload on last row
+                        if (!(smallLoad >= 4 && (smallLoad % 2 == 0))) {
+                            // this is MIXED load and we need to check for
+                            validationValue -= 1;
+                            validationValue -= 1;
+                            targetRow.classList = "table-danger"; //red
+                            const message = "";
+                            if (smallLoad % 2 != 0) {
+                                message = "In full load pallet count to every type of goods must be EVEN.";
+                            }
+                            else {
+                                message = "The smallest load of (frozen or chilled+dry) must be at least 4 pallets.";
+                            }
+                            tableErrorMessage(message, color="red");
                         }
+                    }
+                    else if (!(maxPalletCount - (totalPalletCount - smallLoad) >= 4)) {
+                        validationValue -= 1;
+                        targetRow.classList = "table-danger"; //red
+                        let message = "The smallest load of (frozen or chilled+dry) must be at least 4 pallets.";
+                        if (smallLoad % 2 != 0 || (totalPalletCount - smallLoad) != 0 ) {
+                            message = "In full load pallet count to every type of goods must be EVEN.";
+                        }
+                        tableErrorMessage(message, color="red");
                     }
                 }
             }
@@ -108,11 +170,12 @@ function verificateTableData(event) {
             }
         }
         if (validationValue == (rows-1)) {
-            console.log("ALL rows in the table are valid!");
+           // "ALL rows in the table are valid!"
             submitButton.disabled = false;
-        }
-        else {
-            console.log("Check the yellow/red rows again!");
+            submitButton.classList = 'btn btn-success';
+            const verifyButt = document.getElementById('verify_button');
+            verifyButt.classList = 'btn btn-outline-primary';
+            tableErrorMessage(message = "Tour verified and may be registred.", color = "green");
         }
     })     
 
@@ -158,7 +221,6 @@ function registerTour(){
     .then(response => response.json())
     .then(data => {
         const tour_id = data['tour_id'];
-        console.log(tour_id);
         /* data has to return tour_id to be user to register delivery points
             if tour_id is empty:  Drop Error alert
         */
@@ -167,7 +229,6 @@ function registerTour(){
         }
         else {
             registerDeliveryPoint(tour_id);
-            console.log(data);
         }    
     })
 }

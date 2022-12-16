@@ -107,7 +107,6 @@ function loadDeliveryPlanPart1() {
             data.forEach(element => {
                 listDeliveryIds.push(element['delivery_id']);
             });
-            console.log(listDeliveryIds);
             // when list is updated: create and update the form
             //disable selected fields
             deliveryYearField.disabled = true;
@@ -214,7 +213,6 @@ function loadDeliveryPlanPart2() {
             }
             else {
                 //if delivery id not valid - set focus on it and write to console
-                console.log("Wrong Delivery Plan ID!");
                 dpField.focus();
                 dpField.placeholder = "Valid Delivery plan id!";
             }

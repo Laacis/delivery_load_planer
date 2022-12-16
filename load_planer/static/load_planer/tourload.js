@@ -138,7 +138,6 @@ function loadDestinationList(tour_id, destinations, truck_id) {
     fetch(`/get_truck_details/${truck_id}`)
     .then(response => response.json())
     .then(data => {
-        console.log(data);
         const truckField = document.getElementById('truck_field');
         const truckDivcont = document.createElement('div');
         truckDivcont.style = 'border:1px solid black;';

@@ -8,7 +8,6 @@ var uid = 0;
 function makeVerifyButton() {
     const liField = document.getElementById('button_li');
     if (liField == null) {
-        console.log("liField is NULL!");
         const unverId = document.getElementById('unver_driver');
         const textDiv = document.createElement('div');
         textDiv.innerHTML = "No unverified Drivers to display.";

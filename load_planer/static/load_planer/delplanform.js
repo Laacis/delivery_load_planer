@@ -243,8 +243,6 @@ function checkUserInput(event) {
     targetDPF.appendChild(errorRow);
 
     let inputList = [];
-    console.log("checking");
-    console.log(destination_list)
     let verified = true;
     const numberOfInput = document.getElementById('dest_nr').value;
     for ( let i = 1; i<=numberOfInput; i++) {

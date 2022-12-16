@@ -13,7 +13,6 @@ function checkifPlanner() {
     })
 }
 
-
 /** function checks if text in action list is matching the innerHTM lext of v_result <li>
  * if so it creates a button to register/ remove the driver from verified list.
  * Other cases when user has not provided the db with personal information like:
