@@ -27,7 +27,6 @@ function deleteButtonLoad() {
     button.classList = 'btn btn-outline-warning form-control';
     button.textContent = "DELETE PLAN";
     buttonfield.appendChild(button);
-
     button.addEventListener('click', function(){
         let tour_id = document.getElementById('tour_id_field').innerHTML
         fetch(`/delete_tour/${tour_id}`,{
