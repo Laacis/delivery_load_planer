@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
     navItemNames.forEach( element => {
         //div col
         const colMdDiv = document.createElement('div');
-        colMdDiv.classList = 'col-md';
+        colMdDiv.classList = 'col-12 col-md-3 mb-2';
         topNavRow.appendChild(colMdDiv);
         // a tag as button
         const aTagB = document.createElement('a');

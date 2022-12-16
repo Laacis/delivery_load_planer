@@ -12,7 +12,7 @@
                 </div>
                 <div class="row row-cols-3">
                     {% for driver in verified_drivers %}
-                    <div class="col">
+                    <div class="col-12 col-md-4 mb-2">
                         <div class="card border-success mb-3">
                             <div class="card-header">
                                 <a href="{% url 'profile' driver.uid %}"> {{ driver.driver_id }} </a>
@@ -27,7 +27,7 @@
                     {% endfor %}
                 </div>   
             </div>
-            <div class="col-6 col-md-4">
+            <div class="col-12 col-md-4 mb-2">
                 <div class="col-md text-center">
                     <div class="row">
                         <h4>Unverified driver:</h4>
