@@ -190,7 +190,7 @@ function create_form(){
                 totalDestinations++;
 
                 const colDiv = document.createElement('div');
-                colDiv.classList = 'col-4';
+                colDiv.classList = 'col-12 col-md-4 mb-2';
                 rowD.appendChild(colDiv);
                 const inpGr = document.createElement('div');
                 inpGr.classList = 'input-group';
@@ -223,7 +223,7 @@ function create_form(){
         // button field
         const targettt = document.getElementById('button_l');
         const checkInputButton = document.createElement('button');
-        checkInputButton.classList = 'btn btn-outline-success';
+        checkInputButton.classList = 'btn btn-outline-success mb-2';
         checkInputButton.type = 'submit';
         checkInputButton.textContent = "Check input";
         checkInputButton.id = 'check_inp_button';
@@ -239,7 +239,7 @@ function checkUserInput(event) {
     const errorRow = document.createElement('div');
     errorRow.style.color = 'red';
     errorRow.id = 'error_fields';
-    errorRow.classList = 'row justify-content-md-center';
+    errorRow.classList = 'col-12 col-md-12 mb-2 justify-content-md-center';
     targetDPF.appendChild(errorRow);
 
     let inputList = [];
