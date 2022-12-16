@@ -20,7 +20,7 @@
                 </div>
                 <div class="row row-cols-3">
                     {% for destination in destination_list %}
-                        <div class="col" id="id_{{destination.destination_id}}">
+                        <div class="col-12 col-md-4 mb-2" id="id_{{destination.destination_id}}">
                             <div class="card border-success mb-3">
                                 <div class="card-header">
                                     <u><a href="{% url 'destination' destination.destination_id %}" id="{{ destination.destination_id }}"> {{ destination.destination_id }}</a></u>
