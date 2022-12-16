@@ -40,6 +40,7 @@ urlpatterns = [
     path("register_delivery_point", views.register_delivery_point, name="register_delivery_point"),
     path("get_truck_details/<str:truck_id>", views.get_truck_details, name="get_truck_details"),
     path("register_tour", views.register_tour, name='register"tour'),
+    path("delete_tour/<str:tour_id>", views.delete_tour, name="delete_tour"),
     path("get_tour_list/<slug:date>", views.get_tour_list, name="get_tour_list"),
     path('get_tour_details/<str:tour_id>', views.get_tour_details, name="get_tour_details"),
 

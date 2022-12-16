@@ -829,3 +829,20 @@ def am_i_planner(request):
         return JsonResponse({"planner":False})
     
 
+# to delete Tour
+@login_required
+@csrf_exempt
+def delete_tour(request, tour_id):
+    """
+        Deletes a tour in request, by tour_id.
+        Only planner may request this.
+    """
+    if(is_req_planner(request) and (request.method == 'POST')):
+        try:
+            tour = Tour.objects.get(pk=tour_id)
+            tour.delete()
+            return JsonResponse({'delete':True})
+        except:    
+            return JsonResponse({'delete':False})
+    else:
+        return JsonResponse({"error":"Wrong request or wrong status."})

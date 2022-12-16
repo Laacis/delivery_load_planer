@@ -1,7 +1,49 @@
 document.addEventListener("DOMContentLoaded", function() {
+    //checking if user is planner
+    checkifPlanner();
+    //loading details about tour
     createTourDetailsStruct();
 });
 
+/** Function checks if requesting user is Planner 
+ * if true, reqeust to create and style a delete button
+*/
+function checkifPlanner() {
+    fetch('/am_i_planner')
+    .then(result => result.json())
+    .then(result => {
+        if( result['planner']){deleteButtonLoad();}        
+    })
+}
+
+/** creates and styles a delete button, 
+ * even listener, if clicked request to delete the tour, 
+ * in case of success, redirect to Tour_planing page.
+ */
+function deleteButtonLoad() {
+    const buttonfield = document.getElementById('side');
+    //cleate a button
+    const button = document.createElement('button');
+    button.classList = 'btn btn-outline-warning form-control';
+    button.textContent = "DELETE PLAN";
+    buttonfield.appendChild(button);
+
+    button.addEventListener('click', function(){
+        let tour_id = document.getElementById('tour_id_field').innerHTML
+        fetch(`/delete_tour/${tour_id}`,{
+            'method' :'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data['delete']) {
+                location.href = `/tour_planning`;  
+            }
+            else {
+                console.log(data['delete']);
+            }
+        })
+    })
+}
 
 /** this function is loading the details about the Tour in general
  * like details whos the driver, what Truck, later some aditional 
@@ -60,6 +102,7 @@ function loadTourData(tourId) {
             // card title 
             const cardTitle = document.createElement('h5');
             cardTitle.classList = 'card-title';
+            cardTitle.id = 'tour_id_field'
             cardTitle.innerHTML = `Tour id: ${data['tour_id']}`;
             cardBody.appendChild(cardTitle);
 
