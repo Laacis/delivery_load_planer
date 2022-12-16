@@ -388,7 +388,6 @@ function loadSelectIdFields() {
 */
 function loadDeliveryPlanPart4() {
     const formField = document.getElementById("tour_plan_form");
-
     const DeliveryPlanId = document.getElementById('delivery_id_field');  
     // checking if truck and Driver has been selected
     const tableField = document.createElement('table');
