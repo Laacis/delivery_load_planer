@@ -1,12 +1,10 @@
 import json
 
-from django.forms import formset_factory
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -55,21 +53,15 @@ def your_plan(request):
         # not a driver/planner redirected to own profile
         return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
 
-
+@login_required(login_url="login")
 def tour_planning(request):
+    if (is_req_planner(request)):
+        return render(request, "load_planer/tour_planning.html")
 
-    # TODO : REWORK THIS!
-    try:
-        tour_list = Tour.objects.all().order_by("-exec_date")
-        context = {
-            "tour_form": None,
-            "tour_list": tour_list
-        }
-    except:
-        context = {
-            "tour_form": None,
-        }
-    return render(request, "load_planer/tour_planning.html", context=context)
+    else:
+        # not a planner redirected to own profile
+        return HttpResponseRedirect(reverse("profile", kwargs={'profileid':request.user.id }))
+ 
 
 @login_required(login_url="login")
 def trucks(request):
@@ -482,7 +474,10 @@ def get_delivery_plan_list(request, delivery_id, details):
     if (details >= 2):
         return JsonResponse({'error': "wrong details option"})
     if(is_req_planner(request) or is_req_driver(request)):
-        data_list = Delivery_plan.objects.get(pk=delivery_id)
+        try:
+            data_list = Delivery_plan.objects.get(pk=delivery_id)
+        except:
+            return JsonResponse({"error":f"Delivery plan {delivery_id} doesn't exist."})
         if (details == 0):
             result = json.dumps(data_list.del_order)
             
@@ -624,24 +619,24 @@ def register_tour(request):
             truck_id = data['truck_id']
             driver_id = data['driver_id']
             delivery_id = data['delivery_id']
+            # checking if delivery exists
             try:
                 delivery_id = Delivery_plan.objects.get(delivery_id=delivery_id)
             except:
                 return JsonResponse({"error":"delivery_id doesn't exist"})
-
+            # checking if driver_id exists
             try:
                 driver_id = Driver.objects.get(pk=driver_id)
             except:
                 return JsonResponse({"error":"driver_id doesn't exist"})
-
+            #checking if truck exists
             try:
                 truck_id = Truck.objects.get(pk=truck_id)
             except:
                 return JsonResponse({"error":"truck_id doesn't exist"})
+            # if all prev checks passed - register a new tour
             exec_date = data['exec_date']
             tour_id = f"{delivery_id.delivery_id}:{exec_date}"
-            
-            
             register = Tour.objects.create(
                 tour_id = tour_id,
                 delivery_id = delivery_id,
