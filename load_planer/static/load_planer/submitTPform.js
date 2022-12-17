@@ -1,3 +1,4 @@
+/** is called from tourplanform.js  */
 function submitTourPlaningForm(){
     // create a button and append to formfield
     const formField = document.getElementById('tour_plan_form');
@@ -37,6 +38,10 @@ function submitTourPlaningForm(){
     tableErrorMessage(message="", color="");
 }
 
+/** display a message of rules at the start,
+ * in case of finding errors during verification is used to 
+ * send a message explaining the verification error issue.
+ */
 function tableErrorMessage(message, color) {
     const errorDiv = document.getElementById('error_message_div');
     if ( message == "") {
@@ -130,7 +135,6 @@ function verificateTableData(event) {
                     }
                 }
                 else if (i == (rows - 1)){
-
                     /**
                      * last row ot the table, check if it's fullLoad
                      * if true: check Smalload >= 4 and Even count values of pallet types

@@ -42,7 +42,6 @@ function loadPLanMain(data, pallet_size, zones) {
                 totalPalletsInDelivery += value;
             }
         })
-
     })
     if (cdPalletsTotal + fPalletsTotal == pallet_size) { fulload = true;}
     
@@ -274,7 +273,6 @@ function neighbourIndex(data) {
              */
             if ( first.slice(0,-1) == second.slice(0,-1)) { points++;}
             else if ( parseInt(first.slice(1,-2)) + 1 == parseInt(second.slice(1,-2))) {points += 1;}
-            
         }
         resultData[key] = (points / value.length);
     })

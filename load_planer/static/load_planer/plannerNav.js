@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         colMdDiv.appendChild(aTagB);
     })
-
 });
 
 

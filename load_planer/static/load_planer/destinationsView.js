@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function() {
     loadInputField();
     styleCleanInput();
     styleRegForm();
-    
 });
 // globals
 let card_list = [];

@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
     makeVerifyButton();
 });
+// globals
 var uid = 0;
+
 /** creates a button and add event listener that veryfies a driver
  * via POST to /verufy_drive/<uid>
  */
@@ -22,10 +24,9 @@ function makeVerifyButton() {
         liField.appendChild(buttonLi);
         buttonLi.addEventListener('click', verifyDriver);
     }
-
-
 }
 
+/** verify a driver */
 function verifyDriver(event){
     // getting profile id
     uid = parseInt(uid);

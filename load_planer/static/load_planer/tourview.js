@@ -9,8 +9,6 @@ document.addEventListener("DOMContentLoaded", function() {
  * when date is selected, fetches data from db, generates a table of fetched 
  * tours and display each of them in onw row, with a link to tour page
  */
-
-// createing input field
 function crdateInpandButton() {
     const sideBar = document.getElementById('view_tours_input_field');
     const viewDate = document.createElement('input');
@@ -44,10 +42,10 @@ function crdateInpandButton() {
         else {
             viewDate.focus();
         }
-
     })
 }
 
+/** get a tour list for a selected date and adds it to the table */
 function getTourList(date){
     const tourList = document.getElementById('tour_display_list');
 
@@ -66,6 +64,7 @@ function getTourList(date){
     const trHead = document.createElement('tr');
     tlHead.appendChild(trHead);
     const trHeadList = ['Tour id', 'Delivery id', 'Driver id', 'Truck id', 'Destinations'];
+
     trHeadList.forEach( item => {
         const thItem = document.createElement('th');
         thItem.innerHTML = item;

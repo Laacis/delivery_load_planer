@@ -422,6 +422,7 @@ function loadDeliveryPlanPart4() {
             const row = document.createElement('tr');
             row.id = `row:${value}`;
             tBodyF.appendChild(row);
+            
             listHeaders.forEach(element => {
                 const cell = document.createElement('td');
                 if (element === 'Nr.') {
@@ -429,7 +430,6 @@ function loadDeliveryPlanPart4() {
                     cell.id = `${element}:${value}`;
                 }
                 else if (element === 'Destination') {
-                    
                     const aLink = document.createElement('a');
                     aLink.href = `/destination/${key}`;
                     aLink.target = "_blank";
@@ -457,7 +457,6 @@ function loadDeliveryPlanPart4() {
                 }
                 else if (element === 'total'){
                     const inputField = document.createElement('strong');
-
                     inputField.id = `total:${value}`;
                     inputField.innerHTML = 0;
                     inputField.classList = "form-control";

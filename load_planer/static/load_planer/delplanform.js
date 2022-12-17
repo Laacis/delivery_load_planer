@@ -125,7 +125,7 @@ function loadButtons() {
         listDiv.style.display = 'none';
     })
 }
-
+/** as from naming - it hides the form. */
 function hideForm() {
     const formDiv = document.getElementById('delivery_plan_form');
     formDiv.style.display = 'none';
@@ -155,10 +155,8 @@ function create_form(){
         option.text = i;
         year_f.appendChild(option);
     }
-
     // Let user choose  number of destinations to generate input+texarea * number
     const destination_choice = document.getElementById('dest_nr');
-
     for (var i = 1; i < 20; i++) {
         var option = document.createElement('option');
         option.value = i;
@@ -175,10 +173,7 @@ function create_form(){
     button_f_request.addEventListener('click', function() {
         const extra_fields = document.getElementById('delivery_plan_extra_fields');
         let rowNr = Math.ceil(destination_choice.value / 3);
-        let counter = 0;
         let totalDestinations = 0;
-
-
         for ( let i = 0; i < rowNr; i++){
             // crate row
             const rowD = document.createElement('div');
@@ -232,6 +227,12 @@ function create_form(){
     });
 }
 
+/** takes a look at every user input for destination ID's in the form,
+ * script is looking for doubles and comparing to list of known destination id's
+ * is case sensitive.
+ * In case of finding a double or mismatching the known id list
+ * display an error and color,s the input field with red border.
+ */
 function checkUserInput(event) {
     event.preventDefault();
     resetCheckTools();
@@ -251,8 +252,7 @@ function checkUserInput(event) {
         if (!destination_list.includes(destIdValue.value) || inputList.includes(destIdValue.value)){
             destIdValue.style ='border: 2px solid red;';
             errorRow.innerHTML = "Dublicate or Wrong Destination ID's in selected field(s)";
-            verified = false;
-            
+            verified = false; 
         }
         else {
             destIdValue.style ='border: 1px solid light-grey;';
@@ -286,6 +286,7 @@ function checkUserInput(event) {
     }
 }
 
+/** resets thte checkinst, to start empty on every even activated */
 function resetCheckTools(){
     const numberOfInput = document.getElementById('dest_nr').value;
     for ( let i = 1; i<=numberOfInput; i++) {
@@ -301,7 +302,11 @@ function resetCheckTools(){
     } 
 }
 
-
+/** load a list of know destination id's
+ * fetching from db,
+ * list is used to verify destination ID's
+ * used in: checking user input.
+ */
 function load_list(){
     // fetching the list of destinations from db
     fetch('get_destination_list')
@@ -316,24 +321,7 @@ function load_list(){
     })
 }
 
-function dispplayDestinations(value, id) {
-    // sets up value  of input chosen by the user
-    let input = document.getElementById(id);
-    input.value = value;
-    clean_list();
-}
-
-function clean_list() {
-    // cleaning up the the list of destinations by removing all the <li>
-    try {
-        const items = document.querySelectorAll("li");
-        items.forEach(item => item.remove());
-    }
-    catch {
-        console.log("No list to clean!");
-    }   
-}
-
+/** register the Delivery plan in db */
 function send_delivery_plan(event) {
     event.preventDefault();
     const numberOfInput = document.getElementById('dest_nr').value;
@@ -354,7 +342,6 @@ function send_delivery_plan(event) {
             year: year,
             del_order: del_order,
         }),
-        
     })
     .then(response => response.json())
     .then(result => {
@@ -391,7 +378,6 @@ function displayFilterResults(listDeliveryIds) {
         thTag.innerHTML = item;
         thTag.scope = 'col';
         trTag.appendChild(thTag);
-
     })
 
     const tbody = document.createElement('tbody');
@@ -405,8 +391,8 @@ function displayFilterResults(listDeliveryIds) {
         noResDiv.innerHTML = "No Delivery Plans for selected period.";
         targetDiv.appendChild(noResDiv);
     }
-    listDeliveryIds.forEach(element => {
 
+    listDeliveryIds.forEach(element => {
         const trBodyTag = document.createElement('tr');
         tbody.appendChild(trBodyTag);
         Object.entries(element).forEach(entry => {
@@ -426,6 +412,7 @@ function displayFilterResults(listDeliveryIds) {
         })
     })
 }
+
 // Clears the table
 function clearTable() {
     // clean up old entries
@@ -438,6 +425,7 @@ function clearTable() {
     }
 }
 
+/** Loads table of delivery plans for selected year and Quarter */
 function loadPlansTable(year, quarter){
     //clear the list
     listDeliveryIds = [];
