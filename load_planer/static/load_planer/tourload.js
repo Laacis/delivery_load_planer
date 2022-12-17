@@ -54,7 +54,7 @@ function createTourDetailsStruct() {
     const cardDiv = document.createElement('div');
     cardDiv.classList = 'row';
     containerDiv.appendChild(cardDiv);
-    const clList = {'main':'col-12 col-md-8', 'side':'col-6 col-md-4'}
+    const clList = {'main':'col-12 col-md-8', 'side':'col-12 col-md-4'}
     createMyDivs(clList, cardDiv)
     const tourId = document.getElementById('tour_id_field');
     document.getElementById('tour_id_field_div').style.display = 'none';
@@ -136,7 +136,7 @@ function loadDestinationList(tour_id, destinations, truck_id) {
     const detailRow = document.createElement('div');
     detailRow.classList = 'row';
     mainCont.appendChild(detailRow);
-    const dictToLoad = {'truck_field':'col-6 col-md-4', 'delivery_points':'col-12 col-md-8'}
+    const dictToLoad = {'truck_field':'col-12 col-md-4', 'delivery_points':'col-12 col-md-8'}
     createMyDivs(dictToLoad, detailRow);
 
     const deliveryDiv = document.getElementById('delivery_points');
@@ -241,7 +241,7 @@ function generateTruckCells(pallet_size, zones) {
         const solu_rl = ['l','r'];
         solu_rl.forEach(item => {
             const divCol = document.createElement('div');
-            divCol.classList = 'col-md';
+            divCol.classList = 'col-6 col-md-6';
             rowG2.appendChild(divCol);
             const divFFl = document.createElement('div');
             divFFl.classList = 'form-floating';
