@@ -3,24 +3,41 @@
 
 {% block body %}
     
-    <div class="container text-center">
+    <div class="container text-start">
       <!-- Stack the columns on mobile by making one full-width and the other half-width -->
       <div class="row">
-        <div class="col-12 col-md-8">.col-12 .col-md-8</div>
-        <div class="col-12 col-md-4">.col-6 .col-md-4</div>
+        <div class="col-12 col-md-8">
+          <h3 class="text-center">Delivery Load Planner</h3>
+          <p>Delivery load planner is a free and open source tool for small logistic companies who operate temperature controlled deliveries, with multiple destinations per tour on daily basis.</p>
+          <p>Delivery load planner(dlp) povides you overview of your reefers/trucks, clients delivery locations and driver personal.<br>You can register Delivery plans with clients destination locations and in right sequesnce.
+            Delivery plans should be replanned and registred every quarter, to optimize your delivery quality.<br>
+            Every delivery plan can be executed once a day, and registred as a <b>Tour</b>.  <br>
+            Tour bounds a driver and a truck/reefer, those will not be able to take any other tour on that day.
+            Every tour's delivery point is a registred clients address, it has a expected delivery time and registred number of pallets. 
+            Pallets are temperature controlled items that are <strong>Frozen</strong>, <strong>Chilled</strong> and <strong>Dry</strong> goods. 
+            Frozen goods have to be transposted under -20 C, while Chilled and Dry goods can be transported under tempera as low as +5 C.<br>
+            Every tour will be loaded into a reefer, with multiple temperature control zones. 
+            The <strong>load/unload plan</strong> is displayed on the tour page with along with table of delivery details. 
+            Load/unload plan schematic display the pallets inside the reefer/truck, Frozen goods are separated from Chilled and Dry goods, each covering one or more temperature controll zones.
+          </p>
+          
+          <p>There are two types of users in dlp(Delivery load Planner):</p>
+          <ul>
+            <li><strong>Planner</strong> has to be virified by admin.</li>
+            <li><strong>Driver</strong> has to be virified by Planner.</li>
+          </ul>
+          <p><small>For drivers: proceed to registration, after you register a user, please provide personal driver information and "driver id" given to you by your employer.</small></p>
+          <p><small></small></p>
+        </div>
+        <div class="col-12 col-md-4">
+          <h3 >Project details:</h3>
+          <ul>
+            <li> location: <a href="https://github.com/Laacis/delivery_load_planner">github.com/Laacis/..</a></li>
+            <li> developer: Jurijs "Laacis"</li>
+            <li> project type: final project for <a href="https://learning.edx.org/course/course-v1:HarvardX+CS50W+Web/home">webCS50</a></li>
+            <li> project stack: JavaScript(front-end) and python(Django for back-end)</li>
+          </ul>
+        </div>
       </div>
 
-      <!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop -->
-      <div class="row">
-        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
-        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
-        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
-      </div>
-
-      <!-- Columns are always 50% wide, on mobile and desktop -->
-      <div class="row">
-        <div class="col-6">.col-6</div>
-        <div class="col-6">.col-6</div>
-      </div>
-    </div>  
 {% endblock %}
