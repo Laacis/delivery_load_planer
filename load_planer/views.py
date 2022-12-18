@@ -523,9 +523,6 @@ def delete_delivery_plan(request, delivery_id):
         return JsonResponse({"error":"Not a Planner!"})
     
 
-    
-
-
 @login_required
 def get_delivery_list_by_details(request,year, quarter):
     """ 
@@ -721,7 +718,6 @@ def get_tour_list(request, date):
         return JsonResponse({'error':"You are not Driver nor Planner!"})
 
 # API related to load Tour:
-
 
 @login_required
 def get_truck_details(request, truck_id):
