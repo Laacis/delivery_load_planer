@@ -74,7 +74,6 @@ function loadPLanMain(data, pallet_size, zones) {
 function tryAndTestColRowLoads(data, smallLoad, smalloadCount, zones, totalPallets) {
 
     const palletTypes = {"frozen":"alert-primary", "chilled":"alert-success", "dry":"alert-warning"}
-    const palletCountEven = (totalPallets % 2 == 0)? true: false;
     //pallets will be add to startingRrow, we have two pallets per row: r(rowNr)_l and .._r
     var startingRow = Math.round(totalPallets / 2);
     let jsonPlanData =  getJsonLoadingPlan(data, totalPallets, palletTypes, startingRow);
