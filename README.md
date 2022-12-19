@@ -1,7 +1,6 @@
 # Delivery Load Planner
+
 is a final project for [webCS50](https://cs50.harvard.edu/web/2020/ "webCS50 Home") by Jurijs V. "Laacis". Developed from 23.10. - 17.12.2022.
-
-
 ## What is it about?
 This is first of all a final project for [webCS50](https://cs50.harvard.edu/web/2020/ "webCS50 Home").
 The idea of building a Tour planner that generates loading list for the Reefer/Truck and would be available for Driver on mobile or any other device, came from real world as I work in logistics and transportation of temperature controlled goods. We often have issues with that the peson who is planing the loading list has to know a lot about the Tour and delivery plan. And when this person is sick or this task is given to somebody else, who is not as experienced, then the loading time and delivery time grow significantyly. It depends on losts of factors, that have to be taken in accouning. 

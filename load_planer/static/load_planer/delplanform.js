@@ -97,7 +97,7 @@ function loadButtons() {
     }
     // create and style button
     const loadButton = document.createElement('button');
-    loadButton.classList = 'btn btn-primary form-control';
+    loadButton.classList = 'btn btn-success form-control';
     loadButton.type = 'submit';
     loadButton.textContent = "Load Plans";
     filterDiv.appendChild(loadButton);
