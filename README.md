@@ -30,8 +30,61 @@ This project satisfies the complexity and requirements of final project for webC
 * no extra plugins were used, only JavaScript and Django, all I needed - I wrote myself.
 
 ## How to run this application:
-RUN!
+#### How to install:
+1. download the files, unzip.
+2. go to files directory and run command: 
+``` shell
+python manage.py makemigrations load_planer
+python manage.py migrate
+python manage.py runserver
+```
+3. create a superuser:
+    ``` shell
+        python manage.py createsuperuser
+    ```
+    fill out e-mail, password and proceed.
+4. go to project page and register a new user that is going to be Planner on /register/ page
+5. after go to /admin/ page, log in using superuser credentials,then:
+    *  choose "Profiles" section on the side menu
+    * choose username of the new registred user in the select drop-field
+    * tick the "is planner" option and click "Save"
+6. the program is installed and ready to use.
 
+### How to use the program
+After the Planner has been registred, the program can be used as designed.
+Planned has complete control over Drivers, Delivery plans and Tours. 
+Still there are some things that are managed by admin(superuser), only superuser can:
+* delete and edit Destinations with customer information and details
+* delete and edit trucks 
+* delete and edit users
+The following must be done prior to Tour registration:
+1. have at least one Driver to be registred and verified(more about  driver registration later)
+2. have at least one truck registred
+3. have at least one customer - destination registred
+4. have at least one Delivery plan registred using the previous mentioned registration of Destination as a delivery point.
+#### Being a Planner:
+Planner can register a Reefer/truck, verify a Driver, register a Customer Destination point, register a Delivery plan(consisting of delivery points) and Register a Tour(consisting of all parts mentioned above).
+Trucks and Destination registration is straight forward and only takes one form to fill in and send.
+Drivers can only be verified or removed from the verified Drivers list, by simple click, on a selected Drivers profile.
+Delivery plan registration has to be done in two steps:
+1. selecting year, quearter and number of expected delivery points
+2. fill out input fields in generated form and click "Check input"
+3. if all input was verified, the inputfields are locked and Submit button has to be clicked to send the Delivery plan to registration
+Tour Planning takes more staps to register:
+1. select Year and Quarter for the Tour
+2. on next select the date of execution and Delivery plan that will be used for the Tour (The program will sugest the know Delivery plan ID's from database by partial of complete match in the user input)
+3. next step assign Truck and Driver for this Tour. By changing truck inout it will provide you with information about the Reefer/truck, like number of pallets and zones. Only available Drivers and Trucks are displayed in the options, Trucks/Drivers assigned to other Tours on this date are not available.
+4. after this a table is loaded, please fill out time of delivery and number of pallets for every type of goods, for each customer. Every row has it's Destination point, preloaded in "Destination" row, and can be viewd by clicking on it.
+5. After the pallet and time information is filled out, click on "Verify Tour", it will verify your input, in case of error it will guide you with information causeing the failure to verification, and marking the row where the failure was registred.
+6. in case successful verification, click on register Tour to register new Tour.
+7. **WARNING:** 
+---
+ Please make no changes after the TOur data was verified, and sending Registration request. If you made any changes, you need to verify them again, to avoid unexpected results.
+
+
+###### Driver registration
+Every new user registred, has to provide personal information to be verified as a driver, it consists of name,lastname and driver_id issued by the employer. Only if this information is provided a user will be marked as unverified driver. Planner can see unverified drivers on drivers page, or by accessing the profile page of the user. If the user somehow avoided the form on the gateway, the form will be displayed on users profile page, until the information is provided and sent.
+Only verified drivers may be assigned to a Tour. In case of providing wrong information, it can only be changed by superuser.
 ## files: purpouse and content
 There are: 
 * 13 *.js files (48% of all files)
@@ -102,7 +155,7 @@ Each directory has it's own heml file. Majority of files is only awailable for P
 #### .py files
 Python files we are going to look at are only this project related, except views.py and models.py are in every Django project.
 1. **models.py** Models keeps the information of models used in the project and defines relationships inbetween the models and generated database.
-The hardest part for me was to write the model name Delivery_plan as it had to store delivery order sequence. I spend so much time on it that Idon't want to admit. WE didn't work much with JSON during the lections, so I had to find it out myself. The model.JSONField() was never used in the project but the Django documentation told me that it would probably fit my needs, so I had no other choice then useing it. I spend literally a few day's just to figure out how it works as it was consistantly returning me 500 internal server errors. After I spend 3 days without mooving a step further I noticed a misspelling that was ruining all the performance of the code, fixing that was the solution. ( Problems with misspelling is going to happen a few more times during the project, but it won't take me three days to find it) After I mastered the JSONField the project development was under a consistant flow. SOme models received significant changes from their initial structure, as the project developed into more complex as I planned from the begining. By digging deeper into the details and designing the process of the registration of every element I had to add or remove some fields.
-2. **forms.py** This file contains Forms for the project, forms that are used by Django formating language and use CSRF tokens. The forms were located in the views.py but I exported them into forms.py file to make the views.py cleaner. Theres only tree Forms for Driver, Truck and Destination. These are the forms that have CSRF tokens and only custom styles are add to Form fields, to display them in the bootstrap style. In case registration of truck with other options of Max pallet and zones, files: forms.py and models.py need to be changed, as the options are hardcoded inside.
+The hardest part for me was to write the model name Delivery_plan as it had to store delivery order sequence. I spend so much time on it that Idon't want to admit. WE didn't work much with JSON during the lections, so I had to find it out myself. The model.JSONField() was never used in the project but the Django documentation told me that it would probably fit my needs, so I had no other choice then useing it. I spend literally a few day's just to figure out how it works as it was consistantly returning me 500 internal server errors. After I spend 3 days without mooving a step further I noticed a misspelling that was ruining all the performance of the code, fixing that was the solution. ( Problems with misspelling is going to happen a few more times during the project, but it won't take me three days to find it) After I mastered the JSONField the project development was under a consistant flow. Some models received significant changes from their initial structure, as the project developed into more complex as I planned from the begining. By digging deeper into the details and designing the process of the registration of every element I had to add or remove some fields.
+2. **forms.py** This file contains Forms for the project, forms that are used by Django formating language and use CSRF tokens. The forms were located in the views.py but I exported them into forms.py file to make the views.py cleaner. Theres only tree Forms for Driver, Truck and Destination. These are the forms that have CSRF tokens and only custom styles are add to Form fields, to display them in the bootstrap style. In case registration of truck with other options of max pallet and zones, files: forms.py and models.py need to be changed, as the options are hardcoded inside.
 3. **util.py** is a support file with extra utilities for the program and had to hold the algorithm and other helpful functions from the start. But after some brainstroming, I decided to keep the pallets sorting and validation o client side, and to not putmore calculation on the server. As a result this file only contains two functions that check if the requesting user is a planner or is the reqeusting user a driver, returning a boolean value. Every time a page is reqeusted, the views.py checks if the user is Planner, it's used 30 time in the views.py that makes it the most important and most used function in this program.
 4. **views.py** the biggest file of the project is almost 840 line of code and comments. Half of the file is API endpoints, used by JS files....
