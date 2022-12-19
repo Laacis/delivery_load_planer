@@ -40,10 +40,10 @@ There are:
 that are important for this project.
 
 Goint to look at most of them.
-JS files:
-1. plannerNav.js is Planner Navigation js file, that as said from the naming display a navigation for the Planner. This was written to let the Planner navigate through the project and his main working area, js file is used on all pages that only planner has access to. Using this script for a _not_ Planner won't let the user navigate through the website. 
-2. delplan.js  creates table of delivery destinations on the _delivery plan/<id>_ fetches data from API asking for extra details. ALso draws a button to DELETE the delivery plan, and executes this request. All the data displayed for the user on Delivery plan page is made by this js. 
-3. delplanform.js Delivery plan Form file that is huge 444 lines that takes care of the Overview of registred Delivery plans and registring new plans. Here is what it does: 
+#### .JS files:
+1. **plannerNav.js** is Planner Navigation js file, that as said from the naming display a navigation for the Planner. This was written to let the Planner navigate through the project and his main working area, js file is used on all pages that only planner has access to. Using this script for a _not_ Planner won't let the user navigate through the website. 
+2. **delplan.js**  creates table of delivery destinations on the _delivery plan/<id>_ fetches data from API asking for extra details. ALso draws a button to DELETE the delivery plan, and executes this request. All the data displayed for the user on Delivery plan page is made by this js. 
+3. **delplanform.js** Delivery plan Form file that is huge 444 lines that takes care of the Overview of registred Delivery plans and registring new plans. Here is what it does: 
     * Loads and display in table list of all delivery plans registred for the actual quarter. 
     * creates a Delivery plan form that load in two steps, filling out Year,Quater and number of destinations, then loads know list of destinations. it's needed to verify user input, before registration.
     * on second step generates inputfields by the number from the rist part, 
@@ -52,22 +52,22 @@ JS files:
     * after the input is verified, it's locked and the delivery plan can be registered by  fetching the registration reqeust.
     * script also generates buttons and fields that can load delivery plans for requested year/Quarted.
     * loading Delivery plans and Form are separated and when one is loaded, second is hidden from the user.
-4. destinationsView.js Destination View file that is responsible for displaying, filtring and registring new Destinations on Destinations.This script does:
+4. **destinationsView.js** Destination View file that is responsible for displaying, filtring and registring new Destinations on Destinations.This script does:
     * fetches list of all registred destinations and create a card for every recod wti h detailes fetched from the db.
     * create and execute a filter to display cards that match the user input(is not case sensitive) it hides all other cards and display those matching the provided user input, partial or complete match.
     * creates form needed to register new destination, fetches the registration request via API
-5. driverVer.js Driver Verification script used on drivers page, script fetches list of users from db. Users that are not verified as drivers, but have provided personal information as name, last name and driver id. Script creates a Card for this user and a button, to quick verify this Driver( only verified drivers can have Tours assigned to them)
+5. **driverVer.js** Driver Verification script used on drivers page, script fetches list of users from db. Users that are not verified as drivers, but have provided personal information as name, last name and driver id. Script creates a Card for this user and a button, to quick verify this Driver( only verified drivers can have Tours assigned to them)
 ANother way to verify a driver is by button inside users profile.
-6. easyAlgo.js Easy Load algorithm script, that is the one responsible for building the schematic view of loading plan. script is called from anothe js file _tourload.js_ after it has fetched the delivery point table what actually is a table of destination points for the Tour. Call from the _tourload.js_ gives args with information need to build the schematics of loading plan. The _easyAlgo.js_ does:
+6. **easyAlgo.js** Easy Load algorithm script, that is the one responsible for building the schematic view of loading plan. script is called from anothe js file _tourload.js_ after it has fetched the delivery point table what actually is a table of destination points for the Tour. Call from the _tourload.js_ gives args with information need to build the schematics of loading plan. The _easyAlgo.js_ does:
     * script separates pallets by good type _frozen_ and _chilled_ + _dry_ and counts the number of every group and total number of pallets
     * script evaluates of the load is mixed(consist of more than one type of goods) or mono type load
     * then it runs algoLoadEasy fucntion, with a _colStyle_ flag and later - without it, this function sorts the pallets by Column(when pallets are placed in a reefer, from left to the right in revers delivery order) or by Row ( when pallets are placed next to each other in pairs aslo in reverse delivery order, following the principle(LIFO) _LAST_ _IN_ _FIRST_ _OUT_, just like in a stack)
     * after first performance it sends the result ot the loading plan data to _neighbourIndex_ function. that is evaluating the position of neighbour pallets in the load, if a pallet from the same row belongs to the same destination it gets a +1 point, if a a pallet in the same column belongs to the same destination it gets a +1 point as well. ( Important to mention is that the number of points assigned needs further testing and has to be changed after.) Calculated the average number of points are returned.
     * same process is performed again fithout _ColStyle_ flag. Both results of neighbourIndex are compared and the one that has higher score is sendt to _drowThePallets_ function that visualize the result on the page.
-7. gateway.js short script that adds form-control class to form elements on gateway page.
-8. profileView.js Profile page View script that checks if the reqeusting user is a Planner, if true, it loads buttons and adds events, that alow Planner to verify or remove a Driver prom list of verified drivers. It's required to control Driver users.
+7. **gateway.js** short script that adds form-control class to form elements on gateway page.
+8. **profileView.js** Profile page View script that checks if the reqeusting user is a Planner, if true, it loads buttons and adds events, that alow Planner to verify or remove a Driver prom list of verified drivers. It's required to control Driver users.
 9. trucks.js Trucks script is doing the same as gateway script - adding custon class to form element
-10. tourplanform.js Tour plan Form script that does a huge part of loading and styling the view on the Tour Planning page. It does:
+10. **tourplanform.js** Tour plan Form script that does a huge part of loading and styling the view on the Tour Planning page. It does:
     * generate button to create new Tour 
     * if New tour is clicked performs loading a 4 step registration process for a new tour:
         1. user has to choose Year and Quarter of the TOur to be created (is used to fetch registred Delivery plans for selected period)
@@ -76,9 +76,9 @@ ANother way to verify a driver is by button inside users profile.
         4. Loads a table with data from the Delivery plan chosen by the planner, preloading Destination id's, and letting the planner to fill out the number of pallets for each type of goods. ( Rules of loading and restrictions are displayed under the table)
     * Verification of user input and egistration is done by another script _submitTPform.js that is called from tourplanform.js
     
-11. submitTPform.js Submit tour plan form script is responsible for verification of user data and registration of the Tour.
+11. **submitTPform.js** Submit tour plan form script is responsible for verification of user data and registration of the Tour.
     * Verify user input in the table :
-        * after the has provided the input and clicked on _Verify Tour_ button, script performs verification of the user input. The restrictions are: number of pallets of the same type, under fully loaded truck have to be EVEN, because we may not blend goods of different temperature control as it will damage the goods. The smallest load of a type(Frozen of Chilled+Dry) in a mixed load must be at least 4 pallets, this is the bare nimimum to be loaded in a temperature control zone. 
+        * after the has provided the input and clicked on _Verify Tour_ button, script performs verification of the user input. The restrictions are: number of pallets of the same type, under fully loaded truck have to be EVEN, because we may not blend goods of different temperature control as it will damage the goods. The smallest load of a type(Frozen of Chilled+Dry) in a mixed load must be at least 4 pallets, this is the bare minimum to be loaded in a temperature control zone. 
         * if the verification failed, the failed row, changes color, and a comment explaining the failed verification is displayed under the table. 
         * in case of successful verification, Registration button is unlocked and the planner may perform the registration.
     * Registration is perfomrmed in multiple requests:
@@ -86,13 +86,23 @@ ANother way to verify a driver is by button inside users profile.
         * every delivery point registration is counted and only seen as success if the number returned values is equal to number sendt requests. ( I do understand how wulnerable this decision is)
     * after the new Tour is successfully registred Planner is redirected to the new tour page.
 This js script is the most wulnerable in all I did here and has to redesigned in case of future development. The input is not locked like it was during the Delivery plan registration, and user can perform manipulations with the input before sending registration request without re-verifying the input data.
-12. tourview.js Tours view script loaded together with _submitTpform.js_ and _tourplanform.js_ it's only task is to create button to load the Tours for a selected date. it does:
+12. **tourview.js** Tours view script loaded together with _submitTpform.js_ and _tourplanform.js_ it's only task is to create button to load the Tours for a selected date. it does:
     * generate a button and date input field
     * if date is selected, fetches data from bd about Tours registred to the selected date
     * display the results on the table, with details like tour id, delivery plan id, driver, truck used and number of destinations.
     * by default loads the table with Tours on actual date
-
-13. tourload.js Tour load script loads:
+13. **tourload.js** Tour load script loads:
     * Tour details about the Tour on Tour page
     * destination points and information about time, pallets type and count.
     * calls _easyAlgo.js_ and passes information neede for it to work.
+
+#### .HTML files
+Each directory has it's own heml file. Majority of files is only awailable for Planner and will not be accessed by other users than Planner. HTML files often have DJango formating language used to define data to be displayed to the user, based on user status or data options. User is redirected to his own profile in case of trying to access an directory the user has no lawfull access to. Mayority of the files only have the basic mark up and defined div's to define the loading path for the JavaScript generated code.
+
+#### .py files
+Python files we are going to look at are only this project related, except views.py and models.py are in every Django project.
+1. **models.py** Models keeps the information of models used in the project and defines relationships inbetween the models and generated database.
+The hardest part for me was to write the model name Delivery_plan as it had to store delivery order sequence. I spend so much time on it that Idon't want to admit. WE didn't work much with JSON during the lections, so I had to find it out myself. The model.JSONField() was never used in the project but the Django documentation told me that it would probably fit my needs, so I had no other choice then useing it. I spend literally a few day's just to figure out how it works as it was consistantly returning me 500 internal server errors. After I spend 3 days without mooving a step further I noticed a misspelling that was ruining all the performance of the code, fixing that was the solution. ( Problems with misspelling is going to happen a few more times during the project, but it won't take me three days to find it) After I mastered the JSONField the project development was under a consistant flow. SOme models received significant changes from their initial structure, as the project developed into more complex as I planned from the begining. By digging deeper into the details and designing the process of the registration of every element I had to add or remove some fields.
+2. **forms.py** This file contains Forms for the project, forms that are used by Django formating language and use CSRF tokens. The forms were located in the views.py but I exported them into forms.py file to make the views.py cleaner. Theres only tree Forms for Driver, Truck and Destination. These are the forms that have CSRF tokens and only custom styles are add to Form fields, to display them in the bootstrap style. In case registration of truck with other options of Max pallet and zones, files: forms.py and models.py need to be changed, as the options are hardcoded inside.
+3. **util.py** is a support file with extra utilities for the program and had to hold the algorithm and other helpful functions from the start. But after some brainstroming, I decided to keep the pallets sorting and validation o client side, and to not putmore calculation on the server. As a result this file only contains two functions that check if the requesting user is a planner or is the reqeusting user a driver, returning a boolean value. Every time a page is reqeusted, the views.py checks if the user is Planner, it's used 30 time in the views.py that makes it the most important and most used function in this program.
+4. **views.py** the biggest file of the project is almost 840 line of code and comments. Half of the file is API endpoints, used by JS files....
