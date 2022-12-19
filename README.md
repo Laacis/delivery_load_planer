@@ -24,8 +24,8 @@ This project satisfies the complexity and requirements of final project for webC
 * project has 3 user types, and can be controlled without ~~admin~~ superuser, except verification of **Planner** has to be done by superuser.
 * has 17 API endpoints, that are used multiple times across the project.
 * most of the API retun only limited data, neede for a certain task, avoiding sending redundant information.
-* Almost all user input is checkd both, client side and server side, to avoid mistakes during registration and relationships.
 * same API calls are used for different tasks, but the data returned is suitable for.
+* Almost all user input is checkd both, client side and server side, to avoid mistakes during registration and relationships.
 * Project code is documented and commented, explaining what does what and what limitations are used.
 * no extra plugins were used, only JavaScript and Django, all I needed - I wrote myself.
 
@@ -34,10 +34,10 @@ RUN!
 
 ## files: purpouse and content
 There are: 
-* 13 *.js files
-* 15 *.html files
-* 4 *.py files 
-that are inmportant for this project.
+* 13 *.js files (48% of all files)
+* 15 *.html files (20% of all files)
+* 4 *.py files (30% of all files)
+that are important for this project.
 
 Goint to look at most of them.
 JS files:
