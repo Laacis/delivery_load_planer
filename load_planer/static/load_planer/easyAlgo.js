@@ -19,7 +19,10 @@
  * get_delivery_point_table/tour_id
  */
 function loadPLanMain(data, pallet_size, zones) {
-
+    //let's find out if it's a full load (sum FCD pallets == pallet_size)
+    let fulload = false;
+    //number of delivery destinations
+    let nrOfDeliveries = 0;
     // totla number of Froze nad Chill+Dry pallets
     let fPalletsTotal = 0;
     let cdPalletsTotal = 0;
