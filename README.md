@@ -78,9 +78,13 @@ Tour Planning takes more staps to register:
 5. After the pallet and time information is filled out, click on "Verify Tour", it will verify your input, in case of error it will guide you with information causeing the failure to verification, and marking the row where the failure was registred.
 6. in case successful verification, click on register Tour to register new Tour.
 7. **WARNING:** 
----
- Please make no changes after the TOur data was verified, and sending Registration request. If you made any changes, you need to verify them again, to avoid unexpected results.
-
+Please make no changes after the Tour data was verified, and sending Registration request. If you made any changes, you need to verify them again, to avoid unexpected results.
+#### Being a Driver
+Register a new account. After you log in first time, you'll be asked to fill out additional personal information about you: Name, Lastname and your driver id.
+Fill out this information, submit it and wait for the Planner to verify you as a driver.
+Next time you log in after being verified by the Planner, you'll have access to page "Your plan", opens every time you log into the system.
+It has date selection options and a table ouf Tour lists for you.
+In the table is displayed a tour you are going to have today. TO view it click on the Tour id name. To find Tour for another day, select the desired date and click on "Find Tours".
 
 ###### Driver registration
 Every new user registred, has to provide personal information to be verified as a driver, it consists of name,lastname and driver_id issued by the employer. Only if this information is provided a user will be marked as unverified driver. Planner can see unverified drivers on drivers page, or by accessing the profile page of the user. If the user somehow avoided the form on the gateway, the form will be displayed on users profile page, until the information is provided and sent.
@@ -123,7 +127,7 @@ ANother way to verify a driver is by button inside users profile.
 10. **tourplanform.js** Tour plan Form script that does a huge part of loading and styling the view on the Tour Planning page. It does:
     * generate button to create new Tour 
     * if New tour is clicked performs loading a 4 step registration process for a new tour:
-        1. user has to choose Year and Quarter of the TOur to be created (is used to fetch registred Delivery plans for selected period)
+        1. user has to choose Year and Quarter of the Tour to be created (is used to fetch registred Delivery plans for selected period)
         2. User has to select date of execution and Delivery plan id (Delivery plan Id is suggesting user to choose Delivery plans from a list that was fetched previous, and user can only select date in the future, no registration for the past days is possible)
         3. user has to assign Truck and Driver for this Tour. (in change of select field of truck, information about the truck is loaded and displayed, so the planner know the pallet capacity of the truck and number of zones. Driver choice is showing only drivers who are not asigned to any other tour on that date, as they are busy. Both Driver and Truck input are free to change before final registration of the tour)
         4. Loads a table with data from the Delivery plan chosen by the planner, preloading Destination id's, and letting the planner to fill out the number of pallets for each type of goods. ( Rules of loading and restrictions are displayed under the table)
