@@ -18,7 +18,7 @@ function submitTourPlaningForm(){
     buttonRow.appendChild(buttonsDivV);
 
     const verificateButton = document.createElement('button');
-    verificateButton.classList = 'btn btn-primary';
+    verificateButton.classList = 'btn btn-success';
     verificateButton.type = 'submit';
     verificateButton.textContent = "Verify Tour";
     verificateButton.id = 'verify_button';
@@ -178,7 +178,7 @@ function verificateTableData(event) {
             submitButton.disabled = false;
             submitButton.classList = 'btn btn-success';
             const verifyButt = document.getElementById('verify_button');
-            verifyButt.classList = 'btn btn-outline-primary';
+            verifyButt.classList = 'btn btn-outline-success';
             tableErrorMessage(message = "Tour verified and may be registred.", color = "green");
         }
     })     
