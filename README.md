@@ -44,7 +44,7 @@ python manage.py runserver
     fill out e-mail, password and proceed.
 4. go to project page and register a new user that is going to be Planner on /register/ page
 5. after go to /admin/ page, log in using superuser credentials,then:
-    *  choose "Profiles" section on the side menu
+    *  choose "Profiles" section on the side menu, click on "Add profile"
     * choose username of the new registred user in the select drop-field
     * tick the "is planner" option and click "Save"
 6. the program is installed and ready to use.
@@ -90,9 +90,9 @@ Every new user registred, has to provide personal information to be verified as 
 Only verified drivers may be assigned to a Tour. In case of providing wrong information, it can only be changed by superuser.
 ## files: purpouse and content
 There are: 
-* 13 *.js files (48% of all files)
-* 15 *.html files (20% of all files)
-* 4 *.py files (30% of all files)
+* 13 *.js files (~50% of all files)
+* 15 *.html files (~20% of all files)
+* 4 *.py files (~30% of all files)
 that are important for this project.
 
 Goint to look at most of them.
@@ -161,4 +161,4 @@ Python files we are going to look at are only this project related, except views
 The hardest part for me was to write the model name Delivery_plan as it had to store delivery order sequence. I spend so much time on it that Idon't want to admit. WE didn't work much with JSON during the lections, so I had to find it out myself. The model.JSONField() was never used in the project but the Django documentation told me that it would probably fit my needs, so I had no other choice then useing it. I spend literally a few day's just to figure out how it works as it was consistantly returning me 500 internal server errors. After I spend 3 days without mooving a step further I noticed a misspelling that was ruining all the performance of the code, fixing that was the solution. ( Problems with misspelling is going to happen a few more times during the project, but it won't take me three days to find it) After I mastered the JSONField the project development was under a consistant flow. Some models received significant changes from their initial structure, as the project developed into more complex as I planned from the begining. By digging deeper into the details and designing the process of the registration of every element I had to add or remove some fields.
 2. **forms.py** This file contains Forms for the project, forms that are used by Django formating language and use CSRF tokens. The forms were located in the views.py but I exported them into forms.py file to make the views.py cleaner. Theres only tree Forms for Driver, Truck and Destination. These are the forms that have CSRF tokens and only custom styles are add to Form fields, to display them in the bootstrap style. In case registration of truck with other options of max pallet and zones, files: forms.py and models.py need to be changed, as the options are hardcoded inside.
 3. **util.py** is a support file with extra utilities for the program and had to hold the algorithm and other helpful functions from the start. But after some brainstroming, I decided to keep the pallets sorting and validation o client side, and to not putmore calculation on the server. As a result this file only contains two functions that check if the requesting user is a planner or is the reqeusting user a driver, returning a boolean value. Every time a page is reqeusted, the views.py checks if the user is Planner, it's used 30 time in the views.py that makes it the most important and most used function in this program.
-4. **views.py** the biggest file of the project is almost 840 line of code and comments. Half of the file is API endpoints, used by JS files....
+4. **views.py** the biggest file of the project is almost 840 line of code and comments. Half of the file is API endpoints, used by JS files all over the project. This file grow in size very fast during the project development, I had to re-write API's and other par multiple times. THe hardest part was to understand how to return JSON data for on the reply, I figured out that I can serialize it in a few locations, here in views.py file and in models.py I could write a custom method for a model, both ways are used in this project. But my personal favorite is serializing in views.py just before returning the respoinse as it's more clear and controllable what data will be passed. I think I documented the API enough so it's well explained what each of them does, what data returns and where it's called from, and even who is allowed to reqeust this call. as example _get_delivery_plan_list_ has a custom details arg that is defining how detailed data will be returned. If the request has _details_ == 1 it will return more detailed data, with == 0, it will return a JSONField data from db, that is less informative. But both options are used in this project, for different pages and purpouses.
