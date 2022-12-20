@@ -14,7 +14,7 @@ After registring a Tour, it's displayed on the Drivers page, for selected date a
 After, both cases are evaluated, and given point's, based on the result the loading plan chooses the one or another way of loading. It works best with 2-3 deliveries and full loaded trucks.
 
 
-## Distinctiveness and Complexit
+## Distinctiveness and Complexity
 This project satisfies the complexity and requirements of final project for webCS50, because:
 * it's unique, we learned nothing like this project during the course
 * project is very complex, it took me a month to build the conditions and operation units as destination, delivery plans, and others, and couple them all together so they have the right relationship to each other.
