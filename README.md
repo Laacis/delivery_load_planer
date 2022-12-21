@@ -56,7 +56,7 @@ Still there are some things that are managed by admin(superuser), only superuser
 * delete and edit Destinations with customer information and details
 * delete and edit trucks 
 * delete and edit users
-The following must be done prior to Tour registration:
+#### The following must be done prior to Tour registration:
 1. have at least one Driver to be registred and verified(more about  driver registration later)
 2. have at least one truck registred
 3. have at least one customer - destination registred
