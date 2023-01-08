@@ -1,4 +1,6 @@
 # Delivery Load Planner
+### Video Presentation
+[![Video Presentation](https://i9.ytimg.com/vi_webp/VXd0DX1oZv8/mq1.webp?sqp=CPDp6p0G-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGFUgQih_MA8=&rs=AOn4CLCm7198p48ZfIdxr9xIVyxIOOV3Lw)](https://youtu.be/VXd0DX1oZv8)
 
 is a final project for [webCS50](https://cs50.harvard.edu/web/2020/ "webCS50 Home") by Jurijs V. "Laacis". Developed from 23.10. - 17.12.2022.
 ## What is it about?
